@@ -1,72 +1,16 @@
-# Blog: MY-PROJECT-TITLE
+# Blog: Mid
 
-**MY-NAME**
+**Cillian Mc Neill**
 
-## My First Blog Entry
+## 25th September 2017
 
-This is my first blog entry.
+I decided to get started on work and research regarding my project this week. This would involve initial drafting of my project proposal and researching the various technologies I want to use in my solution. Primarily the research will focus on Hyperledger and the implementations of it currently available. As it's open-source, there will be a lot of varied documentation on it but i'm confident in what's currently there from what I have previously found. My main source of information will come from [their own documentation pages](https://hyperledger-fabric.readthedocs.io/en/latest/)
 
-The blog is written in [markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet).
-Markdown is a simple text-based mark-up language.
+## 26th September 2017
 
-## My Second Blog Entry
+I took the opportunity to meet with two lecturers I thought would help me with my project. Brian Stone was my project supervisor for my third year project. He was extremely helpful last year so I wanted to get his input into my current idea. Geoff Hamilton was my other choice for the project supervisor. He has a background in the field I'm looking at so his experience would be very useful in avoiding some of the common pitfalls.
+Over the past few days I have been putting together my project proposal and I intend to send on drafts to both of them and get some feedback.
 
-This week, I learned how to include
-[images](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#images)
-in my blog.
+## 2nd October 2017
 
-![cat](https://gitlab.computing.dcu.ie/sblott/2018-ca400-XXXX/raw/master/docs/blog/images/cat.jpg)
-
-Here are the instructions:
-
-- Add the image to your repo (probably using the `images` sub-directory here).
-  The cat example above is in `./images/cat.jpg`.
-
-- Commit that and push it to your repo.
-
-- On Gitlab, navigate to your new image and click *Raw*.  You get the raw URL of your image.  Copy that URL.
-
-- Add your image to this document using the following format:
-
-    <pre>![alternative text](URL)</pre>
-
-See the example [here](https://gitlab.computing.dcu.ie/sblott/2018-ca400-XXXX/raw/master/docs/blog/blog.md).
-
-You can also mention other users (like me: @sblott).
-
-## Including Code
-
-Raw text:
-```
-Mary had a little lamb,
-it's fleece was white as snow.
-```
-
-Syntax highlighting is also possible; for example...
-
-Python:
-```python
-i = 0
-while i < len(s):
-   # So something.
-   i = i + 1
-```
-
-Java:
-```java
-for (i=0; i<s.length(); i+=1) {
-   // Do something.
-}
-```
-
-Coffeescript:
-```coffeescript
-i = 0
-while i < s.length
-   # So something.
-   i = i + 1
-```
-
-## Instructions
-
-Once you've understood this sample, replace it with your own blog.
+After some discussion and emails with Geoff Hamilton he has agreed to be my project mentor. I think he'll be very helpful as he has a background in cryptography and security. As my project focuses on this, the help will be invaluable. I finalised everything I wanted in my [project proposal](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/Proposal/Project%20Proposal.pdf). I'll email on the final draft to Geoff and get his thoughts before pushing it to git.

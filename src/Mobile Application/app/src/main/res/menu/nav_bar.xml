@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_cards"
+        android:icon="@drawable/ic_credit_card_white_24dp"
+        android:title="@string/cards"/>
+    <item
+        android:id="@+id/action_requests"
+        android:icon="@drawable/ic_receipt_white_24dp"
+        android:title="@string/requests"/>
+    <item
+        android:id="@+id/action_more"
+        android:icon="@drawable/ic_more_horiz_white_24dp"
+        android:title="@string/more"/>
+</menu>

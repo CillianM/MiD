@@ -22,3 +22,23 @@ Due to the weather my project proposal was pushed forward a week. Today the meet
 ## 31st October 2017
 
 I've finished writing the proposal and have received back Geoff's thoughts on it. He didn't see any major issues and he thought it was very thorough. I'll run over it a few more times for semantic/grammar errors but I'm happy with the layout so far.
+
+## 1st November 2017
+
+After completing the functional specification i've started to work on the client mobile application. This has come in the form of creating screens in android studio. The next job will be to put logic behind the screens.
+
+### Login Page
+
+![Login page mockup](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_login.jpg)
+
+### Card Select
+
+![Card selection mockup](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_card.jpg)
+
+### New Card Select
+
+![New card selection](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_select.jpg)
+
+
+## 7 November 2017
+I had my first meeting with Geoff today. It was a group meeting where we discussed where we were in terms of progress and what our next moves were. Since last week I've stood up my web server and implemented functionality into the screens from the previous post. I'll need to mock up web screens and hopefully implement simple versions of them. After that I'll need to start on my backend and creating the links required for interacting with the blockchain.

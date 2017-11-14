@@ -29,15 +29,16 @@ After completing the functional specification i've started to work on the client
 
 ### Login Page
 
-![Login page mockup](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_login.jpg)
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_login.jpg" alt="Login page mockup"width="504" height="896">
 
 ### Card Select
 
-![Card selection mockup](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_card.jpg)
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_card.jpg" alt="Card selection mockup"width="504" height="896">
+
 
 ### New Card Select
 
-![New card selection](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_select.jpg)
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_select.jpg" alt="New card selection"width="504" height="896">
 
 
 ## 7 November 2017
@@ -48,12 +49,11 @@ This weeks meeting was spent going over the web screens I mocked up over the wee
 
 ### Login Page
 
-![Web login page mockup](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_web_login.png)
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_web_login.png" alt="Web login page mockup"width="896" height="504">
 
 ### Submission Select
 
-![Submission selection mockup](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_select.png)
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_select.png" alt="Submission selection mockup"width="896" height="504">
 
 ### Submission View
-
-![Submission viewer](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_view.png)
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_view.png" alt="Submission view"width="896" height="504">

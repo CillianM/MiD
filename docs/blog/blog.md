@@ -48,12 +48,12 @@ This weeks meeting was spent going over the web screens I mocked up over the wee
 
 ### Login Page
 
-![Web login page mockup](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_web_login.jpg)
+![Web login page mockup](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_web_login.png)
 
 ### Submission Select
 
-![Submission selection mockup](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_select.jpg)
+![Submission selection mockup](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_select.png)
 
 ### Submission View
 
-![Submission viewer](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_view.jpg)
+![Submission viewer](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_view.png)

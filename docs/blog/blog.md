@@ -21,7 +21,7 @@ Due to the weather my project proposal was pushed forward a week. Today the meet
 
 ## 31st October 2017
 
-I've finished writing the proposal and have received back Geoff's thoughts on it. He didn't see any major issues and he thought it was very thorough. I'll run over it a few more times for semantic/grammar errors but I'm happy with the layout so far.
+I've finished writing the [functional specification](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/functional-spec/Functional%20Specification.pdf) and have received back Geoff's thoughts on it. He didn't see any major issues and he thought it was very thorough. I'll run over it a few more times for semantic/grammar errors but I'm happy with the layout so far.
 
 ## 1st November 2017
 
@@ -42,3 +42,18 @@ After completing the functional specification i've started to work on the client
 
 ## 7 November 2017
 I had my first meeting with Geoff today. It was a group meeting where we discussed where we were in terms of progress and what our next moves were. Since last week I've stood up my web server and implemented functionality into the screens from the previous post. I'll need to mock up web screens and hopefully implement simple versions of them. After that I'll need to start on my backend and creating the links required for interacting with the blockchain.
+
+## 14th November 2017
+This weeks meeting was spent going over the web screens I mocked up over the week. It's a skeleton application that will need functionality written into it at a later point. This will serve as the example site for an Identifying party's portal and will be used in any demo when discussing the platform as a whole. For this week i'd like to work on building up object diagrams of the backend along with initial construction of these objects into a spring project. I will also need to go over the functional spec and ensure there are no inconsistencies with what's currently being developed. It will also being a chance to triple check my grammar.
+
+### Login Page
+
+![Web login page mockup](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_web_login.jpg)
+
+### Submission Select
+
+![Submission selection mockup](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_select.jpg)
+
+### Submission View
+
+![Submission viewer](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_view.jpg)

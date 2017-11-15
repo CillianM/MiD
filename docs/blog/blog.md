@@ -57,3 +57,10 @@ This weeks meeting was spent going over the web screens I mocked up over the wee
 
 ### Submission View
 <img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_view.png" alt="Submission view"width="896" height="504">
+
+## 15th November 2017
+Over today i've looked into the structure of the main classes that will make up my backend. There will be smaller helper classes i'll need to look into further but i think i have the general structure of what i'd like. I've divided up each section of the backend into controllers which can be interacted with externally. These controllers will go on to access repositories of the objects that are being requested/updated. With this approach, I can seperate out functionality and make it cleaner overall. Along with this i've added initial firebase functionality into the mobile application. This is Google's clould messaging service and will allow me to send messages to any of the users if needs be. Primarily i'd use this for submission notifications but it can be used for other things. I'll continue to develop more diagrams over the week and i should hopefully have the classes up on git by the end of the week.
+
+### Initial Backend Class Diagram
+
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/backend_class_diagram.png" alt="Web login page mockup"width="1013" height="757">

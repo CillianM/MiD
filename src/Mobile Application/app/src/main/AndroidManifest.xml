@@ -33,6 +33,20 @@
         <activity
             android:name=".CardCreateActivity"
             android:theme="@style/AppBaseTheme"></activity>
+
+        <service android:name=".FirebaseTokenController">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".FirebaseMessagingService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

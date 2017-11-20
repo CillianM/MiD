@@ -63,4 +63,4 @@ Over today i've looked into the structure of the main classes that will make up 
 
 ### Initial Backend Class Diagram
 
-<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/backend_class_diagram.png" alt="Web login page mockup"width="1013" height="757">
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/backend_class_diagram.jpg" alt="Web login page mockup"width="1013" height="757">

@@ -64,3 +64,7 @@ Over today i've looked into the structure of the main classes that will make up 
 ### Initial Backend Class Diagram
 
 <img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/backend_class_diagram.jpg" alt="Web login page mockup"width="1013" height="757">
+
+## 21st November 2017
+After the meeting with Geoff today I decided to give one look back over the functional specification. After talking with him, I felt that there could be more diagrams in it aswell as a slightly different structure to some points. These have been addressed and i've pushed it to git.
+We also discussed the initial backend class diagram. He is happy with the progress with it. I've said that i'd like to further implement this diagram by next week. I have the initial structure coded but there is more to add to it before i want to show it to him.

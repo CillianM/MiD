@@ -68,3 +68,9 @@ Over today i've looked into the structure of the main classes that will make up 
 ## 21st November 2017
 After the meeting with Geoff today I decided to give one look back over the functional specification. After talking with him, I felt that there could be more diagrams in it aswell as a slightly different structure to some points. These have been addressed and i've pushed it to git.
 We also discussed the initial backend class diagram. He is happy with the progress with it. I've said that i'd like to further implement this diagram by next week. I have the initial structure coded but there is more to add to it before i want to show it to him.
+
+## 28th November 2017
+Last Friday (the 24th) was the deadline for the fuctional spec. I added some last minute updates to it, primarily some user stories and additional features. 
+The updated spec was run by Geoff and he was happy with the updates. Over the course of the week i've been putting togethere the classes that make up the backend diagram.
+I want the initial structure of things along with unit tests before I push anything up which should hopefully be over the next few days. There won't be a lot of functionality
+in the classes but I want to build up the overall structure and start expanding from there.

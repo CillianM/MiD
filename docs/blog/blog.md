@@ -59,18 +59,25 @@ This weeks meeting was spent going over the web screens I mocked up over the wee
 <img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_view.png" alt="Submission view"width="896" height="504">
 
 ## 15th November 2017
-Over today i've looked into the structure of the main classes that will make up my backend. There will be smaller helper classes i'll need to look into further but i think i have the general structure of what i'd like. I've divided up each section of the backend into controllers which can be interacted with externally. These controllers will go on to access repositories of the objects that are being requested/updated. With this approach, I can seperate out functionality and make it cleaner overall. Along with this i've added initial firebase functionality into the mobile application. This is Google's clould messaging service and will allow me to send messages to any of the users if needs be. Primarily i'd use this for submission notifications but it can be used for other things. I'll continue to develop more diagrams over the week and i should hopefully have the classes up on git by the end of the week.
+Over today i've looked into the structure of the main classes that will make up my backend. There will be smaller helper classes i'll need to look into further but i think i have the general structure of what i'd like. I've divided up each section of the backend into controllers which can be interacted with externally. These controllers will go on to access repositories of the objects that are being requested/updated. With this approach, I can separate out functionality and make it cleaner overall. Along with this i've added initial firebase functionality into the mobile application. This is Google's cloud messaging service and will allow me to send messages to any of the users if needs be. Primarily i'd use this for submission notifications but it can be used for other things. I'll continue to develop more diagrams over the week and i should hopefully have the classes up on git by the end of the week.
 
 ### Initial Backend Class Diagram
 
 <img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/backend_class_diagram.jpg" alt="Web login page mockup"width="1013" height="757">
 
 ## 21st November 2017
-After the meeting with Geoff today I decided to give one look back over the functional specification. After talking with him, I felt that there could be more diagrams in it aswell as a slightly different structure to some points. These have been addressed and i've pushed it to git.
+After the meeting with Geoff today I decided to give one look back over the functional specification. After talking with him, I felt that there could be more diagrams in it as well as a slightly different structure to some points. These have been addressed and i've pushed it to git.<br>
 We also discussed the initial backend class diagram. He is happy with the progress with it. I've said that i'd like to further implement this diagram by next week. I have the initial structure coded but there is more to add to it before i want to show it to him.
 
 ## 28th November 2017
-Last Friday (the 24th) was the deadline for the fuctional spec. I added some last minute updates to it, primarily some user stories and additional features. 
-The updated spec was run by Geoff and he was happy with the updates. Over the course of the week i've been putting togethere the classes that make up the backend diagram.
-I want the initial structure of things along with unit tests before I push anything up which should hopefully be over the next few days. There won't be a lot of functionality
-in the classes but I want to build up the overall structure and start expanding from there.
+Last Friday (the 24th) was the deadline for the functional spec. I added some last minute updates to it, primarily some user stories and additional features.
+The updated spec was run by Geoff and he was happy with the updates. Over the course of the week i've been putting together the classes that make up the backend diagram. <br>
+I want the initial structure of things along with unit tests before I push anything up which should hopefully be over the next few days. There won't be a lot of functionality in the classes but I want to build up the overall structure and start expanding from there.
+
+## 5th December 2017
+Over the past 2 weeks I have been busy with assignments and due to this the updates to the backend have been delayed. I've added the initial backend code to gitlab and attached a screenshot of the current swagger definitions. By having swagger integrated into my code I can easily document the API endpoints. I've also added initial unit tests for each class. Whenever I add a new class to the project a new unit test is created. This will make the building/testing flow of the project much easier. Over the course of the holidays I hope to have the backend in a semi-finished state, allowing me to fine tune it before I go back to working on the two UIs.<br>
+With the backend finished I can also start on the interface for the blockchain. There isn't as much of a rush to get this done as it can be emulated on the backend side but it is still a priority.
+
+
+## Backend Swagger Definitions
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/backend_swagger.png" alt="Web login page mockup"width="1013" height="757">

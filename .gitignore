@@ -198,6 +198,3 @@ Thumbs.db
 # mpeltonen/sbt-idea plugin
 **/.idea_modules/
 
-# Files not needing any updates
-**/application.properties
-

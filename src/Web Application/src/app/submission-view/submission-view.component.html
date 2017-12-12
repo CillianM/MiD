@@ -33,8 +33,9 @@
       </table>
       <br>
       <div class="button-group">
-        <button routerLink="/submissions" routerLinkActive="active">Accept</button>
-        <button routerLink="/submissions" routerLinkActive="active">Reject</button>
+        <button (click)='acceptRequest()'>Accept</button>
+        <button (click)='rejectRequest()'>Reject</button>
       </div>
+      <p>{{submissionMessage}}</p>
   </div>
 </div>

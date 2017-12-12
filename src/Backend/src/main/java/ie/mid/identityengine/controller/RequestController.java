@@ -2,6 +2,7 @@ package ie.mid.identityengine.controller;
 
 import ie.mid.identityengine.dto.InformationRequestDTO;
 import ie.mid.identityengine.dto.RequestDTO;
+import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.model.Request;
 import ie.mid.identityengine.model.User;
@@ -63,6 +64,7 @@ public class RequestController {
         //Contact the user with the id of the request
         JSONObject notificationObject = pushNotificationService.createNotification(
                 REQUESTHEADER,
+                NotificationType.REQUEST,
                 new String[]{"fields"},
                 new Object[]{fields}
         );

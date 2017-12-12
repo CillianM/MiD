@@ -7,25 +7,13 @@
 <div style="padding:0 16px;">
   <h2>Pending Submission Listings</h2>
   <table>
-    <tr>
+    <thead>
       <th>ID</th>
       <th>Date Submitted</th>
+    </thead>
+    <tr *ngFor="let submission of submissions">
+      <th><a routerLink="/submissions/{{submission.id}}" routerLinkActive="active">{{submission.id}}</a></th>
+      <th>{{submission.date}}</th>
     </tr>
-    <tr>
-      <td><a routerLink="/submissions/123456789" routerLinkActive="active">123456789</a></td>
-      <td>1/1/2018</td>
-    </tr>
-    <tr>
-      <td><a routerLink="/submissions/123456789" routerLinkActive="active">123456789</a></td>
-      <td>1/1/2018</td>
-    </tr>
-    <tr>
-      <td><a routerLink="/submissions/123456789" routerLinkActive="active">123456789</a></td>
-      <td>1/1/2018</td>
-    </tr>
-    <tr>
-      <td><a routerLink="/submissions/123456789" routerLinkActive="active">123456789</a></td>
-      <td>1/1/2018</td>
-  </tr>
   </table>
 </div>

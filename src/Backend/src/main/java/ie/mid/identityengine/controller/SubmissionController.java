@@ -42,6 +42,7 @@ public class SubmissionController {
         dto.setUserId(submission.getUserId());
         dto.setPartyId(submission.getPartyId());
         dto.setStatus(submission.getStatus());
+        dto.setDate(submission.getCreatedAt().toString());
         return dto;
     }
 
@@ -54,6 +55,7 @@ public class SubmissionController {
             dto.setUserId(submission.getUserId());
             dto.setPartyId(submission.getPartyId());
             dto.setStatus(submission.getStatus());
+            dto.setDate(submission.getCreatedAt().toString());
             submissionDTOList.add(dto);
         }));
         return submissionDTOList;

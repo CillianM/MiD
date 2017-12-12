@@ -7,6 +7,7 @@ public class SubmissionDTO {
     private String partyId;
     private String data;
     private String status;
+    private String date;
 
     public SubmissionDTO() {
     }
@@ -49,5 +50,13 @@ public class SubmissionDTO {
 
     public void setPartyId(String partyId) {
         this.partyId = partyId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

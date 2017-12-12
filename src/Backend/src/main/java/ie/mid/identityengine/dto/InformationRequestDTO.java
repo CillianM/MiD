@@ -2,43 +2,52 @@ package ie.mid.identityengine.dto;
 
 public class InformationRequestDTO {
 
-    private String sender;
-    private String recipient;
-    private String key;
-    private String desiredInformation;
+    private String senderId;
+    private String recipientId;
+    private String indentityTypeId;
+    private String identityTypeFields;
+    private String identityTypeValues;
 
     public InformationRequestDTO() {
     }
 
-    public String getSender() {
-        return sender;
+    public String getSenderId() {
+        return senderId;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 
-    public String getRecipient() {
-        return recipient;
+    public String getRecipientId() {
+        return recipientId;
     }
 
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
+    public void setRecipientId(String recipientId) {
+        this.recipientId = recipientId;
     }
 
-    public String getKey() {
-        return key;
+    public String getIndentityTypeId() {
+        return indentityTypeId;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setIndentityTypeId(String indentityTypeId) {
+        this.indentityTypeId = indentityTypeId;
     }
 
-    public String getDesiredInformation() {
-        return desiredInformation;
+    public String getIdentityTypeFields() {
+        return identityTypeFields;
     }
 
-    public void setDesiredInformation(String desiredInformation) {
-        this.desiredInformation = desiredInformation;
+    public void setIdentityTypeFields(String identityTypeFields) {
+        this.identityTypeFields = identityTypeFields;
+    }
+
+    public String getIdentityTypeValues() {
+        return identityTypeValues;
+    }
+
+    public void setIdentityTypeValues(String identityTypeValues) {
+        this.identityTypeValues = identityTypeValues;
     }
 }

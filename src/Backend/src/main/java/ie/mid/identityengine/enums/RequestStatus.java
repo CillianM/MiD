@@ -5,7 +5,8 @@ public enum RequestStatus {
     PENDING("PENDING"),
     ACCEPTED("ACCEPTED"),
     DROPPED("DROPPED"),
-    REJECTED("REJECTED");
+    REJECTED("REJECTED"),
+    RESCINDED("RESCINDED");
 
     private String status;
 

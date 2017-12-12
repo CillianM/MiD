@@ -18,14 +18,14 @@ public class IdentityTypeController {
     @Autowired
     IdentityTypeRepository identityTypeRepository;
 
-    @GetMapping(value = "/")
+    @GetMapping()
     @ResponseBody
     public List<IdentityTypeDTO> getIdentityTypes() {
         List<IdentityType> identityTypes = identityTypeRepository.findLatest();
         return getDtoList(identityTypes);
     }
 
-    @PostMapping(value = "/")
+    @PostMapping()
     @ResponseBody
     public IdentityTypeDTO createIdentityType(@RequestBody IdentityTypeDTO identityTypeToCreate) {
 

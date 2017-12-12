@@ -26,7 +26,7 @@ public class UserController {
         return userDTO;
     }
 
-    @PostMapping(value = "/")
+    @PostMapping()
     @ResponseBody
     public UserDTO createUser(@RequestBody UserDTO userToCreate) {
         User user = new User();

@@ -6,6 +6,9 @@ public class RequestDTO {
     private String sender;
     private String recipient;
     private String status;
+    private String indentityTypeId;
+    private String identityTypeFields;
+    private String identityTypeValues;
 
     public RequestDTO() {
     }
@@ -40,5 +43,29 @@ public class RequestDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getIndentityTypeId() {
+        return indentityTypeId;
+    }
+
+    public void setIndentityTypeId(String indentityTypeId) {
+        this.indentityTypeId = indentityTypeId;
+    }
+
+    public String getIdentityTypeFields() {
+        return identityTypeFields;
+    }
+
+    public void setIdentityTypeFields(String identityTypeFields) {
+        this.identityTypeFields = identityTypeFields;
+    }
+
+    public String getIdentityTypeValues() {
+        return identityTypeValues;
+    }
+
+    public void setIdentityTypeValues(String identityTypeValues) {
+        this.identityTypeValues = identityTypeValues;
     }
 }

@@ -32,6 +32,26 @@ public class PushNotificationService {
         return null;
     }
 
+    public JSONObject createNotification(String heading, String body, String to, String[] keys, Object[] data) {
+        JSONObject bodyObject = new JSONObject();
+        bodyObject.put("token", to);
+        bodyObject.put("priority", "high");
+
+        JSONObject notification = new JSONObject();
+        notification.put("title", heading);
+        notification.put("body", body);
+
+        JSONObject dataObject = new JSONObject();
+        for (int i = 0; i < data.length; i++) {
+            dataObject.put(keys[i], data[i]);
+        }
+
+        bodyObject.put("notification", notification);
+        bodyObject.put("data", data);
+
+        return notification;
+    }
+
     @Async
     CompletableFuture<String> sendMessage(HttpEntity<String> entity) {
 

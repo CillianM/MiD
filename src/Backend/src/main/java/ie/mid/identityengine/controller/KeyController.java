@@ -24,7 +24,7 @@ public class KeyController {
         return new KeyDTO(key.getId(), key.getUserId(), key.getKey(), key.getStatus());
     }
 
-    @PostMapping(value = "/")
+    @PostMapping()
     @ResponseBody
     public KeyDTO createKey(@RequestBody KeyDTO keyToCreate) {
         Key key = new Key();

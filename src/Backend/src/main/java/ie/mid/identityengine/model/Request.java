@@ -19,6 +19,12 @@ public class Request {
     private String sender;
     @Column(name = "recipient")
     private String recipient;
+    @Column(name = "type_id")
+    private String indentityTypeId;
+    @Column(name = "type_fields")
+    private String identityTypeFields;
+    @Column(name = "user_response")
+    private String userResponse;
     @Column(name = "status")
     private String status;
     @CreationTimestamp
@@ -77,5 +83,29 @@ public class Request {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getIndentityTypeId() {
+        return indentityTypeId;
+    }
+
+    public void setIndentityTypeId(String indentityTypeId) {
+        this.indentityTypeId = indentityTypeId;
+    }
+
+    public String getIdentityTypeFields() {
+        return identityTypeFields;
+    }
+
+    public void setIdentityTypeFields(String identityTypeFields) {
+        this.identityTypeFields = identityTypeFields;
+    }
+
+    public String getUserResponse() {
+        return userResponse;
+    }
+
+    public void setUserResponse(String userResponse) {
+        this.userResponse = userResponse;
     }
 }

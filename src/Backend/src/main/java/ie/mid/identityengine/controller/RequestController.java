@@ -63,12 +63,10 @@ public class RequestController {
         //Contact the user with the id of the request
         JSONObject notificationObject = pushNotificationService.createNotification(
                 REQUESTHEADER,
-                REQUESTBODY,
-                user.getFcmToken(),
                 new String[]{"fields"},
                 new Object[]{fields}
         );
-        pushNotificationService.sendNotification(notificationObject);
+        pushNotificationService.sendNotification(user.getFcmToken(), notificationObject);
         request.setStatus(RequestStatus.PENDING.toString());
         requestRepository.save(request);
 

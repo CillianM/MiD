@@ -1,6 +1,6 @@
-package ie.mid.identityengine.dto;
+package ie.mid.pojo;
 
-public class UserDTO {
+public class User {
 
     private String id;
     private String fcmToken;
@@ -8,7 +8,7 @@ public class UserDTO {
     private String keyId;
     private String publicKey;
 
-    public UserDTO() {
+    public User() {
     }
 
     public String getId() {

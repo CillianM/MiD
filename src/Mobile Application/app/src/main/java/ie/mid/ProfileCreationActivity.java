@@ -27,16 +27,24 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.math.BigInteger;
 import java.nio.channels.FileChannel;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
+import ie.mid.backend.UserService;
+import ie.mid.model.Profile;
 import ie.mid.view.RoundedImageView;
 
 public class ProfileCreationActivity extends AppCompatActivity implements Validator.ValidationListener {
 
     Validator validator;
     private static final int RESULT_LOAD_IMAGE = 100;
+    private static Random random = new SecureRandom();
 
 
     @NotEmpty
@@ -48,7 +56,7 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
 
     Button createButton;
     RoundedImageView profileImage;
-    String selectedImagePath;
+    String selectedImagePath = "PUG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +91,18 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
 
     @Override
     public void onValidationSucceeded() {
-        Toast.makeText(this, "Yay! we got it right!", Toast.LENGTH_SHORT).show();
+        byte[] salt = getSalt();
+        byte[] hashedPassword = hashPassword(password.getText().toString(), salt);
+
+        UserService user = new UserService(this);
+        Profile profile = new Profile();
+        profile.setName(nickname.getText().toString());
+        profile.setSalt(new BigInteger(salt).toString(16));
+        profile.setHash(new BigInteger(hashedPassword).toString(16));
+        profile.setImageUrl(selectedImagePath);
+        profile = user.createUser(profile);
+        Intent intent = new Intent(getApplicationContext(),ProfileSelectionActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -184,4 +203,30 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
         }
         return finalPath;
     }
+
+    private static byte[] getSalt() {
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        return salt;
+    }
+    private static byte[] hashPassword(String password, byte[] salt) {
+        byte[] saltedPassword = concatenateArrays(password.getBytes(), salt);
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = messageDigest.digest(saltedPassword);
+            for (int i = 0; i < 200 - 1; i++) {
+                hash = messageDigest.digest(hash);
+            }
+            return hash;
+        } catch (NoSuchAlgorithmException e) {
+            throw new AssertionError("Error while hashing: " + e.getMessage(), e);
+        }
+    }
+    private static byte[] concatenateArrays(byte[] a, byte[] b) {
+        byte[] concatenatedArray = new byte[a.length + b.length];
+        System.arraycopy(a, 0, concatenatedArray, 0, a.length);
+        System.arraycopy(b, 0, concatenatedArray, a.length, b.length);
+        return concatenatedArray;
+    }
+
 }

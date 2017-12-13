@@ -34,7 +34,6 @@
         android:layout_alignEnd="@+id/roundedImageView"
         android:layout_alignStart="@+id/roundedImageView"
         android:layout_centerVertical="true"
-        android:entries="@array/test_names"
         android:prompt="@string/profile_prompt" />
 
     <Button
@@ -48,7 +47,8 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:background="@color/colorPrimaryDark"
-        android:text="@string/login" />
+        android:text="@string/login"
+        />
 
 
 </RelativeLayout>

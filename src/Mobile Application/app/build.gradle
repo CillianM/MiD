@@ -38,6 +38,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'jp.wasabeef:picasso-transformations:2.1.2'
     compile 'com.mobsandgeeks:android-saripaar:2.0.3'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }

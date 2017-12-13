@@ -1,5 +1,6 @@
 package ie.mid.identityengine.controller;
 
+import ie.mid.identityengine.dto.KeyDTO;
 import ie.mid.identityengine.dto.UserDTO;
 import ie.mid.identityengine.enums.EntityStatus;
 import ie.mid.identityengine.model.User;
@@ -14,6 +15,9 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    KeyController keyController;
 
     @GetMapping(value = "/{id}")
     @ResponseBody
@@ -32,7 +36,15 @@ public class UserController {
         User user = new User();
         user.setFcmToken(userToCreate.getFcmToken());
         user.setStatus(EntityStatus.ACTIVE.toString());
-        userToCreate.setId(userRepository.save(user).getId());
+        user = userRepository.save(user);
+        userToCreate.setId(user.getId());
+        //create key for user
+        KeyDTO keyDTO = new KeyDTO();
+        keyDTO.setPublicKey(userToCreate.getPublicKey());
+        keyDTO.setUserId(user.getId());
+        keyDTO = keyController.createKey(keyDTO);
+        userToCreate.setKeyId(keyDTO.getId());
+        userToCreate.setStatus(user.getStatus());
         return userToCreate;
     }
 

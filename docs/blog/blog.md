@@ -81,3 +81,8 @@ With the backend finished I can also start on the interface for the blockchain. 
 
 ## Backend Swagger Definitions
 <img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/backend_swagger.png" alt="Web login page mockup"width="1013" height="757">
+
+## 29th January 2018
+I was extremely busy over the course of the christmas break which lead to a decrease in the amount of free time i had to work on the project. With the start of the new semester I will hopefully be able to use the first few weeks to get the bulk
+of the work done. I primarily need to set the android app up to take in and send out requests to the backend. The UI isn't much of an issue right now and can be tweaked as time goes on. Right now I have simple communication with the backend and from here 
+I can use it as a base to expand into what I want. The next few days will be spent getting the android app up to speed on the communication I want it to have and then its down to fine tuning it while I work on the functionality behind those calls in the backend.

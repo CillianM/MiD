@@ -24,8 +24,8 @@ public class BackendService {
         this.endpointExtention = endpointExtention;
     }
 
-    public String sendGet(String json){
-        String [] params = new String[]{"GET",json};
+    public String sendGet(String json) {
+        String[] params = new String[]{"GET", json};
         try {
             return new BackendCaller().execute(params).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -34,8 +34,8 @@ public class BackendService {
         return null;
     }
 
-    public String sendPost(String json){
-        String [] params = new String[]{"POST",json};
+    public String sendPost(String json) {
+        String[] params = new String[]{"POST", json};
         try {
             return new BackendCaller().execute(params).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -44,8 +44,8 @@ public class BackendService {
         return null;
     }
 
-    public String sendPut(String json){
-        String [] params = new String[]{"PUT",json};
+    public String sendPut(String json) {
+        String[] params = new String[]{"PUT", json};
         try {
             return new BackendCaller().execute(params).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -54,8 +54,8 @@ public class BackendService {
         return null;
     }
 
-    public String sendDelete(String json){
-        String [] params = new String[]{"DELETE",json};
+    public String sendDelete(String json) {
+        String[] params = new String[]{"DELETE", json};
         try {
             return new BackendCaller().execute(params).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -72,52 +72,88 @@ public class BackendService {
         this.endpointExtention = endpointExtention;
     }
 
-    private class BackendCaller extends AsyncTask<String,Void,String>{
+    //TODO Clean up and seperate out the background calls into GET,POST,PUT and DELETE rather than the unified one
+    private class BackendCaller extends AsyncTask<String, Void, String> {
 
         private String returnedValue;
+
         @Override
         protected String doInBackground(String... strings) {
             try {
-                URL url = new URL(ENDPOINT + getEndpointExtention());
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                if (strings[0].equals("GET")) {
+                    return sendGet(ENDPOINT + getEndpointExtention());
+                } else {
+                    URL url = new URL(ENDPOINT + getEndpointExtention());
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-                conn.setUseCaches(false);
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
+                    conn.setUseCaches(false);
+                    conn.setDoInput(true);
+                    conn.setDoOutput(true);
 
-                conn.setRequestMethod(strings[0]);
-                conn.setRequestProperty("Content-Type", "application/json");
-                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                wr.write(strings[1]);
-                wr.flush();
-                wr.close();
+                    conn.setRequestMethod(strings[0]);
+                    conn.setRequestProperty("Content-Type", "application/json");
+                    OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+                    if (strings[1].length() > 0)
+                        wr.write(strings[1]);
+                    wr.flush();
+                    wr.close();
 
-                int responseCode = conn.getResponseCode();
-                System.out.println("Response Code : " + responseCode);
+                    int responseCode = conn.getResponseCode();
+                    System.out.println("Response Code : " + responseCode);
 
-                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    String inputLine;
+                    StringBuilder response = new StringBuilder();
 
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+
+                    returnedValue = response.toString();
+                    return response.toString();
                 }
-                in.close();
-
-                returnedValue = response.toString();
-                return response.toString();
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 System.out.println(e);
             }
 
             returnedValue = null;
             return null;
         }
+
         protected void onPostExecute(String feed) {
             // TODO: check this.exception
             // TODO: do something with the feed
+        }
+
+        private String sendGet(String url) throws Exception {
+
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            // optional default is GET
+            con.setRequestMethod("GET");
+
+            //add request header
+            con.setRequestProperty("Content-Type", "application/json");
+
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'GET' request to URL : " + url);
+            System.out.println("Response Code : " + responseCode);
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            //print result
+            return response.toString();
+
         }
     }
 }

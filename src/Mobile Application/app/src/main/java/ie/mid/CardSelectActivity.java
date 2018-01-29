@@ -13,11 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ie.mid.adapter.CardSelectAdapter;
+import ie.mid.backend.IdentityTypeService;
 import ie.mid.model.AvailableCard;
+import ie.mid.pojo.IdentityType;
 
 public class CardSelectActivity extends AppCompatActivity {
 
     GridView gridView;
+    IdentityTypeService identityTypeService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,25 +51,23 @@ public class CardSelectActivity extends AppCompatActivity {
     }
 
     private List<AvailableCard> getListData(){
-        AvailableCard data1 = new AvailableCard("Passport", "http://irishpost.co.uk/wp-content/uploads/2016/10/Ireland_Passport_featured.jpg");
-        AvailableCard data2 = new AvailableCard("Drivers License", "http://www.laoissc.com/wp-content/uploads/sites/4/2014/12/National-Driver-Licence-Service-Logo.png");
-        AvailableCard data3 = new AvailableCard("Public Services Card", "https://pbs.twimg.com/profile_images/905375014270242817/yHHuC5Hz_400x400.jpg");
-        AvailableCard data11 = new AvailableCard("Passport", "http://irishpost.co.uk/wp-content/uploads/2016/10/Ireland_Passport_featured.jpg");
-        AvailableCard data22 = new AvailableCard("Drivers License", "http://www.laoissc.com/wp-content/uploads/sites/4/2014/12/National-Driver-Licence-Service-Logo.png");
-        AvailableCard data33 = new AvailableCard("Public Services Card", "https://pbs.twimg.com/profile_images/905375014270242817/yHHuC5Hz_400x400.jpg");
-        AvailableCard data111 = new AvailableCard("Passport", "http://irishpost.co.uk/wp-content/uploads/2016/10/Ireland_Passport_featured.jpg");
-        AvailableCard data222 = new AvailableCard("Drivers License", "http://www.laoissc.com/wp-content/uploads/sites/4/2014/12/National-Driver-Licence-Service-Logo.png");
-        AvailableCard data333 = new AvailableCard("Public Services Card", "https://pbs.twimg.com/profile_images/905375014270242817/yHHuC5Hz_400x400.jpg");
         ArrayList<AvailableCard> listOfData = new ArrayList<>();
-        listOfData.add(data1);
-        listOfData.add(data2);
-        listOfData.add(data3);
-        listOfData.add(data11);
-        listOfData.add(data22);
-        listOfData.add(data33);
-        listOfData.add(data111);
-        listOfData.add(data222);
-        listOfData.add(data333);
+        identityTypeService = new IdentityTypeService(getApplicationContext());
+        List<IdentityType> identityTypeList = identityTypeService.getIdentityTypes();
+        for (IdentityType identityType : identityTypeList) {
+            String imgUrl = "";
+            String title = "";
+            String[] array = identityType.getFields().split(",");
+            for (String field : array) {
+                if (field.contains("imgUrl")) {
+                    imgUrl = field.substring(field.indexOf(":") + 1);
+                    AvailableCard availableCard = new AvailableCard(title, imgUrl);
+                    listOfData.add(availableCard);
+                } else if (field.contains("title")) {
+                    title = field.substring(field.indexOf(":") + 1);
+                }
+            }
+        }
         return listOfData;
     }
 }

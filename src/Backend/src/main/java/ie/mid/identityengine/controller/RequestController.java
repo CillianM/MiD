@@ -40,14 +40,12 @@ public class RequestController {
         requestDTO.setIdentityTypeFields(request.getIdentityTypeFields());
         requestDTO.setIdentityTypeValues(request.getUserResponse());
         requestDTO.setIndentityTypeId(request.getIndentityTypeId());
-        return new RequestDTO();
+        return requestDTO;
     }
 
     @PostMapping
     @ResponseBody
     public RequestDTO createRequest(@RequestBody InformationRequestDTO informationRequestDTO) {
-        //TODO implement creation of request
-
         //Create the request to be tracked
         Request request = new Request();
         request.setRecipient(informationRequestDTO.getRecipientId());

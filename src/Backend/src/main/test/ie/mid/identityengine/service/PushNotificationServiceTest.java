@@ -1,19 +1,18 @@
 package ie.mid.identityengine.service;
 
-import org.junit.Before;
 import org.junit.Test;
 
 public class PushNotificationServiceTest {
-    @Before
-    public void setUp() throws Exception {
+
+    @Test
+    public void sendNotification() {
     }
 
     @Test
-    public void sendNotification() throws Exception {
+    public void createNotification() {
     }
 
     @Test
-    public void sendMessage() throws Exception {
+    public void sendMessage() {
     }
-
 }

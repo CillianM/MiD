@@ -87,6 +87,7 @@ public class IdentityTypeController {
     public IdentityTypeDTO deleteIdentityType(@PathVariable String partyId, @PathVariable String id) {
         IdentityType identityType = identityTypeRepository.findById(id);
         identityType.setStatus(IdentityTypeStatus.DELETED.toString());
+        identityTypeRepository.save(identityType);
         IdentityTypeDTO dto = new IdentityTypeDTO();
         dto.setFields(identityType.getFields());
         dto.setId(identityType.getId());

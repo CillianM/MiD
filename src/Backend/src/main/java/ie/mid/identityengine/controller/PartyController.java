@@ -20,7 +20,7 @@ public class PartyController {
 
     @GetMapping
     @ResponseBody
-    public List<PartyDTO> getParties(@PathVariable String id) {
+    public List<PartyDTO> getParties() {
         List<Party> parties = partyRepository.findAll();
         List<PartyDTO> partyDTOList = new ArrayList<>();
         parties.forEach(party -> {

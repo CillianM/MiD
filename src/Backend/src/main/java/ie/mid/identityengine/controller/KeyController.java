@@ -31,7 +31,7 @@ public class KeyController {
         key.setStatus(KeyStatus.ACTIVE.toString());
         key.setKey(keyToCreate.getPublicKey());
         key.setUserId(keyToCreate.getUserId());
-        keyRepository.save(key);
+        key = keyRepository.save(key);
         return new KeyDTO(key.getId(), key.getUserId(), key.getKey(), key.getStatus());
     }
 
@@ -42,7 +42,7 @@ public class KeyController {
         Key upgradedKey = new Key(keyDTO.getUserId(), keyDTO.getPublicKey());
         key.setStatus(KeyStatus.UPGRADED.toString());
         keyRepository.save(key);
-        keyRepository.save(upgradedKey);
+        upgradedKey = keyRepository.save(upgradedKey);
         return new KeyDTO(upgradedKey.getId(), upgradedKey.getUserId(), upgradedKey.getKey(), upgradedKey.getStatus());
     }
 

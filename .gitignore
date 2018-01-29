@@ -201,4 +201,5 @@ Thumbs.db
 # Sonar files
 src/Mobile Application/.scannerwork/*
 src/Backend/.scannerwork/*
+**/.idea/sonarIssues.xml
 

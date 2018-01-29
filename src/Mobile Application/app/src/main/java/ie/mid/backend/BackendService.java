@@ -28,9 +28,7 @@ public class BackendService {
         String [] params = new String[]{"GET",json};
         try {
             return new BackendCaller().execute(params).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return null;
@@ -40,9 +38,7 @@ public class BackendService {
         String [] params = new String[]{"POST",json};
         try {
             return new BackendCaller().execute(params).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return null;
@@ -52,9 +48,7 @@ public class BackendService {
         String [] params = new String[]{"PUT",json};
         try {
             return new BackendCaller().execute(params).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return null;
@@ -64,9 +58,7 @@ public class BackendService {
         String [] params = new String[]{"DELETE",json};
         try {
             return new BackendCaller().execute(params).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return null;

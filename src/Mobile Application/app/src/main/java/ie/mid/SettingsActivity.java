@@ -17,8 +17,8 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     protected void onApplyThemeResource(Resources.Theme theme, int resid, boolean first) {
-        resid = R.style.AppBaseTheme;
-        super.onApplyThemeResource(theme, resid, true);
+        int baseTheme = R.style.AppBaseTheme;
+        super.onApplyThemeResource(theme, baseTheme, true);
 
     }
 

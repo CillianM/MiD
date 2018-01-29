@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +28,7 @@ import com.mobsandgeeks.saripaar.annotation.Password;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.UUID;
@@ -75,8 +77,8 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Build.VERSION.SDK_INT>22){
-                    requestPermissions(new String[] {"android.permission.WRITE_EXTERNAL_STORAGE","android.permission.READ_EXTERNAL_STORAGE","android.permission.MANAGE_DOCUMENTS"}, 1);
+                if (Build.VERSION.SDK_INT > 22) {
+                    requestPermissions(new String[]{"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE", "android.permission.MANAGE_DOCUMENTS"}, 1);
                 }
             }
         });
@@ -148,9 +150,7 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
                 if (!(grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
                     Toast.makeText(this, "Permission denied to access your location.", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                } else {
                     Intent i = new Intent(
                             Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(i, RESULT_LOAD_IMAGE);
@@ -175,7 +175,7 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             String copiedImage = copyImage(picturePath);
-            if(!copiedImage.equals(null)){
+            if (copiedImage != null) {
                 Bitmap bitmap = BitmapFactory.decodeFile(copiedImage);
                 selectedImagePath = copiedImage;
                 profileImage.setImageBitmap(bitmap);
@@ -194,31 +194,36 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
         progressBar.setVisibility(View.GONE);
     }
 
-    private String copyImage(String filePath){
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private String copyImage(String filePath) {
         String finalPath = null;
         String extension = filePath.substring(filePath.lastIndexOf("."));
         File sourceImage = new File(filePath);
         if (!sourceImage.exists()) {
-            return finalPath;
+            return null;
         }
-        try{
-            PackageManager packageManager = getPackageManager();
-            String packageName = getPackageName();
-            PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
-            packageName = packageInfo.applicationInfo.dataDir;
-            String newPath = packageName +  "/profile_img/";
-            File newImagePath = new File(newPath);
-            if (!newImagePath.exists()) {
-                newImagePath.mkdirs();
-            }
-            finalPath = newPath + UUID.randomUUID().toString() + extension;
-            File newImage = new File(finalPath);
+        PackageManager packageManager = getPackageManager();
+        String packageName = getPackageName();
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = packageManager.getPackageInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            return null;
+        }
+        packageName = packageInfo.applicationInfo.dataDir;
+        String newPath = packageName + "/profile_img/";
+        File newImagePath = new File(newPath);
+        if (!newImagePath.exists()) {
+            newImagePath.mkdirs();
+        }
+        finalPath = newPath + UUID.randomUUID().toString() + extension;
+        File newImage = new File(finalPath);
+        try {
             newImage.createNewFile();
-
-            FileChannel source = null;
-            FileChannel destination = null;
-            source = new FileInputStream(sourceImage).getChannel();
-            destination = new FileOutputStream(newImage).getChannel();
+        } catch (IOException e) {
+            return null;
+        }
+        try (FileChannel source = new FileInputStream(sourceImage).getChannel(); FileChannel destination = new FileOutputStream(newImage).getChannel()) {
             if (destination != null && source != null) {
                 destination.transferFrom(source, 0, source.size());
             }
@@ -229,8 +234,7 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
                 destination.close();
             }
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
         return finalPath;

@@ -198,3 +198,7 @@ Thumbs.db
 # mpeltonen/sbt-idea plugin
 **/.idea_modules/
 
+# Sonar files
+src/Mobile Application/.scannerwork/*
+src/Backend/.scannerwork/*
+

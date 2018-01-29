@@ -3,8 +3,8 @@ package ie.mid;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,6 +29,7 @@ public class ProfileSelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_selection);
+        profileImage = (RoundedImageView) findViewById(R.id.user_profile_photo);
 
         DatabaseHandler handler = new DatabaseHandler(this);
         handler.open();
@@ -46,7 +47,9 @@ public class ProfileSelectionActivity extends AppCompatActivity {
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
+                    intent.putExtra("user", profiles.get(profileSpinner.getSelectedItemPosition()).getId());
                     startActivity(intent);
                 }
             });
@@ -61,8 +64,8 @@ public class ProfileSelectionActivity extends AppCompatActivity {
             });
 
             profileSpinner = (Spinner) findViewById(R.id.profile_spinner);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(),
-                    R.layout.list_item_spinner, names);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
+                    R.layout.spinner_item, names);
             profileSpinner.setAdapter(adapter);
 
             profileSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -72,6 +75,8 @@ public class ProfileSelectionActivity extends AppCompatActivity {
                     if(!imagePath.equals("PUG")) {
                         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
                         profileImage.setImageBitmap(bitmap);
+                    } else {
+                        profileImage.setImageDrawable(getResources().getDrawable(R.drawable.pug));
                     }
                 }
 

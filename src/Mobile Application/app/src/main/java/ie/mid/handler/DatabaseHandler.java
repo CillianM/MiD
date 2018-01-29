@@ -159,8 +159,8 @@ public class DatabaseHandler {
         content.put(PROFILE_NAME,name);
         content.put(PROFILE_IMG,profileImg);
         content.put(SERVER_ID,serverId);
-        content.put(HASH,privateKey);
-        content.put(SALT,publicKey);
+        content.put(HASH, hash);
+        content.put(SALT, salt);
         content.put(PRIVATE_KEY,privateKey);
         content.put(PUBLIC_KEY,publicKey);
         content.put(CREATION_DATE, date);
@@ -223,6 +223,28 @@ public class DatabaseHandler {
     public int returnAmountOfProfiles()
     {
         return (int) DatabaseUtils.queryNumEntries(db, PROFILE_TABLE_NAME);
+    }
+
+    public Profile getProfile(String id) {
+        String selectQuery = "SELECT ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,SERVER_ID,PRIVATE_KEY,PUBLIC_KEY FROM " + PROFILE_TABLE_NAME + " WHERE " + ID + "='" + id + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        Profile profile = new Profile();
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                profile = new Profile(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getString(7)
+                );
+            }
+            return profile;
+        }
+        return null;
     }
 
     public List<Profile> returnProfiles()

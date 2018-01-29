@@ -8,13 +8,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -22,30 +23,24 @@ import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.ConfirmPassword;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.math.BigInteger;
 import java.nio.channels.FileChannel;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import ie.mid.backend.UserService;
 import ie.mid.model.Profile;
+import ie.mid.util.HashUtil;
+import ie.mid.util.InternetUtil;
 import ie.mid.view.RoundedImageView;
 
 public class ProfileCreationActivity extends AppCompatActivity implements Validator.ValidationListener {
 
     Validator validator;
     private static final int RESULT_LOAD_IMAGE = 100;
-    private static Random random = new SecureRandom();
-
 
     @NotEmpty
     EditText nickname;
@@ -55,13 +50,26 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
     private EditText confirmPassword;
 
     Button createButton;
+    ImageButton setttingsButton;
     RoundedImageView profileImage;
+    ProgressBar progressBar;
     String selectedImagePath = "PUG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_creation);
+
+        progressBar = (ProgressBar) findViewById(R.id.account_loading);
+
+        setttingsButton = (ImageButton) findViewById(R.id.settings_button);
+        setttingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         profileImage = (RoundedImageView) findViewById(R.id.profile_image);
         profileImage.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +92,7 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 validator.validate();
             }
         });
@@ -91,22 +100,33 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
 
     @Override
     public void onValidationSucceeded() {
-        byte[] salt = getSalt();
-        byte[] hashedPassword = hashPassword(password.getText().toString(), salt);
+        showLoading();
+        if (InternetUtil.isNetworkAvailable(getApplicationContext())) {
+            byte[] salt = HashUtil.getSalt();
+            byte[] hashedPassword = HashUtil.hashPassword(password.getText().toString(), salt);
 
-        UserService user = new UserService(this);
-        Profile profile = new Profile();
-        profile.setName(nickname.getText().toString());
-        profile.setSalt(new BigInteger(salt).toString(16));
-        profile.setHash(new BigInteger(hashedPassword).toString(16));
-        profile.setImageUrl(selectedImagePath);
-        profile = user.createUser(profile);
-        Intent intent = new Intent(getApplicationContext(),ProfileSelectionActivity.class);
-        startActivity(intent);
+            UserService userService = new UserService(this);
+            Profile profile = new Profile();
+            profile.setName(nickname.getText().toString());
+            profile.setSalt(HashUtil.byteToHex(salt));
+            profile.setHash(HashUtil.byteToHex(hashedPassword));
+            profile.setImageUrl(selectedImagePath);
+            profile = userService.createUser(profile);
+            if (profile != null) {
+                Intent intent = new Intent(getApplicationContext(), ProfileSelectionActivity.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(getApplicationContext(), "Error creating profile please try again later", Toast.LENGTH_LONG).show();
+                hideLoading();
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "Network not available please try again later", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
     public void onValidationFailed(List<ValidationError> errors) {
+        hideLoading();
         for (ValidationError error : errors) {
             View view = error.getView();
             String message = error.getCollatedErrorMessage(this);
@@ -157,9 +177,21 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
             String copiedImage = copyImage(picturePath);
             if(!copiedImage.equals(null)){
                 Bitmap bitmap = BitmapFactory.decodeFile(copiedImage);
+                selectedImagePath = copiedImage;
                 profileImage.setImageBitmap(bitmap);
+
             }
         }
+    }
+
+    void showLoading() {
+        createButton.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    void hideLoading() {
+        createButton.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
     }
 
     private String copyImage(String filePath){
@@ -204,29 +236,5 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
         return finalPath;
     }
 
-    private static byte[] getSalt() {
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        return salt;
-    }
-    private static byte[] hashPassword(String password, byte[] salt) {
-        byte[] saltedPassword = concatenateArrays(password.getBytes(), salt);
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = messageDigest.digest(saltedPassword);
-            for (int i = 0; i < 200 - 1; i++) {
-                hash = messageDigest.digest(hash);
-            }
-            return hash;
-        } catch (NoSuchAlgorithmException e) {
-            throw new AssertionError("Error while hashing: " + e.getMessage(), e);
-        }
-    }
-    private static byte[] concatenateArrays(byte[] a, byte[] b) {
-        byte[] concatenatedArray = new byte[a.length + b.length];
-        System.arraycopy(a, 0, concatenatedArray, 0, a.length);
-        System.arraycopy(b, 0, concatenatedArray, a.length, b.length);
-        return concatenatedArray;
-    }
 
 }

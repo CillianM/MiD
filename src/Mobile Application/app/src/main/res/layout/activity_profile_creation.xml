@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
     tools:context="ie.mid.ProfileCreationActivity">
+
+    <ImageButton
+        android:id="@+id/settings_button"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_settings_black_24dp" />
 
     <ie.mid.view.RoundedImageView
         android:id="@+id/profile_image"
@@ -77,6 +87,17 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
         android:background="@color/colorPrimary"
+        android:visibility="visible"
         android:text="Create" />
+
+    <ProgressBar
+        android:id="@+id/account_loading"
+        android:indeterminate="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/input_layout_password_confirm"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:visibility="gone" />
 
 </RelativeLayout>

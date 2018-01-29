@@ -5,16 +5,13 @@ import android.content.Context;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import ie.mid.handler.DatabaseHandler;
 import ie.mid.model.Profile;
 import ie.mid.pojo.User;
+import ie.mid.util.HashUtil;
 
 public class UserService {
 
@@ -25,7 +22,7 @@ public class UserService {
     public UserService(Context context) {
         this.context = context;
         this.mapper = new ObjectMapper();
-        this.backendService = new BackendService("/user");
+        this.backendService = new BackendService(context, "/user");
     }
 
     public void updateFcm(String fcm) {
@@ -46,8 +43,8 @@ public class UserService {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             keyPairGenerator.initialize(2048);
             KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            profile.setPrivateKey(new BigInteger( keyPair.getPrivate().getEncoded()).toString(16));
-            profile.setPublicKey(new BigInteger(keyPair.getPublic().getEncoded()).toString(16));
+            profile.setPrivateKey(HashUtil.byteToHex(keyPair.getPrivate().getEncoded()));
+            profile.setPublicKey(HashUtil.byteToHex(keyPair.getPublic().getEncoded()));
 
 
             DatabaseHandler handler = new DatabaseHandler(context);
@@ -60,10 +57,12 @@ public class UserService {
             user.setFcmToken(fcm);
             String json = mapper.writeValueAsString(user);
             String createdUser = backendService.sendPost(json);
-            user = mapper.readValue(createdUser, User.class);
-
-            //save to local storage
-            return handler.createProfile(profile.getName(), profile.getImageUrl(), profile.getHash(), profile.getSalt(),user.getId(), profile.getPublicKey(),profile.getPrivateKey());
+            if (createdUser != null) {
+                user = mapper.readValue(createdUser, User.class);
+                //save to local storage
+                return handler.createProfile(profile.getName(), profile.getImageUrl(), profile.getHash(), profile.getSalt(), user.getId(), profile.getPublicKey(), profile.getPrivateKey());
+            }
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
         }

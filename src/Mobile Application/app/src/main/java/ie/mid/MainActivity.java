@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.util.SparseArrayCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -14,7 +12,7 @@ import ie.mid.fragments.CardFragment;
 import ie.mid.fragments.MoreFragment;
 import ie.mid.fragments.RequestsFragment;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
 
     @Override

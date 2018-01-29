@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="General">
+        <EditTextPreference
+            android:defaultValue="@string/default_server_address"
+            android:key="@string/key_server_address"
+            android:summary="@string/default_server_address"
+            android:title="@string/title_gallery_storage" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_header_about">
+
+        <Preference
+            android:summary="@string/app_version"
+            android:title="@string/title_version" />
+
+        <Preference
+            android:key="@string/key_send_feedback"
+            android:summary="@string/summary_feedback"
+            android:title="@string/title_send_feedback" />
+
+        <Preference
+            android:summary="@string/summary_git"
+            android:title="@string/title_git">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/url_git" />
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

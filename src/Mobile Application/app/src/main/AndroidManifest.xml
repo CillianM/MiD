@@ -6,9 +6,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name="ie.mid.BaseApplication"
+        android:name=".BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -33,7 +34,7 @@
         <activity android:name=".ProfileCreationActivity" />
         <activity
             android:name=".CardCreateActivity"
-            android:theme="@style/AppBaseTheme"></activity>
+            android:theme="@style/AppBaseTheme" />
 
         <service android:name=".FirebaseTokenController">
             <intent-filter>
@@ -45,9 +46,14 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>

@@ -1,8 +1,9 @@
 package ie.mid.backend;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
-
-import org.json.JSONObject;
+import android.preference.PreferenceManager;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -13,10 +14,13 @@ import java.util.concurrent.ExecutionException;
 
 public class BackendService {
 
-    private static final String ENDPOINT = "http://10.0.2.2:8080"; //BACKEND URL GOES HERE
+    private static String ENDPOINT = "http://10.0.2.2:8080"; //BACKEND URL GOES HERE
     private String endpointExtention;
 
-    public BackendService(String endpointExtention) {
+    public BackendService(Context context, String endpointExtention) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        ENDPOINT = prefs.getString("key_server_address", null);
         this.endpointExtention = endpointExtention;
     }
 

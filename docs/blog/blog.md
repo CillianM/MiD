@@ -2,7 +2,7 @@
 
 **Cillian Mc Neill**
 
-##Note
+## Note
 Over the course of the project I will be working off a Trello board in place of an agile task tracker. This will allow me to compile each task and the work required for each. it can be found [here](https://trello.com/b/Lp2PAf1i/mid-identity-engine)
 
 ## 25th September 2017

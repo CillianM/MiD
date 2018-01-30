@@ -27,6 +27,9 @@ public class UserController {
         userDTO.setId(user.getId());
         userDTO.setFcmToken(user.getFcmToken());
         userDTO.setStatus(user.getStatus());
+        KeyDTO latestKey = keyController.getKey(id);
+        userDTO.setKeyId(latestKey.getId());
+        userDTO.setPublicKey(latestKey.getPublicKey());
         return userDTO;
     }
 

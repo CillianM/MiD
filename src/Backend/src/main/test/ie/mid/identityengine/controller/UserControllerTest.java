@@ -39,6 +39,7 @@ public class UserControllerTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(userRepository.findById(anyString())).thenReturn(user);
         when(keyController.createKey(any(KeyDTO.class))).thenReturn(key);
+        when(keyController.getKey(anyString())).thenReturn(key);
     }
 
     @Test

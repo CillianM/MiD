@@ -2,6 +2,9 @@
 
 **Cillian Mc Neill**
 
+##Note
+Over the course of the project I will be working off a Trello board in place of an agile task tracker. This will allow me to compile each task and the work required for each. it can be found [here](https://trello.com/b/Lp2PAf1i/mid-identity-engine)
+
 ## 25th September 2017
 
 I decided to get started on work and research regarding my project this week. This would involve initial drafting of my project proposal and researching the various technologies I want to use in my solution. Primarily the research will focus on Hyperledger and the implementations of it currently available. As It's open-source, there will be a lot of varied documentation on it but I'm confident in what's currently there from what I have previously found. My main source of information will come from [their own documentation pages](https://hyperledger-fabric.readthedocs.io/en/latest/)
@@ -86,3 +89,13 @@ With the backend finished I can also start on the interface for the blockchain. 
 I was extremely busy over the course of the christmas break which lead to a decrease in the amount of free time i had to work on the project. With the start of the new semester I will hopefully be able to use the first few weeks to get the bulk
 of the work done. I primarily need to set the android app up to take in and send out requests to the backend. The UI isn't much of an issue right now and can be tweaked as time goes on. Right now I have simple communication with the backend and from here 
 I can use it as a base to expand into what I want. The next few days will be spent getting the android app up to speed on the communication I want it to have and then its down to fine tuning it while I work on the functionality behind those calls in the backend.
+
+## 30th January 2018
+I was able to meet with Geoff today and discuss where I am with the project. Work is progressing steadily and there is currently nothing blocking me. I have taken massive steps in wrapping up the Android side of things over the last few days and by the end of the week i should hopefully
+have everything I need to allow a user to user it as intended. The backend is slowly reflecting the updates to the app but the big changes will come later in the week (primarily the submission handling). With the app out of the way (functionality-wise) i'd like to get some
+more opinions on the UI. I've approached students within my year for tips on it and so far there is nothing glaring. I feel once the functionality is there the flaws will be more prominant.
+I have also added [swagger](https://www.sonarqube.org/) to keep track of development and any bugs that arise. It will also keep track of all tests created and document code coverage. Ideally I want to keep above 80% so that will be the goal going forward.
+
+### Sonar Dashboard
+
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/sonar_dash.png" alt="Web login page mockup"width="896" height="504">

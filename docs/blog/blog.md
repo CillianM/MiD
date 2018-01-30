@@ -94,8 +94,8 @@ I can use it as a base to expand into what I want. The next few days will be spe
 I was able to meet with Geoff today and discuss where I am with the project. Work is progressing steadily and there is currently nothing blocking me. I have taken massive steps in wrapping up the Android side of things over the last few days and by the end of the week i should hopefully
 have everything I need to allow a user to user it as intended. The backend is slowly reflecting the updates to the app but the big changes will come later in the week (primarily the submission handling). With the app out of the way (functionality-wise) i'd like to get some
 more opinions on the UI. I've approached students within my year for tips on it and so far there is nothing glaring. I feel once the functionality is there the flaws will be more prominant.
-I have also added [swagger](https://www.sonarqube.org/) to keep track of development and any bugs that arise. It will also keep track of all tests created and document code coverage. Ideally I want to keep above 80% so that will be the goal going forward.
+I have also added [sonar](https://www.sonarqube.org/) to keep track of development and any bugs that arise. It will also keep track of all tests created and document code coverage. Ideally I want to keep above 80% so that will be the goal going forward.
 
-### Sonar Dashboard
+### Sonar Dashboard - Initial Setup
 
 <img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/sonar_dash.png" alt="Web login page mockup"width="896" height="504">

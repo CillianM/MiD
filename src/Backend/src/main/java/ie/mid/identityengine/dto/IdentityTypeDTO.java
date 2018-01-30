@@ -1,10 +1,17 @@
 package ie.mid.identityengine.dto;
 
+import ie.mid.identityengine.model.Field;
+
+import java.util.List;
+
 public class IdentityTypeDTO {
 
     private String id;
     private String partyId;
-    private String fields;
+    private String name;
+    private String iconImg;
+    private String coverImg;
+    private List<Field> fields;
     private int versionNumber;
     private String status;
 
@@ -19,11 +26,11 @@ public class IdentityTypeDTO {
         this.partyId = partyId;
     }
 
-    public String getFields() {
+    public List<Field> getFields() {
         return fields;
     }
 
-    public void setFields(String fields) {
+    public void setFields(List<Field> fields) {
         this.fields = fields;
     }
 
@@ -49,5 +56,29 @@ public class IdentityTypeDTO {
 
     public void setVersionNumber(int versionNumber) {
         this.versionNumber = versionNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getIconImg() {
+        return iconImg;
+    }
+
+    public void setIconImg(String iconImg) {
+        this.iconImg = iconImg;
+    }
+
+    public String getCoverImg() {
+        return coverImg;
+    }
+
+    public void setCoverImg(String coverImg) {
+        this.coverImg = coverImg;
     }
 }

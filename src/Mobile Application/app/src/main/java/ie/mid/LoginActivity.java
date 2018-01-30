@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         byte[] hashedPassword = HashUtil.hashPassword(typedPin, salt);
         if (Arrays.equals(hashedPassword, correctHash)) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("userId", userId);
             startActivity(intent);
         } else {
             pinLayout.clearPassword();

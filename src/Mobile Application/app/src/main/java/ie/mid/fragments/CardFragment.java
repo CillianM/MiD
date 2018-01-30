@@ -18,15 +18,11 @@ import android.widget.Toast;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import ie.mid.CardSelectActivity;
 import ie.mid.ProfileSelectionActivity;
 import ie.mid.R;
-import ie.mid.enums.CardStatus;
-import ie.mid.enums.DataType;
-import ie.mid.model.CardData;
+import ie.mid.handler.DatabaseHandler;
 import ie.mid.model.CardType;
 
 /**
@@ -38,6 +34,7 @@ public class CardFragment extends Fragment  {
     private MaterialViewPager mViewPager;
     private List<CardType> cardTypes;
     private CardType currentCardType;
+    String userId;
 
     public static CardFragment newInstance() {
         return new CardFragment();
@@ -52,6 +49,7 @@ public class CardFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        userId = getArguments().getString("userId");
         return inflater.inflate(R.layout.fragment_card, container, false);
     }
 
@@ -64,10 +62,6 @@ public class CardFragment extends Fragment  {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.new_card:
-                intent = new Intent(getActivity(), CardSelectActivity.class);
-                startActivity(intent);
-                break;
             case R.id.edit_card:
                 Toast.makeText(getActivity(), currentCardType.getTitle(), Toast.LENGTH_SHORT)
                         .show();
@@ -125,48 +119,10 @@ public class CardFragment extends Fragment  {
     }
 
     public List<CardType> getCards(){
-        CardData data1 = new CardData("Test Data 1", DataType.PRIMARY.toString());
-        data1.setDataIcon(R.drawable.ic_vpn_key_black_48dp);
-        CardData data2 = new CardData("Test Data 2", DataType.SECONDARY.toString());
-        data2.setDataIcon(R.drawable.ic_person_black_48dp);
-        CardData data3 = new CardData("Test Data 3", DataType.TERTIARY.toString());
-        data3.setDataIcon(R.drawable.ic_cake_black_48dp);
-        CardData data4 = new CardData("Test Data 4", DataType.TERTIARY.toString());
-        data4.setDataIcon(R.drawable.ic_home_black_48dp);
-        CardData data5 = new CardData("Test Data 5", DataType.TERTIARY.toString());
-        data5.setDataIcon(R.drawable.ic_home_black_48dp);
-        ArrayList<CardData> listOfData = new ArrayList<>();
-        listOfData.add(data1);
-        listOfData.add(data2);
-        listOfData.add(data3);
-        listOfData.add(data4);
-        listOfData.add(data5);
-        CardType a = new CardType();
-        a.setTitle("Drivers Licence");
-        a.setDescription("This is your drivers license. It should be carried with you at all times when on the road." +
-                "\nFor more information on your card or any other queries please visit www.ndls.ie");
-        a.setDefaultColor(R.color.blue);
-        a.setImageUrl("http://student.computing.dcu.ie/~mcneilc2/ndls.jpg");
-        a.setDataList(listOfData);
-        a.setStatus(CardStatus.ACCEPTED.toString());
-        CardType b = new CardType();
-        b.setTitle("Passport");
-        b.setDescription("This is a Passport");
-        b.setDefaultColor(R.color.red);
-        b.setImageUrl("http://student.computing.dcu.ie/~mcneilc2/passport.jpg");
-        b.setDataList(listOfData);
-        b.setStatus(CardStatus.PENDING.toString());
-        CardType c = new CardType();
-        c.setTitle("Public Services Card");
-        c.setDescription("This is a Public Services Card");
-        c.setDefaultColor(R.color.cyan);
-        c.setImageUrl("http://student.computing.dcu.ie/~mcneilc2/psc.png");
-        c.setStatus(CardStatus.REJECTED.toString());
-        c.setDataList(listOfData);
-        ArrayList<CardType> listOfCards = new ArrayList<>();
-        listOfCards.add(a);
-        listOfCards.add(b);
-        listOfCards.add(c);
+        DatabaseHandler handler = new DatabaseHandler(getActivity().getApplicationContext());
+        handler.open();
+        List<CardType> listOfCards = handler.getUserCards(userId);
+        handler.close();
         return listOfCards;
     }
 }

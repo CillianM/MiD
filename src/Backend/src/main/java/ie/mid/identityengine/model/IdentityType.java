@@ -17,6 +17,12 @@ public class IdentityType {
     private String id;
     @Column(name = "party_id")
     private String partyId;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "coverImg")
+    private String coverImg;
+    @Column(name = "iconImg")
+    private String iconImg;
     @Column(name = "fields")
     private String fields;
     @Column(name = "version_number")
@@ -73,6 +79,30 @@ public class IdentityType {
 
     public void setVersionNumber(int versionNumber) {
         this.versionNumber = versionNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCoverImg() {
+        return coverImg;
+    }
+
+    public void setCoverImg(String coverImg) {
+        this.coverImg = coverImg;
+    }
+
+    public String getIconImg() {
+        return iconImg;
+    }
+
+    public void setIconImg(String iconImg) {
+        this.iconImg = iconImg;
     }
 
     public Date getCreatedAt() {

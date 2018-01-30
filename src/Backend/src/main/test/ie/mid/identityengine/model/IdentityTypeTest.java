@@ -27,6 +27,10 @@ public class IdentityTypeTest {
     private static final String NEW_FIELDS = "field3,field4";
     private static final Date DATE = new Date();
     private static final Date NEW_DATE = new Date();
+    private static final String NAME = "name";
+    private static final String NEW_NAME = "new_name";
+    private static final String IMG = "img";
+    private static final String NEW_IMG = "new_img";
 
     @Before
     public void setUp() throws Exception {
@@ -38,6 +42,9 @@ public class IdentityTypeTest {
         identityType.setCreatedAt(DATE);
         identityType.setUpdatedAt(DATE);
         identityType.setStatus(STATUS);
+        identityType.setName(NAME);
+        identityType.setCoverImg(IMG);
+        identityType.setIconImg(IMG);
 
     }
 
@@ -127,6 +134,42 @@ public class IdentityTypeTest {
         identityType.setUpdatedAt(NEW_DATE);
         assertEquals(identityType.getUpdatedAt(), NEW_DATE);
         identityType.setUpdatedAt(DATE);
+    }
+
+    @Test
+    public void getName() {
+        assertEquals(identityType.getName(), NAME);
+    }
+
+    @Test
+    public void setName() {
+        identityType.setName(NEW_NAME);
+        assertEquals(identityType.getName(), NEW_NAME);
+        identityType.setName(NAME);
+    }
+
+    @Test
+    public void getIconImg() {
+        assertEquals(identityType.getIconImg(), IMG);
+    }
+
+    @Test
+    public void setIconImg() {
+        identityType.setIconImg(NEW_IMG);
+        assertEquals(identityType.getIconImg(), NEW_IMG);
+        identityType.setStatus(IMG);
+    }
+
+    @Test
+    public void getCoverImg() {
+        assertEquals(identityType.getCoverImg(), IMG);
+    }
+
+    @Test
+    public void setCoverImg() {
+        identityType.setCoverImg(NEW_IMG);
+        assertEquals(identityType.getCoverImg(), NEW_IMG);
+        identityType.setCoverImg(IMG);
     }
 
 }

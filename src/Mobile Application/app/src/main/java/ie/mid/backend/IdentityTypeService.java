@@ -23,7 +23,7 @@ public class IdentityTypeService {
 
     public List<IdentityType> getIdentityTypes() {
 
-        String identityTypeListing = backendService.sendGet("");
+        String identityTypeListing = backendService.sendGet();
         if (identityTypeListing != null) {
             try {
                 return mapper.readValue(

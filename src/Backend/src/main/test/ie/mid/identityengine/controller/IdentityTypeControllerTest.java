@@ -1,6 +1,8 @@
 package ie.mid.identityengine.controller;
 
 import ie.mid.identityengine.dto.IdentityTypeDTO;
+import ie.mid.identityengine.enums.FieldType;
+import ie.mid.identityengine.model.Field;
 import ie.mid.identityengine.model.IdentityType;
 import ie.mid.identityengine.repository.IdentityTypeRepository;
 import org.junit.Before;
@@ -29,15 +31,23 @@ public class IdentityTypeControllerTest {
     private IdentityTypeRepository identityTypeRepository;
 
     private static final String ID = "id";
+    private static final String FIELD = "field";
+    private static final String FIELDS = "1:2,3:4";
+    private IdentityTypeDTO identityTypeDTO = new IdentityTypeDTO();
+    private List<IdentityTypeDTO> identityTypeDTOList = new ArrayList<>();
+
 
     @Before
     public void setUp() throws Exception {
         IdentityType identityType = new IdentityType();
         identityType.setId(ID);
+        identityType.setFields(FIELDS);
         List<IdentityType> identityTypeList = new ArrayList<>();
         identityTypeList.add(identityType);
-        IdentityTypeDTO identityTypeDTO = Mockito.mock(IdentityTypeDTO.class);
-        List<IdentityTypeDTO> identityTypeDTOList = new ArrayList<>();
+        Field field = new Field(FIELD,FieldType.ADDRESS);
+        List<Field> fieldList =new ArrayList<>();
+        fieldList.add(field);
+        identityTypeDTO.setFields(fieldList);
         identityTypeDTOList.add(identityTypeDTO);
 
         when(identityTypeRepository.findById(anyString())).thenReturn(identityType);
@@ -54,8 +64,8 @@ public class IdentityTypeControllerTest {
 
     @Test
     public void createIdentityType() throws Exception {
-        IdentityTypeDTO identityTypeDTO = identityTypeController.createIdentityType(new IdentityTypeDTO());
-        assertEquals(identityTypeDTO.getId(), ID);
+        IdentityTypeDTO identityType = identityTypeController.createIdentityType(identityTypeDTO);
+        assertEquals(identityType.getId(), ID);
     }
 
     @Test
@@ -72,8 +82,8 @@ public class IdentityTypeControllerTest {
 
     @Test
     public void updateIdentityType() throws Exception {
-        IdentityTypeDTO identityTypeDTO = identityTypeController.updateIdentityType(ID, ID, new IdentityTypeDTO());
-        assertNotNull(identityTypeDTO);
+        IdentityTypeDTO identityType = identityTypeController.updateIdentityType(ID, ID, identityTypeDTO);
+        assertNotNull(identityType);
     }
 
     @Test

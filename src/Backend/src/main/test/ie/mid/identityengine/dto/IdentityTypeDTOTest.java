@@ -1,10 +1,14 @@
 package ie.mid.identityengine.dto;
 
+import ie.mid.identityengine.enums.FieldType;
+import ie.mid.identityengine.model.Field;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,17 +23,29 @@ public class IdentityTypeDTOTest {
     private static final String STATUS = "status";
     private static final String NEW_STATUS = "new_status";
     private static final String NEW_FIELDS = "field3,field4";
-    private static final Date DATE = new Date();
-    private static final Date NEW_DATE = new Date();
+    private static final String NAME = "name";
+    private static final String NEW_NAME = "new_name";
+    private static final String IMG = "img";
+    private static final String NEW_IMG = "new_img";
+    private Field field = new Field(NAME, FieldType.ADDRESS);
+    private List<Field> fieldList = new ArrayList<>();
+    private Field newField = new Field(NEW_NAME, FieldType.ADDRESS);
+    private List<Field> newFieldList = new ArrayList<>();
 
     @Before
     public void setUp() throws Exception {
+        fieldList.add(field);
+        newFieldList.add(newField);
+        fieldList.add(field);
         identityType = new IdentityTypeDTO();
         identityType.setId(ID);
         identityType.setPartyId(ID);
-        identityType.setFields(FIELDS);
+        identityType.setFields(fieldList);
         identityType.setVersionNumber(1);
         identityType.setStatus(STATUS);
+        identityType.setName(NAME);
+        identityType.setCoverImg(IMG);
+        identityType.setIconImg(IMG);
 
     }
 
@@ -59,13 +75,14 @@ public class IdentityTypeDTOTest {
 
     @Test
     public void getFields() throws Exception {
+        assertEquals(identityType.getFields().get(0).getName(), NAME);
     }
 
     @Test
     public void setFields() throws Exception {
-        identityType.setFields(NEW_FIELDS);
-        assertEquals(identityType.getFields(), NEW_FIELDS);
-        identityType.setFields(FIELDS);
+        identityType.setFields(newFieldList);
+        assertEquals(identityType.getFields().get(0).getName(), NEW_NAME);
+        identityType.setFields(fieldList);
     }
 
     @Test
@@ -90,5 +107,41 @@ public class IdentityTypeDTOTest {
         identityType.setStatus(NEW_STATUS);
         assertEquals(identityType.getStatus(), NEW_STATUS);
         identityType.setStatus(STATUS);
+    }
+
+    @Test
+    public void getName() {
+        assertEquals(identityType.getName(), NAME);
+    }
+
+    @Test
+    public void setName() {
+        identityType.setName(NEW_NAME);
+        assertEquals(identityType.getName(), NEW_NAME);
+        identityType.setName(NAME);
+    }
+
+    @Test
+    public void getIconImg() {
+        assertEquals(identityType.getIconImg(), IMG);
+    }
+
+    @Test
+    public void setIconImg() {
+        identityType.setIconImg(NEW_IMG);
+        assertEquals(identityType.getIconImg(), NEW_IMG);
+        identityType.setStatus(IMG);
+    }
+
+    @Test
+    public void getCoverImg() {
+        assertEquals(identityType.getCoverImg(), IMG);
+    }
+
+    @Test
+    public void setCoverImg() {
+        identityType.setCoverImg(NEW_IMG);
+        assertEquals(identityType.getCoverImg(), NEW_IMG);
+        identityType.setCoverImg(IMG);
     }
 }

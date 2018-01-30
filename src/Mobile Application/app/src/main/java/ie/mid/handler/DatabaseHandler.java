@@ -14,7 +14,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import ie.mid.R;
+import ie.mid.enums.DataType;
 import ie.mid.model.AvailableCard;
+import ie.mid.model.CardData;
+import ie.mid.model.CardType;
+import ie.mid.model.Field;
 import ie.mid.model.Profile;
 
 public class DatabaseHandler {
@@ -50,26 +55,30 @@ public class DatabaseHandler {
 
     //Card data variables
     private static final String CARD_ID = "card_id";
-    private static final String DATA = "data";
+    private static final String TITLE = "title";
+    private static final String COVER_IMG_URL = "cover_img_url";
+    private static final String FIELD_NAME = "field_name";
+    private static final String FIELD_VALUE = "field_value";
     private static final String OWNER = "owner";
     private static final String STATUS_CODE = "status_code";
     private static final String CARD_TABLE_NAME = "cards";
     private static final String CARD_TABLE_CREATE = "create table " + CARD_TABLE_NAME + " (" +
             ID + " text not null, " +
+            TITLE + " text not null," +
             CARD_ID + " text not null," +
             OWNER + " text not null," +
-            DATA + " text not null," +
+            FIELD_NAME + " text not null," +
+            FIELD_VALUE + " text not null," +
+            COVER_IMG_URL + " text not null," +
             STATUS_CODE + " text not null," +
             CREATION_DATE + " text not null," +
             UPDATED_DATE + " text not null" +
             ");";
 
     //Available card variables
-    private static final String TITLE = "title";
     private static final String DESCRIPTION = "description";
     private static final String CARD_FIELDS = "card_fields";
     private static final String ICON_IMG_URL = "icon_img_url";
-    private static final String COVER_IMG_URL = "cover_img_url";
     private static final String BACKEND_ID = "backend_id";
     private static final String VERSION_NUMBER = "version_number";
     private static final String AVAILABLE_CARD_TABLE_NAME = "available_cards";
@@ -181,16 +190,18 @@ public class DatabaseHandler {
         return new AvailableCard(id,title,iconUrl,coverUrl,versionNumber);
     }
 
-    public String createCard(String title, String description,String owner,String data,String statusCode)
+    public String createCard(String cardId, String title, String owner, String fieldName, String fieldValue, String coverImg, String statusCode)
     {
         String id = UUID.randomUUID().toString();
         String date = new Date().toString();
         ContentValues content = new ContentValues();
         content.put(ID, id);
+        content.put(CARD_ID, cardId);
         content.put(TITLE,title);
-        content.put(description,owner);
         content.put(OWNER,owner);
-        content.put(DATA,data);
+        content.put(COVER_IMG_URL, coverImg);
+        content.put(FIELD_NAME, fieldName);
+        content.put(FIELD_VALUE, fieldValue);
         content.put(STATUS_CODE,statusCode);
         content.put(CREATION_DATE, date);
         content.put(UPDATED_DATE, date);
@@ -247,6 +258,69 @@ public class DatabaseHandler {
         return null;
     }
 
+    public List<CardType> getUserCards(String id) {
+        String selectQuery = "SELECT ID ,TITLE ,CARD_ID ,OWNER ,FIELD_NAME ,FIELD_VALUE, COVER_IMG_URL,STATUS_CODE FROM " + CARD_TABLE_NAME + " WHERE " + OWNER + "='" + id + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        List<CardType> cardDataList = new ArrayList<>();
+
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                CardType cardType = new CardType();
+                cardType.setTitle(cursor.getString(1));
+                cardType.setDefaultColor(R.color.blue);
+                cardType.setStatus(cursor.getString(6));
+                cardType.setImageUrl(cursor.getString(7));
+                List<Field> fieldList = getFieldList(cursor.getString(4));
+                cardType.setDataList(getCardData(fieldList, cursor.getString(5)));
+                cardDataList.add(cardType);
+            }
+            return cardDataList;
+        }
+        return null;
+    }
+
+    private List<Field> getFieldList(String fieldString) {
+        String[] fieldArray = fieldString.split(",");
+        List<Field> fieldList = new ArrayList<>();
+        for (String field : fieldArray) {
+            DataType fieldType = DataType.findDataType(field.substring(field.indexOf(":") + 1));
+            if (fieldType != null) {
+                fieldList.add(new Field(field.substring(0, field.indexOf(":")), fieldType.toString()));
+            }
+        }
+        return fieldList;
+    }
+
+    private ArrayList<CardData> getCardData(List<Field> fieldList, String values) {
+        ArrayList<CardData> cardDataList = new ArrayList<>();
+        String[] valuesArray = values.split(",");
+        for (int i = 0; i < valuesArray.length; i++) {
+            CardData cardData = new CardData(valuesArray[i], fieldList.get(i).getType());
+            cardData.setDataIcon(getDataIcon(fieldList.get(i).getType()));
+            cardDataList.add(cardData);
+        }
+        return cardDataList;
+    }
+
+    private int getDataIcon(String type) {
+        switch (type) {
+            case "KEY":
+                return R.drawable.ic_vpn_key_black_48dp;
+            case "EXPIRY":
+                return R.drawable.ic_date_range_black_48dp;
+            case "FIRSTNAME":
+                return R.drawable.ic_person_black_48dp;
+            case "SURNAME":
+                return R.drawable.ic_person_black_48dp;
+            case "ADDRESS":
+                return R.drawable.ic_home_black_48dp;
+            case "BIRTHDAY":
+                return R.drawable.ic_cake_black_48dp;
+            default:
+                return R.drawable.ic_person_black_48dp;
+        }
+    }
+
     public List<Profile> returnProfiles()
     {
         Cursor cursor =  db.query(PROFILE_TABLE_NAME, new String[]{ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,SERVER_ID,PRIVATE_KEY,PUBLIC_KEY}, null, null, null, null, null);
@@ -297,15 +371,17 @@ public class DatabaseHandler {
         return true;
     }
 
-    public int returnAmountOfCards()
+    public boolean hasCards(String id)
     {
-        return (int) DatabaseUtils.queryNumEntries(db, CARD_TABLE_NAME);
+        String selectQuery = "SELECT ID FROM " + CARD_TABLE_NAME + " WHERE " + OWNER + "='" + id + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        return cursor.getCount() != 0;
     }
 
-    public boolean updateCardData(String id,String data)
+    public boolean updateCardData(String id, String fieldValue)
     {
         ContentValues content = new ContentValues();
-        content.put(DATA,data);
+        content.put(FIELD_VALUE, fieldValue);
         db.update(CARD_TABLE_NAME,content,ID + " = ?", new String[] { id });
         return true;
     }

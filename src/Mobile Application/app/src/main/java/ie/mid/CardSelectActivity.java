@@ -21,10 +21,13 @@ public class CardSelectActivity extends AppCompatActivity {
 
     GridView gridView;
     IdentityTypeService identityTypeService;
+    List<IdentityType> identityTypeList;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userId = getIntent().getStringExtra("userId");
         setContentView(R.layout.activity_card_select);
         getSupportActionBar().setTitle("Identity Selection");
 
@@ -42,6 +45,8 @@ public class CardSelectActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getApplicationContext(), CardCreateActivity.class);
+                intent.putExtra("card", identityTypeList.get(i));
+                intent.putExtra("userId", userId);
                 startActivity(intent);
             }
         });
@@ -53,20 +58,10 @@ public class CardSelectActivity extends AppCompatActivity {
     private List<AvailableCard> getListData(){
         ArrayList<AvailableCard> listOfData = new ArrayList<>();
         identityTypeService = new IdentityTypeService(getApplicationContext());
-        List<IdentityType> identityTypeList = identityTypeService.getIdentityTypes();
+        identityTypeList = identityTypeService.getIdentityTypes();
         for (IdentityType identityType : identityTypeList) {
-            String imgUrl = "";
-            String title = "";
-            String[] array = identityType.getFields().split(",");
-            for (String field : array) {
-                if (field.contains("imgUrl")) {
-                    imgUrl = field.substring(field.indexOf(":") + 1);
-                    AvailableCard availableCard = new AvailableCard(title, imgUrl);
-                    listOfData.add(availableCard);
-                } else if (field.contains("title")) {
-                    title = field.substring(field.indexOf(":") + 1);
-                }
-            }
+            AvailableCard availableCard = new AvailableCard(identityType.getName(), identityType.getIconImg());
+            listOfData.add(availableCard);
         }
         return listOfData;
     }

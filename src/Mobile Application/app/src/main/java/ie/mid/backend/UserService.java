@@ -60,7 +60,9 @@ public class UserService {
             if (createdUser != null) {
                 user = mapper.readValue(createdUser, User.class);
                 //save to local storage
-                return handler.createProfile(profile.getName(), profile.getImageUrl(), profile.getHash(), profile.getSalt(), user.getId(), profile.getPublicKey(), profile.getPrivateKey());
+                profile = handler.createProfile(profile.getName(), profile.getImageUrl(), profile.getHash(), profile.getSalt(), user.getId(), profile.getPublicKey(), profile.getPrivateKey());
+                handler.close();
+                return profile;
             }
             return null;
         } catch (Exception e) {

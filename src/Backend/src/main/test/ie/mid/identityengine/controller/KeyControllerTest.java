@@ -25,6 +25,7 @@ public class KeyControllerTest {
     private KeyRepository keyRepository;
 
     private static final String ID = "id";
+    private static final String SERVER = "SERVER";
 
     @Before
     public void setUp() throws Exception {
@@ -39,6 +40,12 @@ public class KeyControllerTest {
     public void getKey() throws Exception {
         KeyDTO key = keyController.getKey(ID);
         assertEquals(key.getId(), ID);
+    }
+
+    @Test
+    public void getKeyForServer() throws Exception {
+        KeyDTO key = keyController.getKey(SERVER);
+        assertEquals(key.getId(), SERVER);
     }
 
     @Test

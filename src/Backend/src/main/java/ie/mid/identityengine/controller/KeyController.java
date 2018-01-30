@@ -6,6 +6,7 @@ import ie.mid.identityengine.enums.KeyStatus;
 import ie.mid.identityengine.model.Key;
 import ie.mid.identityengine.repository.KeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +18,18 @@ public class KeyController {
     @Autowired
     KeyRepository keyRepository;
 
+    @Value("${mid.public}")
+    private String publicServerKey;
+
+    @Value("${mid.private}")
+    private String privateServerKey;
+
     @GetMapping(value = "/{ownerId}")
     @ResponseBody
     public KeyDTO getKey(@PathVariable String ownerId) {
+        if (ownerId.equals("SERVER")) {
+            return new KeyDTO("SERVER", "SERVER", publicServerKey, KeyStatus.ACTIVE.toString());
+        }
         Key key = keyRepository.findByUserIdAndStatus(ownerId, EntityStatus.ACTIVE.toString());
         return new KeyDTO(key.getId(), key.getUserId(), key.getKey(), key.getStatus());
     }

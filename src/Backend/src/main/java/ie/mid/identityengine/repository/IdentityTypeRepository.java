@@ -13,9 +13,9 @@ public interface IdentityTypeRepository extends JpaRepository<IdentityType, Long
     @Query("SELECT i FROM IdentityType i WHERE i.id=?1 AND i.versionNumber = (SELECT max(i2.versionNumber) FROM IdentityType i2 WHERE i2.id = i.id)")
     IdentityType findById(String id);
 
-    @Query("SELECT i from IdentityType i WHERE i.versionNumber = (SELECT max(i.versionNumber) FROM IdentityType i2 WHERE i2.id = i.id)")
+    @Query("SELECT i from IdentityType i WHERE i.status = 'ACTIVE' AND i.versionNumber = (SELECT max(i.versionNumber) FROM IdentityType i2 WHERE i2.id = i.id)")
     List<IdentityType> findLatest();
 
-    @Query("SELECT i from IdentityType i WHERE i.partyId=?1 AND i.versionNumber = (SELECT max(i.versionNumber) FROM IdentityType i2 WHERE i2.id = i.id)")
+    @Query("SELECT i from IdentityType i WHERE i.partyId=?1 AND i.status = 'ACTIVE' AND i.versionNumber = (SELECT max(i.versionNumber) FROM IdentityType i2 WHERE i2.id = i.id)")
     List<IdentityType> findLatestByPartyId(String partyId);
 }

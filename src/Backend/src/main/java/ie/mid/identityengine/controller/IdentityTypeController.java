@@ -134,8 +134,11 @@ public class IdentityTypeController {
     private String getFieldString(List<Field> fieldList){
         StringBuilder stringBuilder = new StringBuilder();
         for(Field field: fieldList){
-            String fieldString = field.getName() + ":" + field.getType() + ",";
-            stringBuilder.append(fieldString);
+            FieldType fieldType = FieldType.findFieldType(field.getType());
+            if(fieldType != null) {
+                String fieldString = field.getName() + ":" + fieldType.toString() + ",";
+                stringBuilder.append(fieldString);
+            }
         }
         stringBuilder.deleteCharAt(stringBuilder.length()-1);
         return stringBuilder.toString();

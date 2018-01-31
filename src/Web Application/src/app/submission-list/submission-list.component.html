@@ -1,19 +1,36 @@
 <ul class="topnav">
-  <li><a>NDLS Verification Portal</a></li>
-  <li><a class="active">Submission Listing</a></li>
+  <li><a>MiD Verification Portal</a></li>
+  <li><a class="active" href="/party">Party Listing</a></li>
   <li class="right"><a href="/login">Logout</a></li>
 </ul>
 
 <div style="padding:0 16px;">
   <h2>Pending Submission Listings</h2>
-  <table>
-    <thead>
-      <th>ID</th>
-      <th>Date Submitted</th>
-    </thead>
-    <tr *ngFor="let submission of submissions">
-      <th><a routerLink="/submissions/{{submission.id}}" routerLinkActive="active">{{submission.id}}</a></th>
-      <th>{{submission.date}}</th>
-    </tr>
-  </table>
+  <div class="table100 ver1 m-b-110">
+    <div class="table100-head">
+      <table>
+        <thead>
+          <tr>
+            <th class="column-head">Submission Id</th>
+            <th class="column-head">User Id</th>
+            <th class="column-head">Status</th>
+            <th class="column-head">Date Submitted</th>
+          </tr>    
+        </thead>
+      </table>
+    </div>
+
+    <div class="table100-body">
+      <table>
+        <tbody>
+          <tr *ngFor="let submission of submissions">
+            <td class="column"><a routerLink="{{submission.id}}" routerLinkActive="active">{{submission.id}}</a></td>
+            <td class="column">{{submission.userId}}</td>
+            <td class="column">{{submission.status}}</td>
+            <td class="column">{{submission.date}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

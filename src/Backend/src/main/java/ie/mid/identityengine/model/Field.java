@@ -6,6 +6,10 @@ public class Field {
     private String name;
     private String type;
 
+    public Field(){
+
+    }
+
     public Field(String name, FieldType type) {
         this.name = name;
         this.type = type.toString();

@@ -1,0 +1,82 @@
+<ul class="topnav">
+    <li><a>MiD Verification Portal</a></li>
+    <li><a class="active" routerLink="/party">Party Listing</a></li>
+    <li class="right"><a routerLink="/login">Logout</a></li>
+  </ul>
+  
+  <div style="padding:0 16px;">
+    <ul class="table-title">
+      <li><h2>Available Identity Types</h2></li>
+      <li class="right"><button class="create-button right" (click)="modal.show()">Create Identity Type</button></li>
+    </ul>
+    <div class="table100 ver1 m-b-110">
+      <div class="table100-head">
+        <table>
+          <thead>
+            <tr>
+              <th class="column-head">Name</th>
+              <th class="column-head">Version Number</th>
+              <th class="column-head">Status</th>
+            </tr>    
+          </thead>
+        </table>
+      </div>
+  
+      <div class="table100-body">
+        <table>
+          <tbody>
+            <tr *ngFor="let idenityType of idenityTypes">
+              <td class="column"><a routerLink="{{idenityType.id}}" routerLinkActive="active">{{idenityType.name}}</a></td>
+              <td class="column">{{idenityType.versionNumber}}</td>
+              <td class="column">{{idenityType.status}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <app-modal #modal>
+      <div class="app-modal-header">
+        <h2>Create Identity Type</h2>
+      </div>
+      <div class="app-modal-body">
+        <form>
+          <div class="form-group">
+            <p>General Information</p>
+            <input #typeName type="text"class="text-input" placeholder="Identity Type Name" >
+            <input #coverImg type="text"class="text-input" placeholder="Cover Image URL" >
+            <input #iconImg type="text"class="text-input" placeholder="Icon Image URL" >
+          </div>
+
+          <div class="form-group">
+            <ul class="table-title">
+                <li><p>Entry Fields</p></li>
+                <li class="right"><button class="add-button" (click)="addField()">Add Field</button></li>
+                <li [hidden]="deleteField.length == 0" class="right"><button class="add-button" (click)="deleteFields()">Delete Field</button></li>
+              </ul>
+              <div class="grouped" *ngFor="let field of newFields; let i = index">
+                <input class="type-check" type="checkbox" (click)="delete(i)">
+                <input #typeName type="text"class="type-input" placeholder="Entry Field Name" (input)="updateName(i,$event.target.value)">
+                <select #type class="type-select" (change)="updateType(i,type.value)">
+                    <option value="FIRSTNAME">Firstname</option>
+                    <option value="SURNAME">Surname</option>
+                    <option value="BIRTHDAY">Birthday</option>
+                    <option value="ADDRESS">Address</option>
+                    <option value="KEY">Id Field</option>
+                    <option value="EXPIRY">Expiry</option>
+                  </select>
+              </div>
+              
+            </div>
+        </form>
+        <div class="button-container">
+          <button type="button" class="create-button" (click)="submitData(typeName.value,coverImg.value,iconImg.value)">
+            <span>Submit</span>
+          </button>
+        </div>
+      </div>
+      <div class="app-modal-footer">
+      </div>
+  </app-modal>
+  

@@ -1,7 +1,7 @@
 package ie.mid.identityengine.controller;
 
 import ie.mid.identityengine.dto.SubmissionDTO;
-import ie.mid.identityengine.enums.EntityStatus;
+import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.model.Submission;
 import ie.mid.identityengine.repository.SubmissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,11 +66,12 @@ public class SubmissionController {
     public SubmissionDTO createSubmission(@RequestBody SubmissionDTO submissionToCreate) {
         Submission submission = new Submission();
         submission.setData(submissionToCreate.getData());
-        submission.setStatus(EntityStatus.ACTIVE.toString());
+        submission.setStatus(RequestStatus.PENDING.toString());
         submission.setUserId(submissionToCreate.getUserId());
         submission.setPartyId(submissionToCreate.getPartyId());
         submission = submissionRepository.save(submission);
         submissionToCreate.setId(submission.getId());
+        submissionToCreate.setStatus(submission.getStatus());
         return submissionToCreate;
     }
 

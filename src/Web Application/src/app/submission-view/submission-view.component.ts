@@ -8,19 +8,21 @@ import { Submission, Data, SubmissionStatus } from '../models/submission';
 @Component({
   selector: 'app-submission-view',
   templateUrl: './submission-view.component.html',
-  styleUrls: ['./submission-view.component.css'],
+  styleUrls: ['./submission-view.component.css',
+  '../app.component.css'],
   encapsulation: ViewEncapsulation.None
 })
 export class SubmissionViewComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,private router: Router,private submissionService: SubmissionService) { }
-  id:string;
+  submissionId:string;
+  partyId:string;
   submission:Submission;
   data:Data[];
   submissionMessage:string;
 
   getSubmission(){
-    this.submissionService.getSubmission(this.id)
+    this.submissionService.getSubmission(this.submissionId)
     .subscribe(
       submission => {
         this.submission = submission, //Bind to view
@@ -36,7 +38,7 @@ export class SubmissionViewComponent implements OnInit {
 
   acceptRequest(){
     this.submission.status = SubmissionStatus.ACCEPTED;
-    this.submissionService.updateSubmission(this.id,this.submission)
+    this.submissionService.updateSubmission(this.submissionId,this.submission)
     .subscribe(
       submission => {
         this.submission = submission,
@@ -48,7 +50,7 @@ export class SubmissionViewComponent implements OnInit {
 
   rejectRequest(){
     this.submission.status = SubmissionStatus.REJECTED;
-    this.submissionService.updateSubmission(this.id,this.submission)
+    this.submissionService.updateSubmission(this.submissionId,this.submission)
     .subscribe(
       submission => {
         this.submission = submission, 
@@ -59,9 +61,9 @@ export class SubmissionViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.id = this.route.snapshot.paramMap.get('id');
+    this.submissionId = this.route.snapshot.paramMap.get('submissionId');
+    this.partyId = this.route.snapshot.paramMap.get('partyId');
     this.getSubmission();
-    console.log(this.id);
   }
 
 }

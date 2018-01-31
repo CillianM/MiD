@@ -30,7 +30,7 @@
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #f26532;
+  background: #2f3136;
   width: 100%;
   border: 0;
   padding: 15px;
@@ -41,7 +41,7 @@
   cursor: pointer;
 }
 .form button:hover,.form button:active,.form button:focus {
-  background: #f26532;
+  background: #3b3d44;
 }
 .container {
   position: relative;
@@ -75,4 +75,17 @@
 }
 .container .info span .fa {
   color: #EF3B3A;
+}
+
+.background {
+  background-image: url('../../assets/background.png');
+  background-size: cover;
+  display: block;
+  filter: blur(5px);
+  -webkit-filter: blur(5px);
+  height: 100%;
+  left: 0;
+  position: fixed;
+  right: 0;
+  z-index: 1;
 }

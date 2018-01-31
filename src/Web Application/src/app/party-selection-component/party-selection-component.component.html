@@ -1,0 +1,55 @@
+<ul class="topnav">
+  <li><a>MiD Verification Portal</a></li>
+  <li><a class="active">Party Listing</a></li>
+  <li class="right"><a routerLink="/login">Logout</a></li>
+</ul>
+
+<div style="padding:0 16px;">
+  <ul class="table-title">
+    <li><h2>Available Parties</h2></li>
+    <li class="right"><button class="create-button right" (click)="modal.show()">Create Party</button></li>
+  </ul>
+  <div class="table100 ver1 m-b-110">
+    <div class="table100-head">
+      <table>
+        <thead>
+          <tr>
+            <th class="column-head">Name</th>
+            <th class="column-head">Status</th>
+          </tr>    
+        </thead>
+      </table>
+    </div>
+
+    <div class="table100-body">
+      <table>
+        <tbody>
+          <tr *ngFor="let party of parties">
+            <td class="column"><a routerLink="{{party.id}}" routerLinkActive="active">{{party.name}}</a></td>
+            <td class="column">{{party.status}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<app-modal #modal>
+    <div class="app-modal-header">
+      <h2>Create Party</h2>
+    </div>
+    <div class="app-modal-body">
+      <form>
+        <div class="form-group">
+          <input #partyName type="text"class="name-input" placeholder="Name" >
+        </div>
+      </form>
+      <div class="button-container">
+        <button type="button" class="create-button" (click)="createNewParty(partyName.value)">
+          <span>Submit</span>
+        </button>
+      </div>
+    </div>
+    <div class="app-modal-footer">
+    </div>
+</app-modal>

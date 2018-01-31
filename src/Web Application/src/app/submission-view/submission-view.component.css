@@ -1,39 +1,4 @@
-/*https://www.w3schools.com/css/css_navbar.asp*/
-body {margin: 0;}
-
-ul.topnav {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #226db5;
-}
-
-ul.topnav li {float: left;}
-
-ul.topnav li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-ul.topnav li a:hover:not(.active) {background-color: #226db5;}
-
-ul.topnav li a.active {background-color: #f26532;}
-
-ul.topnav li.right {float: right;}
-
-@media screen and (max-width: 600px){
-    ul.topnav li.right, 
-    ul.topnav li {float: none;}
-}
-
-/*https://www.w3schools.com/css/css_table.asp*/
-table {
+.info-table {
     border-collapse: collapse;
     width:70%;
     
@@ -47,15 +12,12 @@ th, td {
 tr:nth-child(even){background-color: #f2f2f2}
 
 th {
-    background-color: #f26532;
+    background-color: #3b3d44;
     color: white;
 }
 
 .container{
     width: 100%;
-}
-
-.info-container {
 }
 
 .profile-container{
@@ -70,7 +32,7 @@ th {
     font-family: "Roboto", sans-serif;
     text-transform: uppercase;
     outline: 0;
-    background: #f26532;
+    background: #3b3d44;
     width: 25%;
     border: 0;
     padding: 15px;

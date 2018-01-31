@@ -52,6 +52,7 @@ public class PartyController {
         party.setStatus(EntityStatus.ACTIVE.toString());
         party = partyRepository.save(party);
         partyToCreate.setId(party.getId());
+        partyToCreate.setStatus(party.getStatus());
         return partyToCreate;
     }
 

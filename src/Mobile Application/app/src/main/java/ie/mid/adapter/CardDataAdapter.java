@@ -46,7 +46,7 @@ public class CardDataAdapter extends RecyclerView.Adapter<CardDataAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return contents.getDataList().size();
+        return contents.getDataList().size() + 1;
     }
 
     @Override
@@ -72,9 +72,9 @@ public class CardDataAdapter extends RecyclerView.Adapter<CardDataAdapter.ViewHo
             }
             holder.dataIcon.setImageDrawable(drawable);
         } else {
-            cardData = contents.getDataList().get(position).getData();
+            cardData = contents.getDataList().get(position - 1).getData();
             holder.dataText.setText(cardData);
-            Drawable drawable = context.getResources().getDrawable(contents.getDataList().get(position).getDataIcon());
+            Drawable drawable = context.getResources().getDrawable(contents.getDataList().get(position - 1).getDataIcon());
             holder.dataIcon.setImageDrawable(drawable);
         }
     }

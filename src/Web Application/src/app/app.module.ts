@@ -12,6 +12,15 @@ import { SubmissionListComponent } from './submission-list/submission-list.compo
 import { SubmissionViewComponent } from './submission-view/submission-view.component';
 import { PagenotfoundComponent} from './pagenotfound/pagenotfound.component'; 
 import { SubmissionService } from './services/submission-service';
+import { PartySelectionComponentComponent } from './party-selection-component/party-selection-component.component';
+import { PartyViewComponentComponent } from './party-view-component/party-view-component.component';
+import { Globals } from './app-properties';
+import { PartyService } from './services/party-service';
+import { ModalService } from './modal-window/modal.service';
+import { ModalComponent } from './modal-window/modal.component';
+import { IdentityTypeListComponent } from './identity-type-list/identity-type-list.component';
+import { IdentityTypeViewComponent } from './identity-type-view/identity-type-view.component';
+import { IdentityTypeService } from './services/identitytype-service';
 
 @NgModule({
   declarations: [
@@ -19,7 +28,12 @@ import { SubmissionService } from './services/submission-service';
     LoginComponent,
     SubmissionListComponent,
     SubmissionViewComponent,
-    PagenotfoundComponent
+    PagenotfoundComponent,
+    PartySelectionComponentComponent,
+    PartyViewComponentComponent,
+    ModalComponent,
+    IdentityTypeListComponent,
+    IdentityTypeViewComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +43,11 @@ import { SubmissionService } from './services/submission-service';
     JsonpModule,
   ],
   providers: [
-    SubmissionService
+    SubmissionService,
+    PartyService,
+    IdentityTypeService,
+    ModalService,
+    Globals
   ],
   bootstrap: [
     AppComponent

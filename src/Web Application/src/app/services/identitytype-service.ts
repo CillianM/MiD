@@ -23,7 +23,7 @@ export class IdentityTypeService{
         
     }
 
-    getIdentityType(partyId:string,id:string) : Observable<IdentityType[]> {
+    getIdentityType(partyId:string,id:string) : Observable<IdentityType> {
         return this.http.get(this.ENDPOINT + "/" + partyId + "/" + id)
                         .map((res:Response) => res.json())                               
                         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));

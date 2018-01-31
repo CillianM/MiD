@@ -65,6 +65,9 @@ public class IdentityTypeController {
         dto.setPartyId(identityType.getPartyId());
         dto.setStatus(identityType.getStatus());
         dto.setVersionNumber(identityType.getVersionNumber());
+        dto.setIconImg(identityType.getIconImg());
+        dto.setCoverImg(identityType.getCoverImg());
+        dto.setName(identityType.getName());
         return dto;
     }
 
@@ -74,6 +77,9 @@ public class IdentityTypeController {
         IdentityType updatedIdentityType = new IdentityType();
         IdentityType identityType = identityTypeRepository.findById(id);
         updatedIdentityType.setPartyId(identityTypeDTO.getPartyId());
+        updatedIdentityType.setName(identityTypeDTO.getName());
+        updatedIdentityType.setIconImg(identityTypeDTO.getIconImg());
+        updatedIdentityType.setCoverImg(identityTypeDTO.getCoverImg());
         updatedIdentityType.setFields(getFieldString(identityTypeDTO.getFields()));
         updatedIdentityType.setStatus(IdentityTypeStatus.ACTIVE.toString());
         updatedIdentityType.setVersionNumber(identityType.getVersionNumber() + 1);
@@ -84,6 +90,9 @@ public class IdentityTypeController {
         identityTypeDTO.setVersionNumber(updatedIdentityType.getVersionNumber());
         identityTypeDTO.setPartyId(updatedIdentityType.getPartyId());
         identityTypeDTO.setFields(getFieldList(updatedIdentityType.getFields()));
+        identityTypeDTO.setName(updatedIdentityType.getName());
+        identityTypeDTO.setIconImg(updatedIdentityType.getIconImg());
+        identityTypeDTO.setCoverImg(updatedIdentityType.getCoverImg());
         return identityTypeDTO;
     }
 

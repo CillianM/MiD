@@ -1,0 +1,108 @@
+ul.form-heading {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  margin-right: 10px;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+ul.form-heading li {float: left;}
+  
+ul.form-heading li.right {float: right;}
+
+ul.form-heading li button a {
+  display: block;
+  color: white;
+  text-decoration: none;
+
+}
+
+.button-container {
+	text-align: center;
+}
+
+.name-input{
+  width: 100%;
+  height: 40px;
+}
+
+.button-container {
+	text-align: center;
+}
+
+.text-input{
+  width: 99%;
+  height: 40px;
+  margin-bottom: 10px;
+  border:none;
+  border-bottom:1px solid #ccc
+}
+
+.text-input-link{
+    width: 95%;
+    height: 40px;
+    margin-bottom: 10px;
+    border:none;
+    border-bottom:1px solid #ccc
+  }
+
+.type-input{
+  width: 48%;
+  height: 40px;
+  margin-bottom: 10px;
+  border:none;
+  border-bottom:1px solid #ccc
+}
+.type-select{
+  padding:12.5px 0;
+  width:49%;
+  border:none;
+  border-bottom:1px solid #ccc
+}
+
+.form-group p {
+    margin:0px;
+}
+
+.add-button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #2f3136;
+  border: 0;
+  padding: 5px;
+  color: #FFFFFF;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+  margin-right: 5px;
+}
+.add-button:hover,.add-button:focus {
+  background: #3b3d44;
+}
+
+.add-button a{
+    text-decoration: none;
+    color: white;
+    font-family: "Roboto", sans-serif;
+}
+
+.delete-button{
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #3C1F2A;
+  border: 0;
+  width: 100%;
+  padding: 15px;
+  color: #FFFFFF;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.delete-button:hover,.delete-button:focus {
+  background: #4f353f;
+}

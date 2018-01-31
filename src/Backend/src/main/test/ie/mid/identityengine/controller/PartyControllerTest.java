@@ -1,5 +1,6 @@
 package ie.mid.identityengine.controller;
 
+import ie.mid.identityengine.dto.KeyDTO;
 import ie.mid.identityengine.dto.PartyDTO;
 import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.repository.PartyRepository;
@@ -27,6 +28,9 @@ public class PartyControllerTest {
     @Mock
     private PartyRepository partyRepository;
 
+    @Mock
+    private KeyController keyController;
+
     private static final String ID = "id";
 
     @Before
@@ -36,9 +40,13 @@ public class PartyControllerTest {
         party.setId(ID);
         List<Party> parties = new ArrayList<>();
         parties.add(party);
+        KeyDTO key = new KeyDTO();
+        key.setId(ID);
         when(partyRepository.save(any(Party.class))).thenReturn(party);
         when(partyRepository.findById(anyString())).thenReturn(party);
         when(partyRepository.findAll()).thenReturn(parties);
+        when(keyController.createKey(any(KeyDTO.class))).thenReturn(key);
+        when(keyController.getKey(anyString())).thenReturn(key);
     }
 
     @Test

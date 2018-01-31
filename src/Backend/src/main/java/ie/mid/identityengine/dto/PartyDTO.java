@@ -5,6 +5,8 @@ public class PartyDTO {
     private String id;
     private String name;
     private String status;
+    private String keyId;
+    private String publicKey;
 
     public PartyDTO() {
     }
@@ -31,5 +33,21 @@ public class PartyDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getKeyId() {
+        return keyId;
+    }
+
+    public void setKeyId(String keyId) {
+        this.keyId = keyId;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 }

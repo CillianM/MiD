@@ -1,5 +1,6 @@
 package ie.mid.identityengine.controller;
 
+import ie.mid.identityengine.dto.KeyDTO;
 import ie.mid.identityengine.dto.PartyDTO;
 import ie.mid.identityengine.enums.EntityStatus;
 import ie.mid.identityengine.model.Party;
@@ -17,6 +18,9 @@ public class PartyController {
 
     @Autowired
     PartyRepository partyRepository;
+
+    @Autowired
+    KeyController keyController;
 
     @GetMapping
     @ResponseBody
@@ -53,6 +57,13 @@ public class PartyController {
         party = partyRepository.save(party);
         partyToCreate.setId(party.getId());
         partyToCreate.setStatus(party.getStatus());
+
+        //Create key for party
+        KeyDTO keyDTO = new KeyDTO();
+        keyDTO.setPublicKey(partyToCreate.getPublicKey());
+        keyDTO.setUserId(partyToCreate.getId());
+        keyDTO = keyController.createKey(keyDTO);
+        partyToCreate.setKeyId(keyDTO.getId());
         return partyToCreate;
     }
 

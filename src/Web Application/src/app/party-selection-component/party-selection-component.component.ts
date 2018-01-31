@@ -3,6 +3,7 @@ import { PartyService } from '../services/party-service';
 import { Party } from '../models/party';
 import { NgModule } from '@angular/core/src/metadata/ng_module';
 import { ModalService } from '../modal-window/modal.service';
+import { Globals } from '../app-properties';
 
 @Component({
   selector: 'app-party-selection-component',
@@ -15,7 +16,7 @@ import { ModalService } from '../modal-window/modal.service';
 })
 export class PartySelectionComponentComponent implements OnInit {
 
-  constructor(private partyService: PartyService) { }
+  constructor(private partyService: PartyService,private globals: Globals) { }
 
   parties: Party[];
 
@@ -32,7 +33,7 @@ export class PartySelectionComponentComponent implements OnInit {
   createNewParty(name: string){
     var newParty = new Party();
     newParty.name = name;
-    
+    newParty.publicKey = this.globals.publicKey;
 
     this.partyService.createParty(newParty)
     .subscribe(

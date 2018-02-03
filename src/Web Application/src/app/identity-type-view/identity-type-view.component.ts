@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IdentityTypeService } from '../services/identitytype-service';
 import { IdentityType } from '../models/identitytype';
 import { Field } from '../models/field';
+import { Party } from '../models/party';
+import { PartyService } from '../services/party-service';
 
 @Component({
   selector: 'app-identity-type-view',
@@ -16,13 +18,15 @@ export class IdentityTypeViewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private idenityTypeService: IdentityTypeService
+    private idenityTypeService: IdentityTypeService,
+    private partyService:PartyService
   ){}
 
   partyId:string;
   identityId:string;
   identityType:IdentityType;
   deleteField:number[];
+  party:Party;
 
   getIdentityTypes(){
     this.idenityTypeService.getIdentityType(this.partyId,this.identityId)
@@ -100,11 +104,22 @@ export class IdentityTypeViewComponent implements OnInit {
     this.updateIdentityType(idenityType);
   }
 
+  getParty(){
+    this.partyService.getParty(this.partyId)
+    .subscribe(
+      party => {
+        this.party = party,
+        console.log(this.party)
+      });
+      err => console.log(err);
+  }
+
 
   ngOnInit() {
     this.partyId = this.route.snapshot.paramMap.get('partyId');
     this.identityId = this.route.snapshot.paramMap.get('identityId');
     this.deleteField = [];
+    this.getParty();
     this.getIdentityTypes();
   }
 

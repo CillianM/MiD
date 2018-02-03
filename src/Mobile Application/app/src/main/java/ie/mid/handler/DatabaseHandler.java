@@ -17,7 +17,7 @@ import java.util.UUID;
 import ie.mid.R;
 import ie.mid.enums.DataType;
 import ie.mid.model.AvailableCard;
-import ie.mid.model.CardData;
+import ie.mid.model.CardField;
 import ie.mid.model.CardType;
 import ie.mid.model.Field;
 import ie.mid.model.Profile;
@@ -55,6 +55,7 @@ public class DatabaseHandler {
 
     //Card data variables
     private static final String CARD_ID = "card_id";
+    private static final String PARTY_ID = "party_id";
     private static final String TITLE = "title";
     private static final String COVER_IMG_URL = "cover_img_url";
     private static final String FIELD_NAME = "field_name";
@@ -66,6 +67,7 @@ public class DatabaseHandler {
             ID + " text not null, " +
             TITLE + " text not null," +
             CARD_ID + " text not null," +
+            PARTY_ID + " text not null," +
             OWNER + " text not null," +
             FIELD_NAME + " text not null," +
             FIELD_VALUE + " text not null," +
@@ -190,13 +192,14 @@ public class DatabaseHandler {
         return new AvailableCard(id,title,iconUrl,coverUrl,versionNumber);
     }
 
-    public String createCard(String cardId, String title, String owner, String fieldName, String fieldValue, String coverImg, String statusCode)
+    public String createCard(String partyId, String cardId, String title, String owner, String fieldName, String fieldValue, String coverImg, String statusCode)
     {
         String id = UUID.randomUUID().toString();
         String date = new Date().toString();
         ContentValues content = new ContentValues();
         content.put(ID, id);
         content.put(CARD_ID, cardId);
+        content.put(PARTY_ID, partyId);
         content.put(TITLE,title);
         content.put(OWNER,owner);
         content.put(COVER_IMG_URL, coverImg);
@@ -259,22 +262,48 @@ public class DatabaseHandler {
     }
 
     public List<CardType> getUserCards(String id) {
-        String selectQuery = "SELECT ID ,TITLE ,CARD_ID ,OWNER ,FIELD_NAME ,FIELD_VALUE, COVER_IMG_URL,STATUS_CODE FROM " + CARD_TABLE_NAME + " WHERE " + OWNER + "='" + id + "'";
+        String selectQuery = "SELECT ID ,TITLE ,CARD_ID ,OWNER ,FIELD_NAME ,FIELD_VALUE, COVER_IMG_URL,STATUS_CODE,PARTY_ID FROM " + CARD_TABLE_NAME + " WHERE " + OWNER + "='" + id + "'";
         Cursor cursor = db.rawQuery(selectQuery, null);
         List<CardType> cardDataList = new ArrayList<>();
 
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
                 CardType cardType = new CardType();
+                cardType.setId(cursor.getString(0));
                 cardType.setTitle(cursor.getString(1));
+                cardType.setCardId(cursor.getString(2));
+                cardType.setOwnerId(cursor.getString(3));
                 cardType.setDefaultColor(R.color.blue);
-                cardType.setStatus(cursor.getString(6));
-                cardType.setImageUrl(cursor.getString(7));
+                cardType.setStatus(cursor.getString(7));
+                cardType.setImageUrl(cursor.getString(6));
+                cardType.setPartyId(cursor.getString(8));
                 List<Field> fieldList = getFieldList(cursor.getString(4));
                 cardType.setDataList(getCardData(fieldList, cursor.getString(5)));
                 cardDataList.add(cardType);
             }
             return cardDataList;
+        }
+        return null;
+    }
+
+    public CardType getUserCard(String id) {
+        String selectQuery = "SELECT ID ,TITLE ,CARD_ID ,OWNER ,FIELD_NAME ,FIELD_VALUE, COVER_IMG_URL,STATUS_CODE,PARTY_ID FROM " + CARD_TABLE_NAME + " WHERE " + ID + "='" + id + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        CardType cardType = new CardType();
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                cardType.setId(cursor.getString(0));
+                cardType.setTitle(cursor.getString(1));
+                cardType.setCardId(cursor.getString(2));
+                cardType.setOwnerId(cursor.getString(3));
+                cardType.setDefaultColor(R.color.blue);
+                cardType.setStatus(cursor.getString(7));
+                cardType.setImageUrl(cursor.getString(6));
+                cardType.setPartyId(cursor.getString(8));
+                List<Field> fieldList = getFieldList(cursor.getString(4));
+                cardType.setDataList(getCardData(fieldList, cursor.getString(5)));
+            }
+            return cardType;
         }
         return null;
     }
@@ -291,15 +320,16 @@ public class DatabaseHandler {
         return fieldList;
     }
 
-    private ArrayList<CardData> getCardData(List<Field> fieldList, String values) {
-        ArrayList<CardData> cardDataList = new ArrayList<>();
+    private ArrayList<CardField> getCardData(List<Field> fieldList, String values) {
+        ArrayList<CardField> cardFieldList = new ArrayList<>();
         String[] valuesArray = values.split(",");
         for (int i = 0; i < valuesArray.length; i++) {
-            CardData cardData = new CardData(valuesArray[i], fieldList.get(i).getType());
-            cardData.setDataIcon(getDataIcon(fieldList.get(i).getType()));
-            cardDataList.add(cardData);
+            CardField cardField = new CardField(valuesArray[i], fieldList.get(i).getType());
+            cardField.setDataIcon(getDataIcon(fieldList.get(i).getType()));
+            cardField.setFieldTitle(fieldList.get(i).getName());
+            cardFieldList.add(cardField);
         }
-        return cardDataList;
+        return cardFieldList;
     }
 
     private int getDataIcon(String type) {
@@ -378,18 +408,18 @@ public class DatabaseHandler {
         return cursor.getCount() != 0;
     }
 
-    public boolean updateCardData(String id, String fieldValue)
+    public boolean updateCardStatus(String id, String status)
     {
         ContentValues content = new ContentValues();
-        content.put(FIELD_VALUE, fieldValue);
+        content.put(STATUS_CODE, status);
         db.update(CARD_TABLE_NAME,content,ID + " = ?", new String[] { id });
         return true;
     }
 
-    public boolean updateCardImg(String id,String img)
+    public boolean updateCard(String id,String fields)
     {
         ContentValues content = new ContentValues();
-        content.put(COVER_IMG_URL,img);
+        content.put(FIELD_VALUE,fields);
         db.update(CARD_TABLE_NAME,content,ID + " = ?", new String[] { id });
         return true;
     }

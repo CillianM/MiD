@@ -1,5 +1,10 @@
 package ie.mid.pojo;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
+import java.io.IOException;
+
 public class Submission {
 
     private String id;
@@ -58,5 +63,15 @@ public class Submission {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String toJsonString() {
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        try {
+            return ow.writeValueAsString(this);
+        } catch (IOException e) {
+            return null;
+        }
+
     }
 }

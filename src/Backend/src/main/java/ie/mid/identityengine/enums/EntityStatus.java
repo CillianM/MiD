@@ -4,14 +4,14 @@ public enum EntityStatus {
     ACTIVE("ACTIVE"),
     DELETED("DELETED");
 
-    private String entityStatus;
+    private String status;
 
-    EntityStatus(String entityStatus) {
-        this.entityStatus = entityStatus;
+    EntityStatus(String status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
-        return entityStatus;
+        return status;
     }
 }

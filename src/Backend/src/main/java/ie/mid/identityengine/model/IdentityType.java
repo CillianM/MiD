@@ -15,25 +15,25 @@ public class IdentityType {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private String id;
-    @Column(name = "party_id")
+    @Column(name = "party_id", nullable = false)
     private String partyId;
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "coverImg")
+    @Column(name = "coverImg", nullable = false)
     private String coverImg;
-    @Column(name = "iconImg")
+    @Column(name = "iconImg", nullable = false)
     private String iconImg;
-    @Column(name = "fields")
+    @Column(name = "fields", nullable = false)
     private String fields;
-    @Column(name = "version_number")
+    @Column(name = "version_number", nullable = false)
     private int versionNumber;
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private String status;
     @CreationTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     @UpdateTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
     public IdentityType() {

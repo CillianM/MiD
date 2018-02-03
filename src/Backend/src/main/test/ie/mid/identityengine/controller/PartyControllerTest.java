@@ -32,16 +32,25 @@ public class PartyControllerTest {
     private KeyController keyController;
 
     private static final String ID = "id";
+    private static final String NAME = "name";
+    private static final String KEY = "key";
+    private PartyDTO partyDTO = new PartyDTO();
+
+
 
     @Before
     public void setUp() throws Exception {
-
+        partyDTO.setId(ID);
+        partyDTO.setName(NAME);
+        partyDTO.setPublicKey(KEY);
         Party party = new Party();
         party.setId(ID);
+        party.setName(NAME);
         List<Party> parties = new ArrayList<>();
         parties.add(party);
         KeyDTO key = new KeyDTO();
         key.setId(ID);
+        key.setPublicKey(KEY);
         when(partyRepository.save(any(Party.class))).thenReturn(party);
         when(partyRepository.findById(anyString())).thenReturn(party);
         when(partyRepository.findAll()).thenReturn(parties);
@@ -58,25 +67,25 @@ public class PartyControllerTest {
     @Test
     public void getParty() throws Exception {
         PartyDTO partyDTO = partyController.getParty(ID);
-        assertEquals(partyDTO.getId(), ID);
+        assertEquals(ID, partyDTO.getId());
     }
 
     @Test
     public void createParty() throws Exception {
-        PartyDTO partyDTO = partyController.createParty(new PartyDTO());
-        assertEquals(partyDTO.getId(), ID);
+        PartyDTO partyDTO = partyController.createParty(this.partyDTO);
+        assertEquals(ID, partyDTO.getId());
     }
 
     @Test
     public void updateParty() throws Exception {
-        PartyDTO partyDTO = partyController.updateParty(ID, new PartyDTO());
+        PartyDTO partyDTO = partyController.updateParty(ID, this.partyDTO);
         assertNotNull(partyDTO);
     }
 
     @Test
     public void deleteParty() throws Exception {
         PartyDTO partyDTO = partyController.deleteParty(ID);
-        assertEquals(partyDTO.getId(), ID);
+        assertEquals(ID, partyDTO.getId());
     }
 
 }

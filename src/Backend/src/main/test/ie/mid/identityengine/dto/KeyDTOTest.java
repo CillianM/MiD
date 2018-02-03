@@ -26,49 +26,49 @@ public class KeyDTOTest {
 
     @Test
     public void getId() throws Exception {
-        assertEquals(key.getId(), ID);
+        assertEquals(ID, key.getId());
     }
 
     @Test
     public void setId() throws Exception {
         key.setId(NEW_ID);
-        assertEquals(key.getId(), NEW_ID);
+        assertEquals(NEW_ID, key.getId());
         key.setId(ID);
     }
 
     @Test
     public void getStatus() throws Exception {
-        assertEquals(key.getKeyStatus(), STATUS);
+        assertEquals(STATUS, key.getKeyStatus());
     }
 
     @Test
     public void setStatus() throws Exception {
         key.setKeyStatus(NEW_STATUS);
-        assertEquals(key.getKeyStatus(), NEW_STATUS);
+        assertEquals(NEW_STATUS, key.getKeyStatus());
         key.setKeyStatus(STATUS);
     }
 
     @Test
     public void getKey() throws Exception {
-        assertEquals(key.getPublicKey(), KEY);
+        assertEquals(KEY, key.getPublicKey());
     }
 
     @Test
     public void setKey() throws Exception {
         key.setPublicKey(NEW_KEY);
-        assertEquals(key.getPublicKey(), NEW_KEY);
+        assertEquals(NEW_KEY, key.getPublicKey());
         key.setPublicKey(KEY);
     }
 
     @Test
     public void getUserId() throws Exception {
-        assertEquals(key.getUserId(), ID);
+        assertEquals(ID, key.getUserId());
     }
 
     @Test
     public void setUserId() throws Exception {
         key.setUserId(NEW_ID);
-        assertEquals(key.getUserId(), NEW_ID);
+        assertEquals(NEW_ID, key.getUserId());
         key.setUserId(ID);
     }
 }

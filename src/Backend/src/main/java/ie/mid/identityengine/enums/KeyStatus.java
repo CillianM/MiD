@@ -7,14 +7,14 @@ public enum KeyStatus {
     EXPIRED("EXPIRED"),
     DELETED("DELETED");
 
-    private String keyStatus;
+    private String status;
 
-    KeyStatus(String keyStatus) {
-        this.keyStatus = keyStatus;
+    KeyStatus(String status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
-        return keyStatus;
+        return status;
     }
 }

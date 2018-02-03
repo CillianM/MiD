@@ -8,11 +8,15 @@ import java.util.ArrayList;
 
 public class CardType {
 
+    private String id;
+    private String partyId;
+    private String cardId;
+    private String ownerId;
     private String title;
     private String description;
     private int defaultColor;
     private String imageUrl;
-    private ArrayList<CardData> dataList;
+    private ArrayList<CardField> dataList;
     private String status;
 
     public CardType() {
@@ -34,11 +38,11 @@ public class CardType {
         this.description = description;
     }
 
-    public ArrayList<CardData> getDataList() {
+    public ArrayList<CardField> getDataList() {
         return dataList;
     }
 
-    public void setDataList(ArrayList<CardData> dataList) {
+    public void setDataList(ArrayList<CardField> dataList) {
         this.dataList = dataList;
     }
 
@@ -64,5 +68,37 @@ public class CardType {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(String cardId) {
+        this.cardId = cardId;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public String getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(String partyId) {
+        this.partyId = partyId;
     }
 }

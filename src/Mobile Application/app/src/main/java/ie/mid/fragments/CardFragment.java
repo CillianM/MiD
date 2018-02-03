@@ -20,6 +20,7 @@ import com.github.florent37.materialviewpager.header.HeaderDesign;
 
 import java.util.List;
 
+import ie.mid.CardCreateActivity;
 import ie.mid.ProfileSelectionActivity;
 import ie.mid.R;
 import ie.mid.handler.DatabaseHandler;
@@ -63,8 +64,20 @@ public class CardFragment extends Fragment  {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.edit_card:
-                Toast.makeText(getActivity(), currentCardType.getTitle(), Toast.LENGTH_SHORT)
-                        .show();
+                if(!currentCardType.getStatus().equals("PENDING")) {
+                    intent = new Intent(getActivity(), CardCreateActivity.class);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("isUpdate", true);
+                    intent.putExtra("cardId", currentCardType.getId());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(getActivity().getApplicationContext(),"Cannot Update a pending card",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.delete_card:
+                deleteCard();
                 break;
             default:
                 intent = new Intent(getActivity(), ProfileSelectionActivity.class);
@@ -124,5 +137,15 @@ public class CardFragment extends Fragment  {
         List<CardType> listOfCards = handler.getUserCards(userId);
         handler.close();
         return listOfCards;
+    }
+
+    private void deleteCard(){
+        DatabaseHandler handler = new DatabaseHandler(getActivity().getApplicationContext());
+        handler.open();
+        handler.removeCard(currentCardType.getId());
+        handler.close();
+        Intent intent = getActivity().getIntent();
+        getActivity().finish();
+        startActivity(intent);
     }
 }

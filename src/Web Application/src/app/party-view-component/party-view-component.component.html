@@ -1,6 +1,7 @@
 <ul class="topnav">
-    <li><a>MiD Admin Portal</a></li>
-    <li><a class="active">Party Listing</a></li>
+    <li><a routerLink="/login">MiD Admin Portal</a></li>
+    <li><a class="inactive" routerLink="/party">Party Listing</a></li>
+    <li><a class="active">{{party?.name}}</a></li>
     <li class="right"><a routerLink="/login">Logout</a></li>
   </ul>
   

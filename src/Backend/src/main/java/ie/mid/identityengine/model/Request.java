@@ -15,23 +15,23 @@ public class Request {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private String id;
-    @Column(name = "sender")
+    @Column(name = "sender", nullable = false)
     private String sender;
-    @Column(name = "recipient")
+    @Column(name = "recipient", nullable = false)
     private String recipient;
-    @Column(name = "type_id")
+    @Column(name = "type_id", nullable = false)
     private String indentityTypeId;
-    @Column(name = "type_fields")
+    @Column(name = "type_fields", nullable = false)
     private String identityTypeFields;
-    @Column(name = "user_response")
+    @Column(name = "user_response", nullable = false)
     private String userResponse;
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private String status;
     @CreationTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     @UpdateTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
     public Request() {

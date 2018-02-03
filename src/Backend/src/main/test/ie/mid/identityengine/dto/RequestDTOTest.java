@@ -35,86 +35,86 @@ public class RequestDTOTest {
 
     @Test
     public void getId() throws Exception {
-        assertEquals(request.getId(), ID);
+        assertEquals(ID, request.getId());
     }
 
     @Test
     public void setId() throws Exception {
         request.setId(NEW_ID);
-        assertEquals(request.getId(), NEW_ID);
+        assertEquals(NEW_ID, request.getId());
         request.setId(ID);
 
     }
 
     @Test
     public void getSender() throws Exception {
-        assertEquals(request.getSender(), ID);
+        assertEquals(ID, request.getSender());
     }
 
     @Test
     public void setSender() throws Exception {
         request.setSender(NEW_ID);
-        assertEquals(request.getSender(), NEW_ID);
+        assertEquals(NEW_ID, request.getSender());
         request.setSender(ID);
     }
 
     @Test
     public void getRecipient() throws Exception {
-        assertEquals(request.getRecipient(), ID);
+        assertEquals(ID, request.getRecipient());
     }
 
     @Test
     public void setRecipient() throws Exception {
         request.setRecipient(NEW_ID);
-        assertEquals(request.getRecipient(), NEW_ID);
+        assertEquals(NEW_ID, request.getRecipient());
         request.setRecipient(ID);
     }
 
     @Test
     public void getIndentityTypeId() throws Exception {
-        assertEquals(request.getIndentityTypeId(), ID);
+        assertEquals(ID, request.getIndentityTypeId());
     }
 
     @Test
     public void setIndentityTypeId() throws Exception {
         request.setIndentityTypeId(NEW_ID);
-        assertEquals(request.getIndentityTypeId(), NEW_ID);
+        assertEquals(NEW_ID, request.getIndentityTypeId());
         request.setIndentityTypeId(ID);
     }
 
     @Test
     public void getIdentityTypeFields() throws Exception {
-        assertEquals(request.getIdentityTypeFields(), FIELDS);
+        assertEquals(FIELDS, request.getIdentityTypeFields());
     }
 
     @Test
     public void setIdentityTypeFields() throws Exception {
         request.setIdentityTypeFields(NEW_ID);
-        assertEquals(request.getIdentityTypeFields(), NEW_ID);
+        assertEquals(NEW_ID, request.getIdentityTypeFields());
         request.setIdentityTypeFields(ID);
     }
 
     @Test
     public void getIdentityTypeValues() throws Exception {
-        assertEquals(request.getIdentityTypeValues(), FIELDS);
+        assertEquals(FIELDS, request.getIdentityTypeValues());
     }
 
     @Test
     public void setIdentityTypeValues() throws Exception {
         request.setIdentityTypeValues(NEW_ID);
-        assertEquals(request.getIdentityTypeValues(), NEW_ID);
+        assertEquals(NEW_ID, request.getIdentityTypeValues());
         request.setIdentityTypeValues(ID);
     }
 
     @Test
     public void getStatus() throws Exception {
-        assertEquals(request.getStatus(), STATUS);
+        assertEquals(STATUS, request.getStatus());
     }
 
     @Test
     public void setStatus() throws Exception {
         request.setStatus(NEW_STATUS);
-        assertEquals(request.getStatus(), NEW_STATUS);
+        assertEquals(NEW_STATUS, request.getStatus());
         request.setStatus(STATUS);
     }
 }

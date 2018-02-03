@@ -3,6 +3,8 @@ import { ViewEncapsulation } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubmissionService } from '../services/submission-service';
 import { Submission, Data, SubmissionStatus } from '../models/submission';
+import { Party } from '../models/party';
+import { PartyService } from '../services/party-service';
 
 
 @Component({
@@ -14,12 +16,18 @@ import { Submission, Data, SubmissionStatus } from '../models/submission';
 })
 export class SubmissionViewComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute,private router: Router,private submissionService: SubmissionService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private submissionService: SubmissionService,
+    private partyService: PartyService
+  ) {}
   submissionId:string;
   partyId:string;
   submission:Submission;
   data:Data[];
   submissionMessage:string;
+  party:Party;
 
   getSubmission(){
     this.submissionService.getSubmission(this.submissionId)
@@ -44,6 +52,7 @@ export class SubmissionViewComponent implements OnInit {
         this.submission = submission,
         console.log(this.submission)
         this.submissionMessage = "Request submitted successfully";
+        this.router.navigateByUrl('/party/' + this.partyId);
       });
       err => this.submissionMessage = "Error submitting request, please try again later";
   }
@@ -56,14 +65,26 @@ export class SubmissionViewComponent implements OnInit {
         this.submission = submission, 
         console.log(this.submission)
         this.submissionMessage = "Request submitted successfully";
+        this.router.navigateByUrl('/party/' + this.partyId);
       });
       err => this.submissionMessage = "Error submitting request, please try again later";
+  }
+
+  getParty(){
+    this.partyService.getParty(this.partyId)
+    .subscribe(
+      party => {
+        this.party = party,
+        console.log(this.party)
+      });
+      err => console.log(err);
   }
 
   ngOnInit() {
     this.submissionId = this.route.snapshot.paramMap.get('submissionId');
     this.partyId = this.route.snapshot.paramMap.get('partyId');
     this.getSubmission();
+    this.getParty();
   }
 
 }

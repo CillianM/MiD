@@ -39,6 +39,7 @@ public class RequestControllerTest {
     private static final String ID = "id";
     private static final String FCM = "fcm";
     private static final String FIELDS = "one,two";
+    private InformationRequestDTO requestDTO = new InformationRequestDTO();
 
 
     @Before
@@ -50,6 +51,10 @@ public class RequestControllerTest {
         Request request = new Request();
         request.setId(ID);
         request.setIdentityTypeFields(FIELDS);
+        requestDTO.setRecipientId(ID);
+        requestDTO.setSenderId(ID);
+        requestDTO.setIndentityTypeId(ID);
+        requestDTO.setIdentityTypeFields(FIELDS);
         when(requestRepository.save(any(Request.class))).thenReturn(request);
         when(requestRepository.findById(anyString())).thenReturn(request);
         when(userRepository.save(any(User.class))).thenReturn(user);
@@ -60,25 +65,25 @@ public class RequestControllerTest {
     @Test
     public void getRequest() throws Exception {
         RequestDTO requestDTO = requestController.getRequest(ID);
-        assertEquals(requestDTO.getId(), ID);
+        assertEquals(ID, requestDTO.getId());
     }
 
     @Test
     public void createRequest() throws Exception {
-        RequestDTO requestDTO = requestController.createRequest(new InformationRequestDTO());
-        assertEquals(requestDTO.getId(), ID);
+        RequestDTO requestDTO = requestController.createRequest(this.requestDTO);
+        assertEquals(ID, requestDTO.getId());
     }
 
     @Test
     public void updateRequest() throws Exception {
-        RequestDTO requestDTO = requestController.updateRequest(ID, new InformationRequestDTO());
-        assertEquals(requestDTO.getId(), ID);
+        RequestDTO requestDTO = requestController.updateRequest(ID, this.requestDTO);
+        assertEquals(ID, requestDTO.getId());
     }
 
     @Test
     public void rescindRequest() throws Exception {
         RequestDTO requestDTO = requestController.rescindRequest(ID);
-        assertEquals(requestDTO.getId(), ID);
+        assertEquals(ID, requestDTO.getId());
     }
 
 }

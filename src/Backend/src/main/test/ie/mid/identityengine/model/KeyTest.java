@@ -32,8 +32,7 @@ public class KeyTest {
         key = new Key();
         key.setId(ID);
         key.setUserId(ID);
-        key.setKey(KEY);
-        key.setKeyClass(KEY_CLASS);
+        key.setPublicKey(KEY);
         key.setStatus(STATUS);
         key.setValidUntil(DATE);
         key.setCreatedAt(DATE);
@@ -42,98 +41,86 @@ public class KeyTest {
 
     @Test
     public void getId() throws Exception {
-        assertEquals(key.getId(), ID);
+        assertEquals(ID, key.getId());
     }
 
     @Test
     public void setId() throws Exception {
         key.setId(NEW_ID);
-        assertEquals(key.getId(), NEW_ID);
+        assertEquals(NEW_ID, key.getId());
         key.setId(ID);
     }
 
     @Test
     public void getStatus() throws Exception {
-        assertEquals(key.getStatus(), STATUS);
+        assertEquals(STATUS, key.getStatus());
     }
 
     @Test
     public void setStatus() throws Exception {
         key.setStatus(NEW_STATUS);
-        assertEquals(key.getStatus(), NEW_STATUS);
+        assertEquals(NEW_STATUS, key.getStatus());
         key.setStatus(STATUS);
     }
 
     @Test
     public void getCreatedAt() throws Exception {
-        assertEquals(key.getCreatedAt(), DATE);
+        assertEquals(DATE, key.getCreatedAt());
     }
 
     @Test
     public void setCreatedAt() throws Exception {
         key.setCreatedAt(NEW_DATE);
-        assertEquals(key.getCreatedAt(), NEW_DATE);
+        assertEquals(NEW_DATE, key.getCreatedAt());
         key.setCreatedAt(DATE);
     }
 
     @Test
     public void getKey() throws Exception {
-        assertEquals(key.getKey(), KEY);
+        assertEquals(KEY, key.getPublicKey());
     }
 
     @Test
     public void setKey() throws Exception {
-        key.setKey(NEW_KEY);
-        assertEquals(key.getKey(), NEW_KEY);
-        key.setKey(KEY);
+        key.setPublicKey(NEW_KEY);
+        assertEquals(NEW_KEY, key.getPublicKey());
+        key.setPublicKey(KEY);
     }
 
     @Test
     public void getUserId() throws Exception {
-        assertEquals(key.getUserId(), ID);
+        assertEquals(ID, key.getUserId());
     }
 
     @Test
     public void setUserId() throws Exception {
         key.setUserId(NEW_ID);
-        assertEquals(key.getUserId(), NEW_ID);
+        assertEquals(NEW_ID, key.getUserId());
         key.setUserId(ID);
     }
 
     @Test
     public void getUpdatedAt() throws Exception {
-        assertEquals(key.getUpdatedAt(), DATE);
+        assertEquals(DATE, key.getUpdatedAt());
     }
 
     @Test
     public void setUpdatedAt() throws Exception {
         key.setUpdatedAt(NEW_DATE);
-        assertEquals(key.getUpdatedAt(), NEW_DATE);
+        assertEquals(NEW_DATE, key.getUpdatedAt());
         key.setUpdatedAt(DATE);
     }
 
     @Test
-    public void getKeyClass() throws Exception {
-        assertEquals(key.getKeyClass(), KEY_CLASS);
-    }
-
-    @Test
-    public void setKeyClass() throws Exception {
-        key.setKeyClass(NEW_KEY_CLASS);
-        assertEquals(key.getKeyClass(), NEW_KEY_CLASS);
-        key.setKeyClass(NEW_KEY_CLASS);
-    }
-
-    @Test
     public void getValidUntil() throws Exception {
-        assertEquals(key.getValidUntil(), NEW_DATE);
+        assertEquals(NEW_DATE, key.getValidUntil());
 
     }
 
     @Test
     public void setValidUntil() throws Exception {
         key.setValidUntil(NEW_DATE);
-        assertEquals(key.getValidUntil(), NEW_DATE);
+        assertEquals(NEW_DATE, key.getValidUntil());
         key.setValidUntil(DATE);
     }
 

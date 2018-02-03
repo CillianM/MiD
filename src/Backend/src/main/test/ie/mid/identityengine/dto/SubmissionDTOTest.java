@@ -37,73 +37,73 @@ public class SubmissionDTOTest {
 
     @Test
     public void getId() throws Exception {
-        assertEquals(submission.getId(), ID);
+        assertEquals(ID, submission.getId());
     }
 
     @Test
     public void setId() throws Exception {
         submission.setId(NEW_ID);
-        assertEquals(submission.getId(), NEW_ID);
+        assertEquals(NEW_ID, submission.getId());
         submission.setId(ID);
     }
 
     @Test
     public void getUserId() throws Exception {
-        assertEquals(submission.getUserId(), ID);
+        assertEquals(ID, submission.getUserId());
     }
 
     @Test
     public void setUserId() throws Exception {
         submission.setUserId(NEW_ID);
-        assertEquals(submission.getUserId(), NEW_ID);
+        assertEquals(NEW_ID, submission.getUserId());
         submission.setUserId(ID);
     }
 
     @Test
     public void getPartyId() throws Exception {
-        assertEquals(submission.getPartyId(), ID);
+        assertEquals(ID, submission.getPartyId());
     }
 
     @Test
     public void setPartyId() throws Exception {
         submission.setPartyId(NEW_ID);
-        assertEquals(submission.getPartyId(), NEW_ID);
+        assertEquals(NEW_ID, submission.getPartyId());
         submission.setPartyId(ID);
     }
 
     @Test
     public void getData() throws Exception {
-        assertEquals(submission.getData(), DATA);
+        assertEquals(DATA, submission.getData());
     }
 
     @Test
     public void setData() throws Exception {
         submission.setData(NEW_DATA);
-        assertEquals(submission.getData(), NEW_DATA);
+        assertEquals(NEW_DATA, submission.getData());
         submission.setData(DATA);
     }
 
     @Test
     public void getStatus() throws Exception {
-        assertEquals(submission.getStatus(), STATUS);
+        assertEquals(STATUS, submission.getStatus());
     }
 
     @Test
     public void setStatus() throws Exception {
         submission.setStatus(NEW_STATUS);
-        assertEquals(submission.getStatus(), NEW_STATUS);
+        assertEquals(NEW_STATUS, submission.getStatus());
         submission.setStatus(STATUS);
     }
 
     @Test
     public void getDate() throws Exception {
-        assertEquals(submission.getDate(), DATE.toString());
+        assertEquals(DATE.toString(), submission.getDate());
     }
 
     @Test
     public void setDate() throws Exception {
         submission.setDate(NEW_DATE.toString());
-        assertEquals(submission.getDate(), NEW_DATE.toString());
+        assertEquals(NEW_DATE.toString(), submission.getDate());
         submission.setDate(DATE.toString());
     }
 }

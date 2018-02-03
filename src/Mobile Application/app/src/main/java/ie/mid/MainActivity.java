@@ -16,13 +16,15 @@ import ie.mid.handler.DatabaseHandler;
 
 public class MainActivity extends AppCompatActivity {
 
-    public String userId;
+    private String userId;
+    private int tab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         userId = getIntent().getStringExtra("userId");
+        tab = getIntent().getIntExtra("tab",-1);
 
         DatabaseHandler handler = new DatabaseHandler(this);
         handler.open();
@@ -66,14 +68,33 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-            //Manually displaying the first fragment - one time only
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            Fragment fragment = CardFragment.newInstance();
+            Fragment fragment = new Fragment();
             Bundle bundle = new Bundle();
-            bundle.putString("userId", userId);
-            fragment.setArguments(bundle);
-            transaction.replace(R.id.container, fragment);
-            transaction.commitNow();
+            if(tab == -1) {
+                bottomNavigationView.getMenu().getItem(0).setChecked(true);
+                fragment = CardFragment.newInstance();
+                bundle.putString("userId", userId);
+                fragment.setArguments(bundle);
+                transaction.replace(R.id.container, fragment);
+                transaction.commitNow();
+            }
+            else {
+                bottomNavigationView.getMenu().getItem(2).setChecked(true);
+                switch (tab){
+                    case 0:
+                        fragment = CardFragment.newInstance();
+                    case 1:
+                        fragment = RequestsFragment.newInstance();
+                    case 2:
+                        fragment = CardFragment.newInstance();
+                }
+                bundle = new Bundle();
+                bundle.putString("userId", userId);
+                fragment.setArguments(bundle);
+                transaction.replace(R.id.container, fragment);
+                transaction.commitNow();
+            }
         }
     }
 }

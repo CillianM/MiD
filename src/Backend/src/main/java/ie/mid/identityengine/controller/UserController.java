@@ -3,6 +3,8 @@ package ie.mid.identityengine.controller;
 import ie.mid.identityengine.dto.KeyDTO;
 import ie.mid.identityengine.dto.UserDTO;
 import ie.mid.identityengine.enums.EntityStatus;
+import ie.mid.identityengine.exception.BadRequestException;
+import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +25,13 @@ public class UserController {
     @ResponseBody
     public UserDTO getUser(@PathVariable String id) {
         User user = userRepository.findById(id);
+        if (user == null) throw new ResourceNotFoundException("No user exists");
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setFcmToken(user.getFcmToken());
         userDTO.setStatus(user.getStatus());
         KeyDTO latestKey = keyController.getKey(id);
+        if (latestKey == null) throw new ResourceNotFoundException("No key exists for user");
         userDTO.setKeyId(latestKey.getId());
         userDTO.setPublicKey(latestKey.getPublicKey());
         return userDTO;
@@ -36,6 +40,7 @@ public class UserController {
     @PostMapping()
     @ResponseBody
     public UserDTO createUser(@RequestBody UserDTO userToCreate) {
+        if (isInvalidUser(userToCreate)) throw new BadRequestException();
         User user = new User();
         user.setFcmToken(userToCreate.getFcmToken());
         user.setStatus(EntityStatus.ACTIVE.toString());
@@ -55,6 +60,7 @@ public class UserController {
     @ResponseBody
     public UserDTO updateUserToken(@PathVariable String id, @RequestBody String token) {
         User user = userRepository.findById(id);
+        if (user == null) throw new ResourceNotFoundException();
         user.setFcmToken(token);
         userRepository.save(user);
         UserDTO userDTO = new UserDTO();
@@ -68,6 +74,7 @@ public class UserController {
     @ResponseBody
     public UserDTO deleteUser(@PathVariable String id) {
         User user = userRepository.findById(id);
+        if (user == null) throw new ResourceNotFoundException();
         user.setStatus(EntityStatus.DELETED.toString());
         userRepository.save(user);
         UserDTO userDTO = new UserDTO();
@@ -75,5 +82,9 @@ public class UserController {
         userDTO.setFcmToken(user.getFcmToken());
         userDTO.setId(user.getId());
         return userDTO;
+    }
+
+    private boolean isInvalidUser(UserDTO userDTO) {
+        return userDTO.getFcmToken() == null || userDTO.getPublicKey() == null;
     }
 }

@@ -37,61 +37,61 @@ public class PartyTest {
 
     @Test
     public void getId() throws Exception {
-        assertEquals(party.getId(), ID);
+        assertEquals(ID, party.getId());
     }
 
     @Test
     public void setId() throws Exception {
         party.setId(NEW_ID);
-        assertEquals(party.getId(), NEW_ID);
+        assertEquals(NEW_ID, party.getId());
         party.setId(ID);
     }
 
     @Test
     public void getName() throws Exception {
-        assertEquals(party.getName(), NAME);
+        assertEquals(NAME, party.getName());
     }
 
     @Test
     public void setName() throws Exception {
         party.setName(NEW_NAME);
-        assertEquals(party.getName(), NEW_NAME);
+        assertEquals(NEW_NAME, party.getName());
         party.setName(ID);
     }
 
     @Test
     public void getStatus() throws Exception {
-        assertEquals(party.getStatus(), STATUS);
+        assertEquals(STATUS, party.getStatus());
     }
 
     @Test
     public void setStatus() throws Exception {
         party.setStatus(NEW_STATUS);
-        assertEquals(party.getStatus(), NEW_STATUS);
+        assertEquals(NEW_STATUS, party.getStatus());
         party.setStatus(STATUS);
     }
 
     @Test
     public void getCreatedAt() throws Exception {
-        assertEquals(party.getCreatedAt(), DATE);
+        assertEquals(DATE, party.getCreatedAt());
     }
 
     @Test
     public void setCreatedAt() throws Exception {
         party.setCreatedAt(NEW_DATE);
-        assertEquals(party.getCreatedAt(), NEW_DATE);
+        assertEquals(NEW_DATE, party.getCreatedAt());
         party.setCreatedAt(DATE);
     }
 
     @Test
     public void getUpdatedAt() throws Exception {
-        assertEquals(party.getUpdatedAt(), DATE);
+        assertEquals(DATE, party.getUpdatedAt());
     }
 
     @Test
     public void setUpdatedAt() throws Exception {
         party.setUpdatedAt(NEW_DATE);
-        assertEquals(party.getUpdatedAt(), NEW_DATE);
+        assertEquals(NEW_DATE, party.getUpdatedAt());
         party.setUpdatedAt(DATE);
     }
 

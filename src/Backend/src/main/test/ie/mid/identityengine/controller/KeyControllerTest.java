@@ -25,12 +25,19 @@ public class KeyControllerTest {
     private KeyRepository keyRepository;
 
     private static final String ID = "id";
+    private static final String KEY = "key";
     private static final String SERVER = "SERVER";
+    private KeyDTO keyDTO = new KeyDTO();
 
     @Before
     public void setUp() throws Exception {
         Key key = new Key();
         key.setId(ID);
+        key.setPublicKey(KEY);
+        key.setUserId(ID);
+        keyDTO.setId(ID);
+        keyDTO.setPublicKey(KEY);
+        keyDTO.setUserId(ID);
         when(keyRepository.findById(anyString())).thenReturn(key);
         when(keyRepository.findByUserIdAndStatus(anyString(), anyString())).thenReturn(key);
         when(keyRepository.save(any(Key.class))).thenReturn(key);
@@ -39,31 +46,31 @@ public class KeyControllerTest {
     @Test
     public void getKey() throws Exception {
         KeyDTO key = keyController.getKey(ID);
-        assertEquals(key.getId(), ID);
+        assertEquals(ID, key.getId());
     }
 
     @Test
     public void getKeyForServer() throws Exception {
         KeyDTO key = keyController.getKey(SERVER);
-        assertEquals(key.getId(), SERVER);
+        assertEquals(SERVER, key.getId());
     }
 
     @Test
     public void createKey() throws Exception {
-        KeyDTO key = keyController.createKey(new KeyDTO());
-        assertEquals(key.getId(), ID);
+        KeyDTO key = keyController.createKey(this.keyDTO);
+        assertEquals(ID, key.getId());
     }
 
     @Test
     public void updateKey() throws Exception {
-        KeyDTO key = keyController.updateKey(ID, new KeyDTO());
-        assertEquals(key.getId(), ID);
+        KeyDTO key = keyController.updateKey(ID, this.keyDTO);
+        assertEquals(ID, key.getId());
     }
 
     @Test
     public void deleteKey() throws Exception {
         KeyDTO key = keyController.deleteKey(ID);
-        assertEquals(key.getId(), ID);
+        assertEquals(ID, key.getId());
     }
 
 }

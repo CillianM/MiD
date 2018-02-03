@@ -25,6 +25,8 @@ ul.topnav li a {
 
 ul.topnav li a.active {background-color: #3b3d44;}
 
+ul.topnav li a.inactive {border-left: 1px solid #494a4d; border-right: 1px solid #3b3d44;}
+
 ul.topnav li.right {
     float: right;
     background-color: #3b3d44;

@@ -29,11 +29,16 @@ public class UserControllerTest {
     KeyController keyController;
 
     private static final String ID = "id";
+    private static final String KEY = "key";
+    private static final String FCM = "fcm";
+    private UserDTO userDTO = new UserDTO();
 
     @Before
     public void setUp() throws Exception {
         User user = new User();
         user.setId(ID);
+        userDTO.setPublicKey(KEY);
+        userDTO.setFcmToken(FCM);
         KeyDTO key = new KeyDTO();
         key.setId(ID);
         when(userRepository.save(any(User.class))).thenReturn(user);
@@ -45,25 +50,25 @@ public class UserControllerTest {
     @Test
     public void getUser() throws Exception {
         UserDTO userDTO = userController.getUser(ID);
-        assertEquals(userDTO.getId(), ID);
+        assertEquals(ID, userDTO.getId());
     }
 
     @Test
     public void createUser() throws Exception {
-        UserDTO userDTO = userController.createUser(new UserDTO());
-        assertEquals(userDTO.getId(), ID);
+        UserDTO userDTO = userController.createUser(this.userDTO);
+        assertEquals(ID, userDTO.getId());
     }
 
     @Test
     public void updateUserToken() throws Exception {
         UserDTO userDTO = userController.updateUserToken(ID, ID);
-        assertEquals(userDTO.getId(), ID);
+        assertEquals(ID, userDTO.getId());
     }
 
     @Test
     public void deleteUser() throws Exception {
         UserDTO userDTO = userController.deleteUser(ID);
-        assertEquals(userDTO.getId(), ID);
+        assertEquals(ID, userDTO.getId());
     }
 
 }

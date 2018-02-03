@@ -4,6 +4,8 @@ import ie.mid.identityengine.dto.InformationRequestDTO;
 import ie.mid.identityengine.dto.RequestDTO;
 import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
+import ie.mid.identityengine.exception.BadRequestException;
+import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.Request;
 import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.RequestRepository;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class RequestController {
 
     private static final String REQUESTHEADER = "Information request";
-    private static final String REQUESTBODY = "This is a request for information from one user to another";
 
     @Autowired
     RequestRepository requestRepository;
@@ -28,10 +29,13 @@ public class RequestController {
     @Autowired
     PushNotificationService pushNotificationService;
 
+    private static final String USER_NOT_EXIST = "User does not exits";
+
     @GetMapping(value = "{id}")
     @ResponseBody
     public RequestDTO getRequest(@PathVariable String id) {
         Request request = requestRepository.findById(id);
+        if (request == null) throw new ResourceNotFoundException();
         RequestDTO requestDTO = new RequestDTO();
         requestDTO.setId(request.getId());
         requestDTO.setRecipient(request.getRecipient());
@@ -46,6 +50,7 @@ public class RequestController {
     @PostMapping
     @ResponseBody
     public RequestDTO createRequest(@RequestBody InformationRequestDTO informationRequestDTO) {
+        if (isInvalidRequest(informationRequestDTO)) throw new BadRequestException();
         //Create the request to be tracked
         Request request = new Request();
         request.setRecipient(informationRequestDTO.getRecipientId());
@@ -58,6 +63,7 @@ public class RequestController {
         String[] fields = request.getIdentityTypeFields().split(",");
 
         User user = userRepository.findById(informationRequestDTO.getRecipientId());
+        if (user == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
 
         //Contact the user with the id of the request
         JSONObject notificationObject = pushNotificationService.createNotification(
@@ -78,6 +84,8 @@ public class RequestController {
     @ResponseBody
     public RequestDTO updateRequest(@PathVariable String id, @RequestBody InformationRequestDTO informationRequestDTO) {
         Request request = requestRepository.findById(id);
+        if (request == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
+        if (isInvalidRequest(informationRequestDTO)) throw new BadRequestException();
         request.setIndentityTypeId(informationRequestDTO.getIndentityTypeId());
         request.setIdentityTypeFields(informationRequestDTO.getIdentityTypeFields());
         request.setUserResponse(informationRequestDTO.getIdentityTypeValues());
@@ -89,9 +97,14 @@ public class RequestController {
     @ResponseBody
     public RequestDTO rescindRequest(@PathVariable String id) {
         Request request = requestRepository.findById(id);
-        request.setUserResponse("REMOVED");
+        if (request == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
+        request.setUserResponse(RequestStatus.RESCINDED.toString());
         request.setStatus(RequestStatus.RESCINDED.toString());
         requestRepository.save(request);
         return getRequest(id);
+    }
+
+    private boolean isInvalidRequest(InformationRequestDTO requestDTO) {
+        return requestDTO.getRecipientId() == null || requestDTO.getSenderId() == null || requestDTO.getIndentityTypeId() == null || requestDTO.getIdentityTypeFields() == null;
     }
 }

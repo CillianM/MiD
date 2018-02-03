@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -51,97 +50,97 @@ public class IdentityTypeDTOTest {
 
     @Test
     public void getId() throws Exception {
-        assertEquals(identityType.getId(), ID);
+        assertEquals(ID, identityType.getId());
     }
 
     @Test
     public void setId() throws Exception {
         identityType.setId(NEW_ID);
-        assertEquals(identityType.getId(), NEW_ID);
+        assertEquals(NEW_ID, identityType.getId());
         identityType.setId(ID);
     }
 
     @Test
     public void getPartyId() throws Exception {
-        assertEquals(identityType.getPartyId(), ID);
+        assertEquals(ID, identityType.getPartyId());
     }
 
     @Test
     public void setPartyId() throws Exception {
         identityType.setPartyId(NEW_ID);
-        assertEquals(identityType.getPartyId(), NEW_ID);
+        assertEquals(NEW_ID, identityType.getPartyId());
         identityType.setPartyId(ID);
     }
 
     @Test
     public void getFields() throws Exception {
-        assertEquals(identityType.getFields().get(0).getName(), NAME);
+        assertEquals(NAME, identityType.getFields().get(0).getName());
     }
 
     @Test
     public void setFields() throws Exception {
         identityType.setFields(newFieldList);
-        assertEquals(identityType.getFields().get(0).getName(), NEW_NAME);
+        assertEquals(NEW_NAME, identityType.getFields().get(0).getName());
         identityType.setFields(fieldList);
     }
 
     @Test
     public void getVersionNumber() throws Exception {
-        assertEquals(identityType.getVersionNumber(), 1);
+        assertEquals(1, identityType.getVersionNumber());
     }
 
     @Test
     public void setVersionNumber() throws Exception {
         identityType.setVersionNumber(2);
-        assertEquals(identityType.getVersionNumber(), 2);
+        assertEquals(2, identityType.getVersionNumber());
         identityType.setVersionNumber(1);
     }
 
     @Test
     public void getStatus() throws Exception {
-        assertEquals(identityType.getStatus(), STATUS);
+        assertEquals(STATUS, identityType.getStatus());
     }
 
     @Test
     public void setStatus() throws Exception {
         identityType.setStatus(NEW_STATUS);
-        assertEquals(identityType.getStatus(), NEW_STATUS);
+        assertEquals(NEW_STATUS, identityType.getStatus());
         identityType.setStatus(STATUS);
     }
 
     @Test
     public void getName() {
-        assertEquals(identityType.getName(), NAME);
+        assertEquals(NAME, identityType.getName());
     }
 
     @Test
     public void setName() {
         identityType.setName(NEW_NAME);
-        assertEquals(identityType.getName(), NEW_NAME);
+        assertEquals(NEW_NAME, identityType.getName());
         identityType.setName(NAME);
     }
 
     @Test
     public void getIconImg() {
-        assertEquals(identityType.getIconImg(), IMG);
+        assertEquals(IMG, identityType.getIconImg());
     }
 
     @Test
     public void setIconImg() {
         identityType.setIconImg(NEW_IMG);
-        assertEquals(identityType.getIconImg(), NEW_IMG);
+        assertEquals(NEW_IMG, identityType.getIconImg());
         identityType.setStatus(IMG);
     }
 
     @Test
     public void getCoverImg() {
-        assertEquals(identityType.getCoverImg(), IMG);
+        assertEquals(IMG, identityType.getCoverImg());
     }
 
     @Test
     public void setCoverImg() {
         identityType.setCoverImg(NEW_IMG);
-        assertEquals(identityType.getCoverImg(), NEW_IMG);
+        assertEquals(NEW_IMG, identityType.getCoverImg());
         identityType.setCoverImg(IMG);
     }
 }

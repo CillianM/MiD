@@ -50,25 +50,25 @@ public class IdentityTypeTest {
 
     @Test
     public void getId() throws Exception {
-        assertEquals(identityType.getId(), ID);
+        assertEquals(ID, identityType.getId());
     }
 
     @Test
     public void setId() throws Exception {
         identityType.setId(NEW_ID);
-        assertEquals(identityType.getId(), NEW_ID);
+        assertEquals(NEW_ID, identityType.getId());
         identityType.setId(ID);
     }
 
     @Test
     public void getPartyId() throws Exception {
-        assertEquals(identityType.getPartyId(), ID);
+        assertEquals(ID, identityType.getPartyId());
     }
 
     @Test
     public void setPartyId() throws Exception {
         identityType.setPartyId(NEW_ID);
-        assertEquals(identityType.getPartyId(), NEW_ID);
+        assertEquals(NEW_ID, identityType.getPartyId());
         identityType.setPartyId(ID);
     }
 
@@ -84,91 +84,91 @@ public class IdentityTypeTest {
     @Test
     public void setFields() throws Exception {
         identityType.setFields(NEW_FIELDS);
-        assertEquals(identityType.getFields(), NEW_FIELDS);
+        assertEquals(NEW_FIELDS, identityType.getFields());
         identityType.setFields(FIELDS);
     }
 
     @Test
     public void getVersionNumber() throws Exception {
-        assertEquals(identityType.getVersionNumber(), 1);
+        assertEquals(1, identityType.getVersionNumber());
     }
 
     @Test
     public void setVersionNumber() throws Exception {
         identityType.setVersionNumber(2);
-        assertEquals(identityType.getVersionNumber(), 2);
+        assertEquals(2, identityType.getVersionNumber());
         identityType.setVersionNumber(1);
     }
 
     @Test
     public void getCreatedAt() throws Exception {
-        assertEquals(identityType.getCreatedAt(), DATE);
+        assertEquals(DATE, identityType.getCreatedAt());
     }
 
     @Test
     public void setCreatedAt() throws Exception {
         identityType.setCreatedAt(NEW_DATE);
-        assertEquals(identityType.getCreatedAt(), NEW_DATE);
+        assertEquals(NEW_DATE, identityType.getCreatedAt());
         identityType.setCreatedAt(DATE);
     }
 
     @Test
     public void getStatus() throws Exception {
-        assertEquals(identityType.getStatus(), STATUS);
+        assertEquals(STATUS, identityType.getStatus());
     }
 
     @Test
     public void setStatus() throws Exception {
         identityType.setStatus(NEW_STATUS);
-        assertEquals(identityType.getStatus(), NEW_STATUS);
+        assertEquals(NEW_STATUS, identityType.getStatus());
         identityType.setStatus(STATUS);
     }
 
     @Test
     public void getUpdatedAt() throws Exception {
-        assertEquals(identityType.getUpdatedAt(), DATE);
+        assertEquals(DATE, identityType.getUpdatedAt());
     }
 
     @Test
     public void setUpdatedAt() throws Exception {
         identityType.setUpdatedAt(NEW_DATE);
-        assertEquals(identityType.getUpdatedAt(), NEW_DATE);
+        assertEquals(NEW_DATE, identityType.getUpdatedAt());
         identityType.setUpdatedAt(DATE);
     }
 
     @Test
     public void getName() {
-        assertEquals(identityType.getName(), NAME);
+        assertEquals(NAME, identityType.getName());
     }
 
     @Test
     public void setName() {
         identityType.setName(NEW_NAME);
-        assertEquals(identityType.getName(), NEW_NAME);
+        assertEquals(NEW_NAME, identityType.getName());
         identityType.setName(NAME);
     }
 
     @Test
     public void getIconImg() {
-        assertEquals(identityType.getIconImg(), IMG);
+        assertEquals(IMG, identityType.getIconImg());
     }
 
     @Test
     public void setIconImg() {
         identityType.setIconImg(NEW_IMG);
-        assertEquals(identityType.getIconImg(), NEW_IMG);
+        assertEquals(NEW_IMG, identityType.getIconImg());
         identityType.setStatus(IMG);
     }
 
     @Test
     public void getCoverImg() {
-        assertEquals(identityType.getCoverImg(), IMG);
+        assertEquals(IMG, identityType.getCoverImg());
     }
 
     @Test
     public void setCoverImg() {
         identityType.setCoverImg(NEW_IMG);
-        assertEquals(identityType.getCoverImg(), NEW_IMG);
+        assertEquals(NEW_IMG, identityType.getCoverImg());
         identityType.setCoverImg(IMG);
     }
 

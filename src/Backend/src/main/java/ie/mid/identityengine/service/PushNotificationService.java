@@ -37,32 +37,29 @@ public class PushNotificationService {
             JSONObject data = new JSONObject();
             data.put("to", deviceId.trim());
             data.put("notification", message);
-            System.out.println(data.toString());
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
             wr.write(data.toString());
             wr.flush();
             wr.close();
 
             int responseCode = conn.getResponseCode();
-            System.out.println("Response Code : " + responseCode);
+            if (responseCode == 200) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
 
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            return response.toString();
+                return response.toString();
+            } else return null;
         }
         catch(Exception e)
         {
-            System.out.println(e);
+            return null;
         }
-
-        return null;
     }
 
     public JSONObject createNotification(String heading, NotificationType type, String[] keys, Object[] data) {

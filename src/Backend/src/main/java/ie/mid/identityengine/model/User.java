@@ -15,15 +15,15 @@ public class User {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private String id;
-    @Column(name = "fcm_token")
+    @Column(name = "fcm_token", nullable = false)
     private String fcmToken;
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private String status;
     @CreationTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     @UpdateTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
     public User() {

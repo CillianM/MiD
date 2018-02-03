@@ -12,10 +12,10 @@ import java.io.InputStreamReader;
 
 public class HTTPCaller {
 
-    private HttpClient httpClient = HttpClientBuilder.create().build(); //Use this instead
+    private HttpClient httpClient = HttpClientBuilder.create().build();
 
     // HTTP GET request
-    private String sendPost(String urlString, JSONObject data) throws Exception {
+    public String sendPost(String urlString, JSONObject data) {
         try {
             HttpPost request = new HttpPost(urlString);
             StringEntity params = new StringEntity(data.toString());

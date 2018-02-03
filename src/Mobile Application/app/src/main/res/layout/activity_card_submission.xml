@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ie.mid.CardSubmissionActivity">
+
+    <ImageView
+        android:layout_marginTop="10dp"
+        android:id="@+id/profile_image"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_photo_camera_black_48dp"
+        android:onClick="takePicture"/>
+
+    <TextView
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/card_explain"
+        android:layout_below="@id/profile_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ensure your details are valid" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/card_explain"
+        android:id="@+id/form_layout">
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/create_button"
+        android:layout_below="@id/form_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorPrimary"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:textColor="@color/white"
+        android:text="Submit" />
+
+</RelativeLayout>

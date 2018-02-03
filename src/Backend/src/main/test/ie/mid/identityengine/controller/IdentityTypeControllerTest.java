@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -31,6 +30,8 @@ public class IdentityTypeControllerTest {
     private IdentityTypeRepository identityTypeRepository;
 
     private static final String ID = "id";
+    private static final String URL = "url";
+    private static final String NAME = "name";
     private static final String FIELD = "field";
     private static final String FIELDS = "1:2,3:4";
     private IdentityTypeDTO identityTypeDTO = new IdentityTypeDTO();
@@ -42,12 +43,20 @@ public class IdentityTypeControllerTest {
         IdentityType identityType = new IdentityType();
         identityType.setId(ID);
         identityType.setFields(FIELDS);
+        identityType.setCoverImg(URL);
+        identityType.setIconImg(URL);
+        identityType.setName(NAME);
+        identityType.setPartyId(ID);
         List<IdentityType> identityTypeList = new ArrayList<>();
         identityTypeList.add(identityType);
         Field field = new Field(FIELD,FieldType.ADDRESS);
         List<Field> fieldList =new ArrayList<>();
         fieldList.add(field);
         identityTypeDTO.setFields(fieldList);
+        identityTypeDTO.setCoverImg(URL);
+        identityTypeDTO.setIconImg(URL);
+        identityTypeDTO.setName(NAME);
+        identityTypeDTO.setPartyId(ID);
         identityTypeDTOList.add(identityTypeDTO);
 
         when(identityTypeRepository.findById(anyString())).thenReturn(identityType);
@@ -65,7 +74,7 @@ public class IdentityTypeControllerTest {
     @Test
     public void createIdentityType() throws Exception {
         IdentityTypeDTO identityType = identityTypeController.createIdentityType(identityTypeDTO);
-        assertEquals(identityType.getId(), ID);
+        assertEquals(ID, identityType.getId());
     }
 
     @Test

@@ -1,6 +1,5 @@
 package ie.mid.identityengine.model;
 
-import ie.mid.identityengine.enums.RequestStatus;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -16,28 +15,22 @@ public class Submission {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private String id;
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private String userId;
-    @Column(name = "party_id")
+    @Column(name = "party_id", nullable = false)
     private String partyId;
-    @Column(name = "data")
+    @Column(name = "data", length = 10000, nullable = false)
     private String data;
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private String status;
     @CreationTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     @UpdateTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
     public Submission() {
-    }
-
-    public Submission(String userId, String data) {
-        this.userId = userId;
-        this.data = data;
-        this.status = RequestStatus.SUBMITTED.toString();
     }
 
     public String getId() {

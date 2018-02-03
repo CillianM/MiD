@@ -34,61 +34,61 @@ public class UserDTOTest {
 
     @Test
     public void getId() throws Exception {
-        assertEquals(user.getId(), ID);
+        assertEquals(ID, user.getId());
     }
 
     @Test
     public void setId() throws Exception {
         user.setId(NEW_ID);
-        assertEquals(user.getId(), NEW_ID);
+        assertEquals(NEW_ID, user.getId());
         user.setId(ID);
     }
 
     @Test
     public void getStatus() throws Exception {
-        assertEquals(user.getStatus(), STATUS);
+        assertEquals(STATUS, user.getStatus());
     }
 
     @Test
     public void setStatus() throws Exception {
         user.setStatus(NEW_STATUS);
-        assertEquals(user.getStatus(), NEW_STATUS);
+        assertEquals(NEW_STATUS, user.getStatus());
         user.setStatus(STATUS);
     }
 
     @Test
     public void getFcmToken() throws Exception {
-        assertEquals(user.getFcmToken(), FCM);
+        assertEquals(FCM, user.getFcmToken());
     }
 
     @Test
     public void setFcmToken() throws Exception {
         user.setFcmToken(NEW_FCM);
-        assertEquals(user.getFcmToken(), NEW_FCM);
+        assertEquals(NEW_FCM, user.getFcmToken());
         user.setFcmToken(FCM);
     }
 
     @Test
     public void getPublicKey() throws Exception {
-        assertEquals(user.getPublicKey(), KEY);
+        assertEquals(KEY, user.getPublicKey());
     }
 
     @Test
     public void setPublicKey() throws Exception {
         user.setPublicKey(NEW_KEY);
-        assertEquals(user.getPublicKey(), NEW_KEY);
+        assertEquals(NEW_KEY, user.getPublicKey());
         user.setPublicKey(KEY);
     }
 
     @Test
     public void getKeyId() throws Exception {
-        assertEquals(user.getKeyId(), ID);
+        assertEquals(ID, user.getKeyId());
     }
 
     @Test
     public void setKeyId() throws Exception {
         user.setKeyId(NEW_ID);
-        assertEquals(user.getKeyId(), NEW_ID);
+        assertEquals(NEW_ID, user.getKeyId());
         user.setKeyId(ID);
     }
 

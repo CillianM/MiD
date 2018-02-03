@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import ie.mid.R;
 import ie.mid.enums.CardStatus;
+import ie.mid.interfaces.ItemClickListener;
 import ie.mid.model.CardType;
 
 
@@ -19,28 +20,44 @@ public class CardDataAdapter extends RecyclerView.Adapter<CardDataAdapter.ViewHo
 
     private CardType contents;
     private Context context;
+    private ItemClickListener listener;
 
     private static final int TYPE_CELL = 1;
+    private static final int TYPE_HEAD = 0;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView dataText;
-        TextView descriptionText;
         ImageView dataIcon;
 
         ViewHolder(View view) {
             super(view);
-            dataText = (TextView) view.findViewById(R.id.text_area);
-            dataIcon = (ImageView) view.findViewById(R.id.dataImage);
+            dataText = view.findViewById(R.id.text_area);
+            dataIcon = view.findViewById(R.id.dataImage);
         }
     }
 
-    public CardDataAdapter(Context context,CardType contents) {
+    public CardDataAdapter(Context context,CardType contents, ItemClickListener listener) {
         this.context = context;
         this.contents = contents;
+        this.listener = listener;
+    }
+
+    @Override
+    public CardDataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
+        View mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_card_small, parent, false);
+        final ViewHolder mViewHolder = new ViewHolder(mView);
+        mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(v, mViewHolder.getLayoutPosition());
+            }
+        });
+        return mViewHolder;
     }
 
     @Override
     public int getItemViewType(int position) {
+        if(position == 0){ return TYPE_HEAD;}
         return TYPE_CELL;
     }
 
@@ -48,15 +65,6 @@ public class CardDataAdapter extends RecyclerView.Adapter<CardDataAdapter.ViewHo
     public int getItemCount() {
         return contents.getDataList().size() + 1;
     }
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = null;
-        view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_card_small, parent, false);
-        return new ViewHolder(view);
-    }
-
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
@@ -72,7 +80,7 @@ public class CardDataAdapter extends RecyclerView.Adapter<CardDataAdapter.ViewHo
             }
             holder.dataIcon.setImageDrawable(drawable);
         } else {
-            cardData = contents.getDataList().get(position - 1).getData();
+            cardData = contents.getDataList().get(position - 1).getFieldEntry();
             holder.dataText.setText(cardData);
             Drawable drawable = context.getResources().getDrawable(contents.getDataList().get(position - 1).getDataIcon());
             holder.dataIcon.setImageDrawable(drawable);

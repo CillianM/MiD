@@ -8,15 +8,15 @@ public enum FieldType {
     ADDRESS("ADDRESS"),
     BIRTHDAY("BIRTHDAY");
 
-    private String fieldType;
+    private String type;
 
-    FieldType(String fieldType) {
-        this.fieldType = fieldType;
+    FieldType(String type) {
+        this.type = type;
     }
 
     public static FieldType findFieldType(String fieldTypeString){
         for(FieldType fieldType : values()){
-            if( fieldType.fieldType.equals(fieldTypeString)){
+            if (fieldType.type.equals(fieldTypeString)) {
                 return fieldType;
             }
         }
@@ -25,6 +25,6 @@ public enum FieldType {
 
     @Override
     public String toString() {
-        return fieldType;
+        return type;
     }
 }

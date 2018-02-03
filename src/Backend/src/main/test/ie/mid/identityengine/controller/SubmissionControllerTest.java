@@ -2,7 +2,10 @@ package ie.mid.identityengine.controller;
 
 import ie.mid.identityengine.dto.SubmissionDTO;
 import ie.mid.identityengine.model.Submission;
+import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.SubmissionRepository;
+import ie.mid.identityengine.repository.UserRepository;
+import ie.mid.identityengine.service.PushNotificationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +31,18 @@ public class SubmissionControllerTest {
     @Mock
     private SubmissionRepository submissionRepository;
 
+    @Mock
+    private PushNotificationService pushNotificationService;
+
+    @Mock
+    private UserRepository userRepository;
+
     private static final String ID = "id";
+    private static final String DATA = "data";
+    private static final String ACCEPTED = "ACCEPTED";
+    private static final String FCM = "fcm";
+
+    private SubmissionDTO submissionDTO = new SubmissionDTO();
 
 
     @Before
@@ -37,12 +51,21 @@ public class SubmissionControllerTest {
         submission.setId(ID);
         submission.setCreatedAt(new Date());
         submission.setUpdatedAt(new Date());
+        submissionDTO.setId(ID);
+        submissionDTO.setData(DATA);
+        submissionDTO.setPartyId(ID);
+        submissionDTO.setUserId(ID);
+        submissionDTO.setStatus(ACCEPTED);
         List<Submission> submissionList = new ArrayList<>();
         submissionList.add(submission);
+        User user = new User();
+        user.setId(ID);
+        user.setFcmToken(FCM);
         when(submissionRepository.save(any(Submission.class))).thenReturn(submission);
         when(submissionRepository.findById(anyString())).thenReturn(submission);
         when(submissionRepository.findByPartyId(anyString())).thenReturn(submissionList);
         when(submissionRepository.findByUserId(anyString())).thenReturn(submissionList);
+        when(userRepository.findById(anyString())).thenReturn(user);
     }
 
     @Test
@@ -60,18 +83,18 @@ public class SubmissionControllerTest {
     @Test
     public void getSubmission() throws Exception {
         SubmissionDTO submissionDTO = submissionController.getSubmission(ID);
-        assertEquals(submissionDTO.getId(), ID);
+        assertEquals(ID, submissionDTO.getId());
     }
 
     @Test
     public void createSubmission() throws Exception {
-        SubmissionDTO submissionDTO = submissionController.createSubmission(new SubmissionDTO());
-        assertEquals(submissionDTO.getId(), ID);
+        SubmissionDTO submissionDTO = submissionController.createSubmission(this.submissionDTO);
+        assertEquals(ID, submissionDTO.getId());
     }
 
     @Test
     public void updateSubmission() throws Exception {
-        SubmissionDTO submissionDTO = submissionController.updateSubmission(ID, new SubmissionDTO());
+        SubmissionDTO submissionDTO = submissionController.updateSubmission(ID, this.submissionDTO);
         assertNotNull(submissionDTO);
     }
 

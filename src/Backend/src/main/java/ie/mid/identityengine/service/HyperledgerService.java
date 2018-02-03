@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class HyperledgerService {
 
-    private static final String ENDPOINT = "";
+    public HyperledgerService() {
 
-
+    }
 }

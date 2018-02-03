@@ -3,6 +3,8 @@ package ie.mid.identityengine.controller;
 import ie.mid.identityengine.dto.IdentityTypeDTO;
 import ie.mid.identityengine.enums.FieldType;
 import ie.mid.identityengine.enums.IdentityTypeStatus;
+import ie.mid.identityengine.exception.BadRequestException;
+import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.Field;
 import ie.mid.identityengine.model.IdentityType;
 import ie.mid.identityengine.repository.IdentityTypeRepository;
@@ -24,12 +26,14 @@ public class IdentityTypeController {
     @ResponseBody
     public List<IdentityTypeDTO> getIdentityTypes() {
         List<IdentityType> identityTypes = identityTypeRepository.findLatest();
+        if (identityTypes == null) throw new ResourceNotFoundException();
         return getDtoList(identityTypes);
     }
 
     @PostMapping()
     @ResponseBody
     public IdentityTypeDTO createIdentityType(@RequestBody IdentityTypeDTO identityTypeToCreate) {
+        if (isInvalidIdentityType(identityTypeToCreate)) throw new BadRequestException();
 
         IdentityType identityType = new IdentityType();
         identityType.setFields(getFieldString(identityTypeToCreate.getFields()));
@@ -44,13 +48,14 @@ public class IdentityTypeController {
         identityTypeToCreate.setVersionNumber(identityType.getVersionNumber());
         identityTypeToCreate.setStatus(identityType.getStatus());
         return identityTypeToCreate;
+
     }
 
     @GetMapping(value = "/{partyId}")
     @ResponseBody
     public List<IdentityTypeDTO> getPartyIdentityTypes(@PathVariable String partyId) {
-
         List<IdentityType> identityTypes = identityTypeRepository.findLatestByPartyId(partyId);
+        if (identityTypes == null) throw new ResourceNotFoundException();
         return getDtoList(identityTypes);
     }
 
@@ -59,6 +64,8 @@ public class IdentityTypeController {
     public IdentityTypeDTO getIdentityType(@PathVariable String partyId, @PathVariable String id) {
 
         IdentityType identityType = identityTypeRepository.findById(id);
+        if (identityType == null) throw new ResourceNotFoundException();
+
         IdentityTypeDTO dto = new IdentityTypeDTO();
         dto.setFields(getFieldList(identityType.getFields()));
         dto.setId(identityType.getId());
@@ -74,8 +81,12 @@ public class IdentityTypeController {
     @PutMapping(value = "/{partyId}/{id}")
     @ResponseBody
     public IdentityTypeDTO updateIdentityType(@PathVariable String partyId, @PathVariable String id, @RequestBody IdentityTypeDTO identityTypeDTO) {
+        if (isInvalidIdentityType(identityTypeDTO)) throw new BadRequestException();
+
         IdentityType updatedIdentityType = new IdentityType();
         IdentityType identityType = identityTypeRepository.findById(id);
+        if (identityType == null) throw new ResourceNotFoundException();
+
         updatedIdentityType.setPartyId(identityTypeDTO.getPartyId());
         updatedIdentityType.setName(identityTypeDTO.getName());
         updatedIdentityType.setIconImg(identityTypeDTO.getIconImg());
@@ -94,12 +105,14 @@ public class IdentityTypeController {
         identityTypeDTO.setIconImg(updatedIdentityType.getIconImg());
         identityTypeDTO.setCoverImg(updatedIdentityType.getCoverImg());
         return identityTypeDTO;
+
     }
 
     @DeleteMapping(value = "/{partyId}/{id}")
     @ResponseBody
     public IdentityTypeDTO deleteIdentityType(@PathVariable String partyId, @PathVariable String id) {
         IdentityType identityType = identityTypeRepository.findById(id);
+        if (identityType == null) throw new ResourceNotFoundException();
         identityType.setStatus(IdentityTypeStatus.DELETED.toString());
         identityTypeRepository.save(identityType);
         IdentityTypeDTO dto = new IdentityTypeDTO();
@@ -132,9 +145,9 @@ public class IdentityTypeController {
         String [] fieldArray = fieldString.split(",");
         List<Field> fieldList = new ArrayList<>();
         for(String field:fieldArray){
-            FieldType fieldType = FieldType.findFieldType(field.substring(field.indexOf(":") + 1));
+            FieldType fieldType = FieldType.findFieldType(field.substring(field.indexOf(':') + 1));
             if(fieldType != null) {
-                fieldList.add(new Field(field.substring(0, field.indexOf(":")), fieldType));
+                fieldList.add(new Field(field.substring(0, field.indexOf(':')), fieldType));
             }
         }
         return fieldList;
@@ -151,5 +164,10 @@ public class IdentityTypeController {
         }
         stringBuilder.deleteCharAt(stringBuilder.length()-1);
         return stringBuilder.toString();
+    }
+
+
+    private boolean isInvalidIdentityType(IdentityTypeDTO identityTypeDTO) {
+        return identityTypeDTO.getCoverImg() == null || identityTypeDTO.getFields() == null || identityTypeDTO.getIconImg() == null || identityTypeDTO.getPartyId() == null || identityTypeDTO.getName() == null;
     }
 }

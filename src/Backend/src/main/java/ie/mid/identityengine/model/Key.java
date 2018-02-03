@@ -15,29 +15,29 @@ public class Key {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "key_id", nullable = false)
     private String id;
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private String userId;
-    @Column(name = "public_key")
-    private String key;
-    @Column(name = "key_class")
-    private String keyClass;
-    @Column(name = "status")
+    @Column(name = "public_key", nullable = false)
+    private String publicKey;
+    @Column(name = "status", nullable = false)
     private String status;
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date validUntil;
     @CreationTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
     @UpdateTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
     public Key() {
     }
 
-    public Key(String owner, String key) {
+    public Key(String owner, String publicKey) {
         this.userId = owner;
+        this.publicKey = publicKey;
         this.status = KeyStatus.ACTIVE.toString();
     }
 
@@ -65,12 +65,12 @@ public class Key {
         this.createdAt = createdAt;
     }
 
-    public String getKey() {
-        return key;
+    public String getPublicKey() {
+        return publicKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     public String getUserId() {
@@ -87,14 +87,6 @@ public class Key {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public String getKeyClass() {
-        return keyClass;
-    }
-
-    public void setKeyClass(String keyClass) {
-        this.keyClass = keyClass;
     }
 
     public Date getValidUntil() {

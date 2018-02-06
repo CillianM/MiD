@@ -10,7 +10,10 @@
   </div>
 
   <div style="padding:0 16px;">
-      <h2>Pending Submission Listings</h2>
+      <ul class="table-title">
+        <li><h2>Pending Submission Listings</h2></li>
+        <li class="right"><button class="create-button right" (click)="getSubmissions()">Refresh List</button></li>
+      </ul>
       <div class="table100 ver1 m-b-110">
         <div class="table100-head">
           <table>
@@ -43,7 +46,7 @@
     <div style="padding:0 16px;">
         <ul class="table-title">
           <li><h2>Available Identity Types</h2></li>
-          <li class="right"><button class="create-button right" (click)="modal.show()">Create Identity Type</button></li>
+          <li class="right"><button class="create-button right" (click)="show()">Create Identity Type</button></li>
         </ul>
         <div class="table100 ver1 m-b-110">
           <div class="table100-head">
@@ -71,13 +74,16 @@
           </div>
         </div>
       </div>
-      
-      <app-modal #modal>
-          <div class="app-modal-header">
-            <h2>Create Identity Type</h2>
-          </div>
-          <div class="app-modal-body">
-            <form>
+
+<div (click)="onContainerClicked($event)" class="modal fade" tabindex="-1" [ngClass]="{'show': visibleAnimate}"
+      [ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': visibleAnimate ? 1 : 0}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h2>Create Identity Type</h2>
+      </div>
+      <div class="modal-body">
+          <form>
               <div class="form-group">
                 <p>General Information</p>
                 <input #typeName type="text"class="text-input" placeholder="Identity Type Name" >
@@ -111,9 +117,11 @@
                 <span>Submit</span>
               </button>
             </div>
-          </div>
-          <div class="app-modal-footer">
-          </div>
-      </app-modal>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
   
   

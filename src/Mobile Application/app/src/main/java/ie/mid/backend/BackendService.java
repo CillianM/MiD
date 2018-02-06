@@ -15,56 +15,37 @@ import java.util.concurrent.ExecutionException;
 
 import static android.content.ContentValues.TAG;
 
-public class BackendService {
+class BackendService {
 
     private static String ENDPOINT = "http://10.0.2.2:8080"; //LOCALHOST URL FOR VM
     private String endpointExtention;
+    private final String LOG_TAG = "BACKEND_SERVICE";
 
-    public BackendService(Context context, String endpointExtention) {
+    BackendService(Context context, String endpointExtention) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         ENDPOINT = prefs.getString("key_server_address", null);
         this.endpointExtention = endpointExtention;
     }
 
-    public String sendGet() {
+    String sendGet() {
         String[] params = new String[]{"GET"};
-        try {
-            return new BackendCaller().execute(params).get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.e(TAG, "Error: " + e.toString());
-        }
-        return null;
+        return executeCall(params);
     }
 
-    public String sendPost(String json) {
+    String sendPost(String json) {
         String[] params = new String[]{"POST", json};
-        try {
-            return new BackendCaller().execute(params).get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.e(TAG, "Error: " + e.toString());
-        }
-        return null;
+        return executeCall(params);
     }
 
-    public String sendPut(String json) {
+    String sendPut(String json) {
         String[] params = new String[]{"PUT", json};
-        try {
-            return new BackendCaller().execute(params).get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.e(TAG, "Error: " + e.toString());
-        }
-        return null;
+        return executeCall(params);
     }
 
-    public String sendDelete() {
+    String sendDelete() {
         String[] params = new String[]{"DELETE"};
-        try {
-            return new BackendCaller().execute(params).get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.e(TAG, "Error: " + e.toString());
-        }
-        return null;
+        return executeCall(params);
     }
 
     private String getEndpointExtention() {
@@ -75,122 +56,128 @@ public class BackendService {
         this.endpointExtention = endpointExtention;
     }
 
-    private class BackendCaller extends AsyncTask<String, Void, String> {
 
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                switch (strings[0]) {
-                    case "GET":
-                        return sendGet(ENDPOINT + getEndpointExtention());
-                    case "POST":
-                        return sendPost(ENDPOINT + getEndpointExtention(), strings[1]);
-                    case "PUT":
-                        return sendPut(ENDPOINT + getEndpointExtention(), strings[1]);
-                    case "DELETE":
-                        return sendDelete(ENDPOINT + getEndpointExtention());
-                }
-
-            } catch (Exception e) {
-                Log.e(TAG, "Error: " + e.toString());
+    private String executeCall(String [] args){
+        try {
+            switch (args[0]) {
+                case "GET":
+                    return sendGet(ENDPOINT + getEndpointExtention());
+                case "POST":
+                    return sendPost(ENDPOINT + getEndpointExtention(), args[1]);
+                case "PUT":
+                    return sendPut(ENDPOINT + getEndpointExtention(), args[1]);
+                case "DELETE":
+                    return sendDelete(ENDPOINT + getEndpointExtention());
             }
-            return null;
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error: " + e.toString());
         }
+        return null;
+    }
 
-        protected void onPostExecute(String feed) {
+    private String sendGet(String url) throws Exception {
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Content-Type", "application/json");
 
-        }
+        int responseCode = con.getResponseCode();
+        Log.i(LOG_TAG,"Sending 'GET' request to URL : " + url);
+        Log.i(LOG_TAG,"Response Code : " + responseCode);
 
-        private String sendGet(String url) throws Exception {
-            URL obj = new URL(url);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Content-Type", "application/json");
-            int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'GET' request to URL : " + url);
-            System.out.println("Response Code : " + responseCode);
-
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
+        if(responseCode == 200) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
             StringBuilder response = new StringBuilder();
-
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
             in.close();
             return response.toString();
         }
+        else return null;
+    }
 
-        private String sendPost(String url, String json) throws Exception {
-            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-            conn.setUseCaches(false);
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-            if (json != null)
-                wr.write(json);
-            wr.flush();
-            wr.close();
+    private String sendPost(String url, String json) throws Exception {
+        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+        conn.setUseCaches(false);
+        conn.setDoInput(true);
+        conn.setDoOutput(true);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+        if (json != null)
+            wr.write(json);
+        wr.flush();
+        wr.close();
 
-            int responseCode = conn.getResponseCode();
-            System.out.println("Response Code : " + responseCode);
-
+        int responseCode = conn.getResponseCode();
+        Log.i(LOG_TAG,"Sending 'POST' request to URL : " + url);
+        Log.i(LOG_TAG,"Response Code : " + responseCode);
+        if(responseCode == 200) {
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String inputLine;
             StringBuilder response = new StringBuilder();
-
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
             in.close();
             return response.toString();
         }
-
-        private String sendPut(String url, String json) throws Exception {
-            HttpURLConnection httpCon = (HttpURLConnection) new URL(url).openConnection();
-            httpCon.setDoOutput(true);
-            httpCon.setRequestMethod("PUT");
-            httpCon.setRequestProperty("Content-Type", "application/json");
-            OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
-            if (json != null)
-                out.write(json);
-            out.flush();
-            out.close();
-
-            int responseCode = httpCon.getResponseCode();
-            System.out.println("Response Code : " + responseCode);
-            BufferedReader in = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            return response.toString();
-        }
-
-        private String sendDelete(String url) throws Exception {
-            HttpURLConnection httpCon = (HttpURLConnection) new URL(url).openConnection();
-            httpCon.setDoOutput(true);
-            httpCon.setRequestMethod("DELETE");
-            httpCon.setRequestProperty("Content-Type", "application/json");
-            OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
-            out.flush();
-            out.close();
-
-            int responseCode = httpCon.getResponseCode();
-            System.out.println("Response Code : " + responseCode);
-            BufferedReader in = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            return response.toString();
-        }
+        else return null;
     }
+
+    private String sendPut(String url, String json) throws Exception {
+        HttpURLConnection httpCon = (HttpURLConnection) new URL(url).openConnection();
+        httpCon.setDoOutput(true);
+        httpCon.setRequestMethod("PUT");
+        httpCon.setRequestProperty("Content-Type", "application/json");
+        OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
+        if (json != null)
+            out.write(json);
+        out.flush();
+        out.close();
+
+        int responseCode = httpCon.getResponseCode();
+        Log.i(LOG_TAG,"Sending 'PUT' request to URL : " + url);
+        Log.i(LOG_TAG,"Response Code : " + responseCode);
+        if(responseCode == 200) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            return response.toString();
+        }
+        else return null;
+    }
+
+    private String sendDelete(String url) throws Exception {
+        HttpURLConnection httpCon = (HttpURLConnection) new URL(url).openConnection();
+        httpCon.setDoOutput(true);
+        httpCon.setRequestMethod("DELETE");
+        httpCon.setRequestProperty("Content-Type", "application/json");
+        OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
+        out.flush();
+        out.close();
+
+        int responseCode = httpCon.getResponseCode();
+        Log.i(LOG_TAG,"Sending 'DELETE' request to URL : " + url);
+        Log.i(LOG_TAG,"Response Code : " + responseCode);
+        if(responseCode == 200) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            return response.toString();
+        }
+        else return null;
+    }
+
 }

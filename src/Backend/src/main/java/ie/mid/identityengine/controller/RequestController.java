@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequestMapping("/request")
 public class RequestController {
@@ -30,6 +33,22 @@ public class RequestController {
     PushNotificationService pushNotificationService;
 
     private static final String USER_NOT_EXIST = "User does not exits";
+
+    @GetMapping(value = "/recipient/{recipientId}")
+    @ResponseBody
+    public List<RequestDTO> getRecipientRequests(@PathVariable String recipientId) {
+        List<Request> requests = requestRepository.findByRecipient(recipientId);
+        if (requests == null) throw new ResourceNotFoundException();
+        return requestListToDTOList(requests);
+    }
+
+    @GetMapping(value = "/sender/{senderId}")
+    @ResponseBody
+    public List<RequestDTO> getSenderRequests(@PathVariable String senderId) {
+        List<Request> requests = requestRepository.findBySender(senderId);
+        if (requests == null) throw new ResourceNotFoundException();
+        return requestListToDTOList(requests);
+    }
 
     @GetMapping(value = "{id}")
     @ResponseBody
@@ -102,6 +121,22 @@ public class RequestController {
         request.setStatus(RequestStatus.RESCINDED.toString());
         requestRepository.save(request);
         return getRequest(id);
+    }
+
+    private List<RequestDTO> requestListToDTOList(List<Request> requestList) {
+        List<RequestDTO> requestDTOList = new ArrayList<>();
+        requestList.forEach((request -> {
+            RequestDTO requestDTO = new RequestDTO();
+            requestDTO.setId(request.getId());
+            requestDTO.setRecipient(request.getRecipient());
+            requestDTO.setSender(request.getSender());
+            requestDTO.setStatus(request.getStatus());
+            requestDTO.setIdentityTypeFields(request.getIdentityTypeFields());
+            requestDTO.setIdentityTypeValues(request.getUserResponse());
+            requestDTO.setIndentityTypeId(request.getIndentityTypeId());
+            requestDTOList.add(requestDTO);
+        }));
+        return requestDTOList;
     }
 
     private boolean isInvalidRequest(InformationRequestDTO requestDTO) {

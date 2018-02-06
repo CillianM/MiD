@@ -11,6 +11,7 @@
         layout="@layout/list_item_card_big"/>
 
     <GridView
+        android:visibility="gone"
         android:id="@+id/card_select"
         android:layout_below="@+id/description"
         android:layout_width="fill_parent"
@@ -22,5 +23,20 @@
         android:footerDividersEnabled="false"
         android:padding="1dp"
         android:numColumns="2" />
+
+    <ProgressBar
+        android:indeterminate="true"
+        android:id="@+id/card_progress"
+        android:layout_centerInParent="true"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
+
+    <TextView
+        android:visibility="gone"
+        android:indeterminate="true"
+        android:id="@+id/card_info"
+        android:layout_centerInParent="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

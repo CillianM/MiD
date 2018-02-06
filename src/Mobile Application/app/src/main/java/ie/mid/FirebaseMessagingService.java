@@ -87,7 +87,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         if(cardType.getId() != null)
-            intent.putExtra("user",cardType.getId());
+            intent.putExtra("user",cardType.getOwnerId());
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)

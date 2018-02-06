@@ -7,7 +7,7 @@
 <div style="padding:0 16px;">
   <ul class="table-title">
     <li><h2>Available Parties</h2></li>
-    <li class="right"><button class="create-button right" (click)="modal.show()">Create Party</button></li>
+    <li class="right"><button class="create-button right" (click)="show()">Create Party</button></li>
   </ul>
   <div class="table100 ver1 m-b-110">
     <div class="table100-head">
@@ -34,22 +34,27 @@
   </div>
 </div>
 
-<app-modal #modal>
-    <div class="app-modal-header">
-      <h2>Create Party</h2>
-    </div>
-    <div class="app-modal-body">
-      <form>
-        <div class="form-group">
-          <input #partyName type="text"class="name-input" placeholder="Name" >
-        </div>
-      </form>
-      <div class="button-container">
-        <button type="button" class="create-button" (click)="createNewParty(partyName.value)">
-          <span>Submit</span>
-        </button>
+<div (click)="onContainerClicked($event)" class="modal fade" tabindex="-1" [ngClass]="{'show': visibleAnimate}"
+      [ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': visibleAnimate ? 1 : 0}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+            <h2>Create Party</h2>
+      </div>
+      <div class="modal-body">
+          <form>
+              <div class="form-group">
+                <input #partyName type="text"class="name-input" placeholder="Name" >
+              </div>
+            </form>
+            <div class="button-container">
+              <button type="button" class="create-button" (click)="createNewParty(partyName.value)">
+                <span>Submit</span>
+              </button>
+            </div>
+      </div>
+      <div class="modal-footer">
       </div>
     </div>
-    <div class="app-modal-footer">
-    </div>
-</app-modal>
+  </div>
+</div>

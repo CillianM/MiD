@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), CardSelectActivity.class);
             intent.putExtra("userId", userId);
             startActivity(intent);
+            finish();
         } else {
 
             BottomNavigationView bottomNavigationView = (BottomNavigationView)

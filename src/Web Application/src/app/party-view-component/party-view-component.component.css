@@ -64,7 +64,7 @@
 }
 
 .type-input{
-  width: 47%;
+  width: 46%;
   height: 40px;
   margin-bottom: 10px;
   border:none;
@@ -96,4 +96,36 @@
 }
 .add-button:hover,.add-button:active,.add-button:focus {
   background: #3b3d44;
+}
+
+@media screen and (max-width: 1680px){
+  .type-input{
+    width: 44%;
+    height: 40px;
+    margin-bottom: 10px;
+    border:none;
+    border-bottom:1px solid #ccc
+  }
+  .type-select{
+    padding:12.5px 0;
+    width:44%;
+    border:none;
+    border-bottom:1px solid #ccc
+  }
+}
+
+@media screen and (max-width: 1000px){
+  .type-input{
+    width: 85%;
+    height: 40px;
+    margin-bottom: 10px;
+    border:none;
+    border-bottom:1px solid #ccc
+  }
+  .type-select{
+    padding:12.5px 0;
+    width:100%;
+    border:none;
+    border-bottom:1px solid #ccc
+  }
 }

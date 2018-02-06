@@ -15,8 +15,6 @@ import { PartySelectionComponentComponent } from './party-selection-component/pa
 import { PartyViewComponentComponent } from './party-view-component/party-view-component.component';
 import { Globals } from './app-properties';
 import { PartyService } from './services/party-service';
-import { ModalService } from './modal-window/modal.service';
-import { ModalComponent } from './modal-window/modal.component';
 import { IdentityTypeViewComponent } from './identity-type-view/identity-type-view.component';
 import { IdentityTypeService } from './services/identitytype-service';
 
@@ -28,7 +26,6 @@ import { IdentityTypeService } from './services/identitytype-service';
     PagenotfoundComponent,
     PartySelectionComponentComponent,
     PartyViewComponentComponent,
-    ModalComponent,
     IdentityTypeViewComponent,
     SafeHtml
   ],
@@ -43,7 +40,6 @@ import { IdentityTypeService } from './services/identitytype-service';
     SubmissionService,
     PartyService,
     IdentityTypeService,
-    ModalService,
     Globals
   ],
   bootstrap: [

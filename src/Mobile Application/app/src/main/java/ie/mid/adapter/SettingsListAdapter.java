@@ -44,14 +44,14 @@ public class SettingsListAdapter extends BaseAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.setting_item, null);
+            view = inflater.inflate(R.layout.setting_item_card_small, null);
         } else {
             view = convertView;
         }
 
-        TextView titleView = view.findViewById(R.id.title);
-        TextView subtitleView = view.findViewById(R.id.subTitle);
-        ImageView iconView = view.findViewById(R.id.icon);
+        TextView titleView = view.findViewById(R.id.text_area);
+        TextView subtitleView = view.findViewById(R.id.sub_text_area);
+        ImageView iconView = view.findViewById(R.id.dataImage);
 
         titleView.setText(settingItems.get(position).getTitle());
         subtitleView.setText(settingItems.get(position).getSubtitle());

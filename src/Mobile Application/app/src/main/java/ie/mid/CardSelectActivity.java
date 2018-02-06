@@ -1,6 +1,7 @@
 package ie.mid;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -14,10 +15,11 @@ import java.util.List;
 
 import ie.mid.adapter.CardSelectAdapter;
 import ie.mid.backend.IdentityTypeService;
+import ie.mid.interfaces.IdentityTaskCompleted;
 import ie.mid.model.AvailableCard;
 import ie.mid.pojo.IdentityType;
 
-public class CardSelectActivity extends AppCompatActivity {
+public class CardSelectActivity extends AppCompatActivity implements IdentityTaskCompleted {
 
     GridView gridView;
     IdentityTypeService identityTypeService;
@@ -37,32 +39,70 @@ public class CardSelectActivity extends AppCompatActivity {
         layoutParams.height = 400;
         cardView.setLayoutParams(layoutParams);
 
-        gridView = (GridView) findViewById(R.id.card_select);
-
-        gridView.setAdapter(new CardSelectAdapter(this,getListData()));
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getApplicationContext(), CardCreateActivity.class);
-                intent.putExtra("card", identityTypeList.get(i));
-                intent.putExtra("userId", userId);
-                startActivity(intent);
-            }
-        });
-
         TextView description = (TextView) findViewById(R.id.desciption_text);
         description.setText(getResources().getString(R.string.select_description));
+
+        new IdentityTypeGetter(this,new IdentityTypeService(getApplicationContext())).execute();
     }
 
-    private List<AvailableCard> getListData(){
-        ArrayList<AvailableCard> listOfData = new ArrayList<>();
-        identityTypeService = new IdentityTypeService(getApplicationContext());
-        identityTypeList = identityTypeService.getIdentityTypes();
-        for (IdentityType identityType : identityTypeList) {
-            AvailableCard availableCard = new AvailableCard(identityType.getName(), identityType.getIconImg());
-            listOfData.add(availableCard);
+    @Override
+    public void onTaskComplete(List<IdentityType> identityTypes) {
+        TextView cardText = (TextView) findViewById(R.id.card_info);
+        findViewById(R.id.card_progress).setVisibility(View.GONE);
+        if(identityTypes != null && identityTypes.size() >1) {
+            ArrayList<AvailableCard> listOfData = new ArrayList<>();
+            for (IdentityType identityType : identityTypes) {
+                AvailableCard availableCard = new AvailableCard(identityType.getName(), identityType.getIconImg());
+                listOfData.add(availableCard);
+            }
+            identityTypeList = identityTypes;
+            gridView = (GridView) findViewById(R.id.card_select);
+            gridView.setAdapter(new CardSelectAdapter(this, listOfData));
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Intent intent = new Intent(getApplicationContext(), CardCreateActivity.class);
+                    intent.putExtra("card", identityTypeList.get(i));
+                    intent.putExtra("userId", userId);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+            findViewById(R.id.card_select).setVisibility(View.VISIBLE);
         }
-        return listOfData;
+        else if(identityTypes != null && identityTypes.size() == 1){
+            cardText.setText("List empty");
+            cardText.setVisibility(View.VISIBLE);
+        }
+        else{
+            cardText.setText("Unable To Retrieve Listing");
+            cardText.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private static class IdentityTypeGetter extends AsyncTask<Void, Void, List<IdentityType>> {
+
+        private IdentityTaskCompleted callBack;
+        private IdentityTypeService identityTypeService;
+
+        IdentityTypeGetter(IdentityTaskCompleted callBack, IdentityTypeService identityTypeService){
+            this.callBack = callBack;
+            this.identityTypeService = identityTypeService;
+        }
+
+        @Override
+        protected List<IdentityType> doInBackground(Void... voids) {
+            return identityTypeService.getIdentityTypes();
+        }
+
+        @Override
+        protected void onPostExecute(List<IdentityType> result) {
+            callBack.onTaskComplete(result);
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
     }
 }

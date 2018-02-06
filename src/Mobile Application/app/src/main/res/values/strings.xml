@@ -13,7 +13,7 @@
     <string name="title_activity_main_fragment">MainFragmentActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_list">ListActivity</string>
-    <string name="select_description">Below is a list of the available forms of identity. To begin, select one and fill in the necessary information requested. The information will be saved for later use and will be abailable for validation at that point.</string>
+    <string name="select_description">Below is a list of the available forms of identity. To begin, select one and fill in the necessary information requested. The information will be saved for later use and will be available for validation at that point.</string>
     <string name="profile_prompt">Select A Profile</string>
     <string name="login">Login</string>
     <string name="title_activity_settings">Settings</string>

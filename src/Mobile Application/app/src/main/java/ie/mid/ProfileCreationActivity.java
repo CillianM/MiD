@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -34,12 +35,13 @@ import java.util.List;
 import java.util.UUID;
 
 import ie.mid.backend.UserService;
+import ie.mid.interfaces.ProfileTaskCompleted;
 import ie.mid.model.Profile;
 import ie.mid.util.HashUtil;
 import ie.mid.util.InternetUtil;
 import ie.mid.view.RoundedImageView;
 
-public class ProfileCreationActivity extends AppCompatActivity implements Validator.ValidationListener {
+public class ProfileCreationActivity extends AppCompatActivity implements Validator.ValidationListener, ProfileTaskCompleted {
 
     Validator validator;
     private static final int RESULT_LOAD_IMAGE = 100;
@@ -52,9 +54,9 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
     private EditText confirmPassword;
 
     Button createButton;
+    ProgressBar progressBar;
     ImageButton setttingsButton;
     RoundedImageView profileImage;
-    ProgressBar progressBar;
     String selectedImagePath = "PUG";
 
     @Override
@@ -103,27 +105,18 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
     @Override
     public void onValidationSucceeded() {
         showLoading();
-        if (InternetUtil.isNetworkAvailable(getApplicationContext())) {
-            byte[] salt = HashUtil.getSalt();
-            byte[] hashedPassword = HashUtil.hashPassword(password.getText().toString(), salt);
+        //salt password
+        byte[] salt = HashUtil.getSalt();
+        byte[] hashedPassword = HashUtil.hashPassword(password.getText().toString(), salt);
+        //create initial profile with data
+        Profile profile = new Profile();
+        profile.setName(nickname.getText().toString());
+        profile.setSalt(HashUtil.byteToHex(salt));
+        profile.setHash(HashUtil.byteToHex(hashedPassword));
+        profile.setImageUrl(selectedImagePath);
+        UserService userService = new UserService(this);
+        new ProfileCreator(this,userService).execute(profile);
 
-            UserService userService = new UserService(this);
-            Profile profile = new Profile();
-            profile.setName(nickname.getText().toString());
-            profile.setSalt(HashUtil.byteToHex(salt));
-            profile.setHash(HashUtil.byteToHex(hashedPassword));
-            profile.setImageUrl(selectedImagePath);
-            profile = userService.createUser(profile);
-            if (profile != null) {
-                Intent intent = new Intent(getApplicationContext(), ProfileSelectionActivity.class);
-                startActivity(intent);
-            } else {
-                Toast.makeText(getApplicationContext(), "Error creating profile please try again later", Toast.LENGTH_LONG).show();
-                hideLoading();
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "Network not available please try again later", Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override
@@ -241,4 +234,41 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
     }
 
 
+    @Override
+    public void onTaskComplete(Profile profile) {
+        if (profile != null) {
+            Intent intent = new Intent(getApplicationContext(), ProfileSelectionActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else {
+            Toast.makeText(getApplicationContext(), "Error creating profile please try again later", Toast.LENGTH_LONG).show();
+            hideLoading();
+        }
+    }
+
+    private static class ProfileCreator extends AsyncTask<Profile, Void, Profile> {
+
+        private ProfileTaskCompleted callBack;
+        private UserService userService;
+
+        ProfileCreator(ProfileTaskCompleted callBack, UserService userService){
+            this.callBack = callBack;
+            this.userService = userService;
+        }
+
+        @Override
+        protected Profile doInBackground(Profile... profiles) {
+            return userService.createUser(profiles[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Profile result) {
+            callBack.onTaskComplete(result);
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+    }
 }

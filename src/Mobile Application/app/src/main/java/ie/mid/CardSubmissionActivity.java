@@ -1,25 +1,35 @@
 package ie.mid;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import ie.mid.backend.SubmissionService;
+import ie.mid.enums.DataType;
 import ie.mid.handler.DatabaseHandler;
+import ie.mid.interfaces.SubmitTaskCompleted;
 import ie.mid.model.CardType;
 import ie.mid.model.Profile;
 import ie.mid.model.SubmissionData;
@@ -27,17 +37,25 @@ import ie.mid.pojo.IdentityType;
 import ie.mid.pojo.Submission;
 import ie.mid.util.HashUtil;
 
-public class CardSubmissionActivity extends AppCompatActivity {
+public class CardSubmissionActivity extends AppCompatActivity implements SubmitTaskCompleted{
 
     private String userId;
     private String cardId;
     private CardType cardType;
-    private IdentityType identityType;
     private List<TextInputEditText> fields;
     private Profile profile;
     private static final int CAMERA_REQUEST_CODE = 1001;
     private ImageView profileImage;
     private Bitmap profilePhoto;
+    Button submitButton;
+    ProgressBar progressBar;
+    int exp_year, exp_month, exp_day,birth_year, birth_month, birth_day;
+    boolean expSet,birthSet,birthUsed,expUsed;
+    DatePickerDialog.OnDateSetListener exp_dateListener,birth_dateListener;
+    Button expButton,birthButton;
+    int expIndex,birthIndex;
+    private final int DATE_PICKER_EXP = 0;
+    private final int DATE_PICKER_BIRTH = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +63,7 @@ public class CardSubmissionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_card_submission);
 
         profileImage = (ImageView) findViewById(R.id.profile_image);
+        progressBar = (ProgressBar) findViewById(R.id.submission_progress);
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");
@@ -53,11 +72,43 @@ public class CardSubmissionActivity extends AppCompatActivity {
         handler.open();
         cardType = handler.getUserCard(cardId);
         profile = handler.getProfile(userId);
+        birth_dateListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                birthSet = true;
+                birth_year = i;
+                birth_month = i1 + 1;
+                birth_day = i2;
+                updateDisplays();
+            }
+        };
+        exp_dateListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                expSet = true;
+                exp_year = i;
+                exp_month = i1 + 1;
+                exp_day = i2;
+                updateDisplays();
+            }
+        };
 
         handler.close();
-
-
         setupView();
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        Date date = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        switch(id){
+            case DATE_PICKER_BIRTH:
+                return new DatePickerDialog(this, birth_dateListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            case DATE_PICKER_EXP:
+                return new DatePickerDialog(this, exp_dateListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        }
+        return null;
     }
 
     private void setupView() {
@@ -76,17 +127,58 @@ public class CardSubmissionActivity extends AppCompatActivity {
             textInputLayout.setLayoutParams(textInputLayoutParams);
             LinearLayout.LayoutParams editTextLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            TextInputEditText editText = new TextInputEditText(this);
-            editText.setLayoutParams(editTextLayoutParams);
-            editText.setHint(cardType.getDataList().get(i).getFieldTitle());
-            editText.setText(cardType.getDataList().get(i).getFieldEntry());
-            editText.setLines(1);
-            textInputLayout.addView(editText);
-            relativeLayout.addView(textInputLayout);
-            fields.add(editText);
+
+            boolean isBirthField = DataType.BIRTHDAY.toString().equals(cardType.getDataList().get(i).getFieldType());
+            boolean isExpField = DataType.EXPIRY.toString().equals(cardType.getDataList().get(i).getFieldType());
+            if(!isBirthField && !isExpField) {
+
+                TextInputEditText editText = new TextInputEditText(this);
+                editText.setLayoutParams(editTextLayoutParams);
+                editText.setHint(cardType.getDataList().get(i).getFieldTitle());
+                editText.setText(cardType.getDataList().get(i).getFieldEntry());
+                editText.setLines(1);
+                textInputLayout.addView(editText);
+                relativeLayout.addView(textInputLayout);
+                fields.add(editText);
+            }
+            else{
+                if(DataType.BIRTHDAY.toString().equals(cardType.getDataList().get(i).getFieldType())){
+                    birthIndex = i;
+                    birthUsed = true;
+                    birthSet = true;
+                    setBirthDate(cardType.getDataList().get(i).getFieldEntry());
+                    birthButton = new Button(this);
+                    birthButton.setText(cardType.getDataList().get(i).getFieldEntry());
+                    birthButton.setLayoutParams(editTextLayoutParams);
+                    birthButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            showDialog(DATE_PICKER_BIRTH);
+                        }
+                    });
+                    textInputLayout.addView(birthButton);
+                }
+                else {
+                    expIndex = i;
+                    expUsed = true;
+                    expSet = true;
+                    setExpiryDate(cardType.getDataList().get(i).getFieldEntry());
+                    expButton = new Button(this);
+                    expButton.setText(cardType.getDataList().get(i).getFieldEntry());
+                    expButton.setLayoutParams(editTextLayoutParams);
+                    expButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            showDialog(DATE_PICKER_EXP);
+                        }
+                    });
+                    textInputLayout.addView(expButton);
+                }
+                relativeLayout.addView(textInputLayout);
+            }
         }
-        Button button = (Button) findViewById(R.id.create_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        submitButton = (Button) findViewById(R.id.create_button);
+        submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 verifyCard();
@@ -94,14 +186,50 @@ public class CardSubmissionActivity extends AppCompatActivity {
         });
     }
 
+    private void updateDisplays() {
+        if(birthSet) {
+            String date = birth_day + "/" + birth_month + "/" + birth_year;
+            birthButton.setText(date);
+        }
+        if(expSet){
+            String date = exp_day + "/" + exp_month + "/" + exp_year;
+            expButton.setText(date);
+        }
+    }
+
+
+    private void setBirthDate(String date){
+        String[] array = date.split("/");
+        birth_day = Integer.parseInt(array[0]);
+        birth_month = Integer.parseInt(array[1]);
+        birth_year =Integer.parseInt(array[2]);
+    }
+
+    private void setExpiryDate(String date){
+        String[] array = date.split("/");
+        exp_day = Integer.parseInt(array[0]);
+        exp_month = Integer.parseInt(array[1]);
+        exp_year =Integer.parseInt(array[2]);
+    }
+
     public void verifyCard() {
         List<String> entryList = new ArrayList<>();
-        for (TextInputEditText editText : fields) {
-            if (editText.getText().length() > 0) {
-                entryList.add(editText.getText().toString());
-            } else {
-                Toast.makeText(getApplicationContext(), "Fields Left Empty", Toast.LENGTH_LONG).show();
-                return;
+        for (int i = 0; i < fields.size() + getDateOffset(); i++) {
+            if(i == birthIndex && birthSet){
+                String date = birth_day + "/" + birth_month + "/" + birth_year;
+                entryList.add(date);
+            }
+            else if(i == expIndex && expSet){
+                String date = exp_day + "/" + exp_month + "/" + exp_year;
+                entryList.add(date);
+            }
+            else{
+                if (fields.get(i).getText().length() > 0 ) {
+                    entryList.add(fields.get(i).getText().toString());
+                } else {
+                    Toast.makeText(getApplicationContext(), "Fields Left Empty", Toast.LENGTH_LONG).show();
+                    return;
+                }
             }
         }
         if(profilePhoto != null)
@@ -111,6 +239,10 @@ public class CardSubmissionActivity extends AppCompatActivity {
     }
 
     private void submitCard(List<String> entryList) {
+        DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
+        handler.open();
+        handler.updateCard(cardType.getId(),getFieldValueString(entryList));
+        handler.close();
         for(int i = 0; i < entryList.size(); i++){
             cardType.getDataList().get(i).setFieldEntry(entryList.get(i));
         }
@@ -124,8 +256,18 @@ public class CardSubmissionActivity extends AppCompatActivity {
         submission.setData(submissionData.toString());
         submission.setUserId(profile.getServerId());
         submission.setPartyId(cardType.getPartyId());
-        SubmitRunner submitRunner = new SubmitRunner(submission);
-        submitRunner.run();
+        new SubmitRunner(this,new SubmissionService(getApplicationContext())).execute(submission);
+        showLoading();
+    }
+
+    private String getFieldValueString(List<String> entryList) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String entry : entryList) {
+            String string = entry + ",";
+            stringBuilder.append(string);
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        return stringBuilder.toString();
     }
 
     public Profile getProfile(){
@@ -158,31 +300,63 @@ public class CardSubmissionActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
     }
 
-    private class SubmitRunner implements Runnable{
+    public int getDateOffset() {
+        int offset = 0;
+        if(birthSet) offset +=1;
+        if(expSet) offset += 1;
+        return offset;
+    }
 
-        Submission submission;
+    void showLoading() {
+        submitButton.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
 
-        SubmitRunner(Submission submission){
-            this.submission = submission;
+    void hideLoading() {
+        submitButton.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onTaskComplete(Submission submission) {
+        if(submission != null){
+            cardType.setStatus(submission.getStatus());
+            DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
+            handler.open();
+            handler.updateCardStatus(cardType.getId(), submission.getStatus());
+            handler.createSubmission(submission.getId(),cardId);
+            handler.close();
+            finishActivity();
+        }
+        else{
+            error();
+            hideLoading();
+        }
+    }
+
+    private static class SubmitRunner extends AsyncTask<Submission, Void, Submission> {
+
+        private SubmitTaskCompleted callBack;
+        private SubmissionService submissionService;
+
+        SubmitRunner(SubmitTaskCompleted callBack, SubmissionService submissionService){
+            this.callBack = callBack;
+            this.submissionService = submissionService;
         }
 
         @Override
-        public void run() {
-
-            SubmissionService submissionService = new SubmissionService(getApplicationContext());
-            submission = submissionService.submitIdentity(submission);
-            if(submission != null){
-                cardType.setStatus(submission.getStatus());
-                DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
-                handler.open();
-                handler.updateCardStatus(cardType.getId(), submission.getStatus());
-                handler.createSubmission(submission.getId(),cardId);
-                handler.close();
-                finishActivity();
-            }
-            else{
-                error();
-            }
+        protected Submission doInBackground(Submission... submissions) {
+            return submissionService.submitIdentity(submissions[0]);
         }
+
+        @Override
+        protected void onPostExecute(Submission result) {
+            callBack.onTaskComplete(result);
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
     }
 }

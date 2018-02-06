@@ -2,7 +2,6 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { PartyService } from '../services/party-service';
 import { Party } from '../models/party';
 import { NgModule } from '@angular/core/src/metadata/ng_module';
-import { ModalService } from '../modal-window/modal.service';
 import { Globals } from '../app-properties';
 
 @Component({
@@ -19,6 +18,24 @@ export class PartySelectionComponentComponent implements OnInit {
   constructor(private partyService: PartyService,private globals: Globals) { }
 
   parties: Party[];
+  visible = false;
+  visibleAnimate = false;
+
+  show(): void {
+    this.visible = true;
+    setTimeout(() => this.visibleAnimate = true, 100);
+  }
+
+  hide(): void {
+    this.visibleAnimate = false;
+    setTimeout(() => this.visible = false, 300);
+  }
+
+  onContainerClicked(event: MouseEvent): void {
+    if ((<HTMLElement>event.target).classList.contains('modal')) {
+      this.hide();
+    }
+  }
 
   getParties(){
     this.partyService.getParties()
@@ -41,6 +58,7 @@ export class PartySelectionComponentComponent implements OnInit {
       returnedParty => {
         this.parties.push(returnedParty), 
         console.log(returnedParty)
+        this.hide();
       });
       err => console.log(err);
   }

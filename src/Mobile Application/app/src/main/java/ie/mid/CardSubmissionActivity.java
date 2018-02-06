@@ -104,7 +104,10 @@ public class CardSubmissionActivity extends AppCompatActivity {
                 return;
             }
         }
-        submitCard(entryList);
+        if(profilePhoto != null)
+            submitCard(entryList);
+        else
+            Toast.makeText(getApplicationContext(), "Please submit a photo", Toast.LENGTH_LONG).show();
     }
 
     private void submitCard(List<String> entryList) {
@@ -113,7 +116,7 @@ public class CardSubmissionActivity extends AppCompatActivity {
         }
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         profilePhoto.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        String imageData = HashUtil.byteToHex(stream.toByteArray());
+        String imageData = HashUtil.byteToBase64(stream.toByteArray());
 
         Profile profile = getProfile();
         SubmissionData submissionData = new SubmissionData(imageData,cardType.getDataList());
@@ -173,6 +176,8 @@ public class CardSubmissionActivity extends AppCompatActivity {
                 DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
                 handler.open();
                 handler.updateCardStatus(cardType.getId(), submission.getStatus());
+                handler.createSubmission(submission.getId(),cardId);
+                handler.close();
                 finishActivity();
             }
             else{

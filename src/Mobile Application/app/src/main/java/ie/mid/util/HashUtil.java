@@ -3,6 +3,7 @@ package ie.mid.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import android.util.Base64;
 import java.util.Random;
 
 /**
@@ -25,6 +26,14 @@ public class HashUtil {
         } catch (NoSuchAlgorithmException e) {
             throw new AssertionError("Error while hashing: " + e.getMessage(), e);
         }
+    }
+
+    public static String byteToBase64(byte[] array){
+        return Base64.encodeToString(array,Base64.DEFAULT);
+    }
+
+    public static byte[] Base64ToByte(String base64){
+        return Base64.decode(base64, Base64.DEFAULT);
     }
 
     public static String byteToHex(byte[] array) {

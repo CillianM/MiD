@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -11,6 +12,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
+
+import static android.content.ContentValues.TAG;
 
 public class BackendService {
 
@@ -29,7 +32,7 @@ public class BackendService {
         try {
             return new BackendCaller().execute(params).get();
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error: " + e.toString());
         }
         return null;
     }
@@ -39,7 +42,7 @@ public class BackendService {
         try {
             return new BackendCaller().execute(params).get();
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error: " + e.toString());
         }
         return null;
     }
@@ -49,7 +52,7 @@ public class BackendService {
         try {
             return new BackendCaller().execute(params).get();
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error: " + e.toString());
         }
         return null;
     }
@@ -59,7 +62,7 @@ public class BackendService {
         try {
             return new BackendCaller().execute(params).get();
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error: " + e.toString());
         }
         return null;
     }
@@ -89,7 +92,7 @@ public class BackendService {
                 }
 
             } catch (Exception e) {
-                System.out.println(e);
+                Log.e(TAG, "Error: " + e.toString());
             }
             return null;
         }

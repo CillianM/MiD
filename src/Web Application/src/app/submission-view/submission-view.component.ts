@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubmissionService } from '../services/submission-service';
-import { Submission, Data, SubmissionStatus } from '../models/submission';
+import { Submission, Data, SubmissionData, SubmissionStatus } from '../models/submission';
 import { Party } from '../models/party';
 import { PartyService } from '../services/party-service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Pipe } from '@angular/core';
+
 
 
 @Component({
@@ -21,10 +24,11 @@ export class SubmissionViewComponent implements OnInit {
     private router: Router,
     private submissionService: SubmissionService,
     private partyService: PartyService
-  ) {}
+    ) {}
   submissionId:string;
   partyId:string;
   submission:Submission;
+  submissionData: SubmissionData;
   data:Data[];
   submissionMessage:string;
   party:Party;
@@ -34,7 +38,9 @@ export class SubmissionViewComponent implements OnInit {
     .subscribe(
       submission => {
         this.submission = submission, //Bind to view
+        this.submissionData = JSON.parse(this.submission.data);
         console.log(this.submission)
+        console.log(this.submissionData)
         this.getData();
       });
       err => console.log(err);
@@ -87,4 +93,13 @@ export class SubmissionViewComponent implements OnInit {
     this.getParty();
   }
 
+}
+
+@Pipe({name: 'safeHtml'})
+export class SafeHtml {
+  constructor(private sanitizer:DomSanitizer){}
+
+  transform(html) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(html);
+  }
 }

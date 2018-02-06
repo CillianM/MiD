@@ -8,7 +8,7 @@ import { HttpModule, JsonpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { LoginComponent } from './login/login.component';
-import { SubmissionViewComponent } from './submission-view/submission-view.component';
+import { SubmissionViewComponent, SafeHtml } from './submission-view/submission-view.component';
 import { PagenotfoundComponent} from './pagenotfound/pagenotfound.component'; 
 import { SubmissionService } from './services/submission-service';
 import { PartySelectionComponentComponent } from './party-selection-component/party-selection-component.component';
@@ -29,14 +29,15 @@ import { IdentityTypeService } from './services/identitytype-service';
     PartySelectionComponentComponent,
     PartyViewComponentComponent,
     ModalComponent,
-    IdentityTypeViewComponent
+    IdentityTypeViewComponent,
+    SafeHtml
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpModule,
-    JsonpModule,
+    JsonpModule
   ],
   providers: [
     SubmissionService,

@@ -34,6 +34,7 @@ export class PartySelectionComponentComponent implements OnInit {
     var newParty = new Party();
     newParty.name = name;
     newParty.publicKey = this.globals.publicKey;
+    console.log(newParty);
 
     this.partyService.createParty(newParty)
     .subscribe(

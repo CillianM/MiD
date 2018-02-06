@@ -2,6 +2,7 @@ package ie.mid.backend;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -12,6 +13,8 @@ import ie.mid.handler.DatabaseHandler;
 import ie.mid.model.Profile;
 import ie.mid.pojo.User;
 import ie.mid.util.HashUtil;
+
+import static android.content.ContentValues.TAG;
 
 public class UserService {
 
@@ -43,8 +46,8 @@ public class UserService {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             keyPairGenerator.initialize(2048);
             KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            profile.setPrivateKey(HashUtil.byteToHex(keyPair.getPrivate().getEncoded()));
-            profile.setPublicKey(HashUtil.byteToHex(keyPair.getPublic().getEncoded()));
+            profile.setPrivateKey(HashUtil.byteToBase64(keyPair.getPrivate().getEncoded()));
+            profile.setPublicKey(HashUtil.byteToBase64(keyPair.getPublic().getEncoded()));
 
 
             DatabaseHandler handler = new DatabaseHandler(context);
@@ -66,7 +69,7 @@ public class UserService {
             }
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error: " + e.toString());
         }
         return null;
     }

@@ -19,7 +19,7 @@ public class Key {
     private String id;
     @Column(name = "user_id", nullable = false)
     private String userId;
-    @Column(name = "public_key", nullable = false)
+    @Column(name = "public_key", nullable = false, length = 450)
     private String publicKey;
     @Column(name = "status", nullable = false)
     private String status;

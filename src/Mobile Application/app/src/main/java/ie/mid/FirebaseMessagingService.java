@@ -2,11 +2,21 @@ package ie.mid;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import ie.mid.enums.CardStatus;
+import ie.mid.handler.DatabaseHandler;
+import ie.mid.model.CardType;
+import ie.mid.model.CreatedSubmission;
 
 import static android.content.ContentValues.TAG;
 
@@ -39,11 +49,52 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     }
 
     public void sendNotification(String notificationMessage){
+        String title = "Submission Request Result";
+        String body = "";
+        String cardName = "";
+        CardType cardType = new CardType();
+        try {
+            JSONObject submissionObject = new JSONObject(notificationMessage);
+            JSONObject dataObject = submissionObject.getJSONObject("data");
+            String submissionId = dataObject.getString("submissionId");
+            String status = dataObject.getString("status");
+            DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
+            handler.open();
+            CreatedSubmission submission = handler.getSubmission(submissionId);
+            if(submission != null){
+                handler.updateCardStatus(submission.getCardId(), status);
+                cardType = handler.getUserCard(submission.getCardId());
+                cardName = cardType.getTitle();
+            }
+            else{
+                cardName = "your card";
+            }
+            handler.close();
+            switch (status){
+                case "ACCEPTED":
+                    title = "Successful Submission";
+                    body = "Your submission for "+cardName+" has been successfully validated";
+                    break;
+                case "REJECTED":
+                    title = "Unuccessful Submission";
+                    body = "Your submission for "+cardName+" has been rejected";
+                    break;
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        if(cardType.getId() != null)
+            intent.putExtra("user",cardType.getId());
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
+                        .setContentIntent(pendingIntent)
+                        .setContentTitle(title)
+                        .setContentText(body);
 
 
         // Gets an instance of the NotificationManager service//

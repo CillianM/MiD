@@ -1,7 +1,7 @@
 package ie.mid.identityengine.enums;
 
 public enum NotificationType {
-    REQUEST("REQUES"),
+    REQUEST("REQUEST"),
     CERTIFICATE_UPDATE("CERTIFICATE_UPDATE"),
     APPLICATION_UPDATE("APPLICATION_UPDATE");
 

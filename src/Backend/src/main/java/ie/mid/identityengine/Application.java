@@ -1,5 +1,7 @@
 package ie.mid.identityengine;
 
+import ie.mid.identityengine.service.StorageService;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -9,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -26,6 +29,14 @@ public class Application extends SpringBootServletInitializer{
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**").allowedMethods("POST","PUT","DELETE","GET").allowedOrigins("http://localhost:4200");
             }
+        };
+    }
+
+    @Bean
+    CommandLineRunner init(StorageService storageService) {
+        return (args) -> {
+            storageService.deleteAll();
+            storageService.init();
         };
     }
 

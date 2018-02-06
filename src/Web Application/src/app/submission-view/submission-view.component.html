@@ -9,29 +9,13 @@
 <h2>Submission ID: {{submissionId}}</h2>
 
 <div class="container">
-  <img class="profile-container" src="assets/man.jpg" alt="Photo of man">
+  <img class="profile-container" [src]="'data:image/jpg;base64,'+submissionData?.imageData | safeHtml" alt="Photo of man">
   <div class="info-container">
     <table class="info-table">
-        <tr>
-          <th>First Name:</th>
-          <td>Malcolm</td>
-        </tr>
-        <tr>
-          <th>Surname:</th>
-          <td>Wilkerson</td>
-        </tr>
-        <tr>
-          <th>Date Of Birth:</th>
-          <td>5/9/1989</td>
-        </tr>
-        <tr>
-          <th>Address:</th>
-          <td>12334 Cantura Street</td>
-        </tr>
-        <tr>
-          <th>Driver Number:</th>
-          <td>55577854</td>
-        </tr>        
+        <tr *ngFor="let field of submissionData?.cardFields">
+            <th>{{field.fieldTitle}}</th>
+            <td>{{field.fieldEntry}}</td>
+          </tr>    
       </table>
       <br>
       <div class="button-group">

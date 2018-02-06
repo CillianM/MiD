@@ -10,6 +10,7 @@ import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.SubmissionRepository;
 import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.PushNotificationService;
+import ie.mid.identityengine.service.StorageService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,9 @@ public class SubmissionController {
 
     @Autowired
     PushNotificationService pushNotificationService;
+
+    @Autowired
+    StorageService storageService;
 
     private static final String SUBMISSION_HEADER = "Submission Update";
 
@@ -55,7 +59,7 @@ public class SubmissionController {
         Submission submission = submissionRepository.findById(id);
         if (submission == null) throw new ResourceNotFoundException();
         SubmissionDTO dto = new SubmissionDTO();
-        dto.setData(submission.getData());
+        dto.setData(storageService.loadData(submission.getData()));
         dto.setId(submission.getId());
         dto.setUserId(submission.getUserId());
         dto.setPartyId(submission.getPartyId());
@@ -69,10 +73,12 @@ public class SubmissionController {
     public SubmissionDTO createSubmission(@RequestBody SubmissionDTO submissionToCreate) {
         if (isInvalidSubmission(submissionToCreate)) throw new BadRequestException();
         Submission submission = new Submission();
-        submission.setData(submissionToCreate.getData());
+
         submission.setStatus(RequestStatus.PENDING.toString());
         submission.setUserId(submissionToCreate.getUserId());
         submission.setPartyId(submissionToCreate.getPartyId());
+        //Save data to file
+        submission.setData(storageService.saveData(submissionToCreate.getData()));
         submission = submissionRepository.save(submission);
         submissionToCreate.setId(submission.getId());
         submissionToCreate.setStatus(submission.getStatus());
@@ -113,7 +119,7 @@ public class SubmissionController {
         List<SubmissionDTO> submissionDTOList = new ArrayList<>();
         submissionList.forEach((submission -> {
             SubmissionDTO dto = new SubmissionDTO();
-            dto.setData(submission.getData());
+            dto.setData(storageService.loadData(submission.getData()));
             dto.setId(submission.getId());
             dto.setUserId(submission.getUserId());
             dto.setPartyId(submission.getPartyId());

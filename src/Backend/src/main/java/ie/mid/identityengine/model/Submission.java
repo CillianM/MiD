@@ -19,7 +19,7 @@ public class Submission {
     private String userId;
     @Column(name = "party_id", nullable = false)
     private String partyId;
-    @Column(name = "data", length = 10000, nullable = false)
+    @Column(name = "data", nullable = false)
     private String data;
     @Column(name = "status", nullable = false)
     private String status;

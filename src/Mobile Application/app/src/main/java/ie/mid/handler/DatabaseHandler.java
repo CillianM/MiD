@@ -9,18 +9,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import ie.mid.R;
+import ie.mid.enums.CardStatus;
 import ie.mid.enums.DataType;
 import ie.mid.model.AvailableCard;
 import ie.mid.model.CardField;
 import ie.mid.model.CardType;
+import ie.mid.model.CreatedSubmission;
 import ie.mid.model.Field;
 import ie.mid.model.Profile;
+import ie.mid.pojo.Submission;
 
 public class DatabaseHandler {
 
@@ -105,9 +109,22 @@ public class DatabaseHandler {
             UPDATED_DATE + " text not null" +
             ");";
 
+    //Submission database
+    private static final String SUBMISSION_ID = "submission_id";
+    private static final String SUBMISSION_STATUS = "submission_status";
+    private static final String SUBMISSION_TABLE_NAME = "submission_table";
+    private static final String SUBMISSION_TABLE_NAME_CREATE = "create table " + SUBMISSION_TABLE_NAME + " (" +
+            ID + " text not null, " +
+            SUBMISSION_ID + " text not null, " +
+            SUBMISSION_STATUS + " text not null," +
+            CARD_ID + " text not null," +
+            CREATION_DATE + " text not null," +
+            UPDATED_DATE + " text not null" +
+            ");";
 
-    private static final String[] TABLE_NAMES = new String []{PROFILE_TABLE_NAME,CARD_TABLE_NAME,AVAILABLE_CARD_TABLE_NAME,FCM_TABLE_NAME};
-    private static final String[] CREATION_SCRIPTS = new String []{PROFILE_TABLE_CREATE,CARD_TABLE_CREATE,AVAILABLE_CARD_TABLE_CREATE,FCM_TABLE_NAME_CREATE};
+
+    private static final String[] TABLE_NAMES = new String []{PROFILE_TABLE_NAME,CARD_TABLE_NAME,AVAILABLE_CARD_TABLE_NAME,FCM_TABLE_NAME,SUBMISSION_TABLE_NAME};
+    private static final String[] CREATION_SCRIPTS = new String []{PROFILE_TABLE_CREATE,CARD_TABLE_CREATE,AVAILABLE_CARD_TABLE_CREATE,FCM_TABLE_NAME_CREATE,SUBMISSION_TABLE_NAME_CREATE};
     private DataBaseHelper dbhelper;
     private SQLiteDatabase db;
 
@@ -162,6 +179,10 @@ public class DatabaseHandler {
         dbhelper.close();
     }
 
+    public String getTimestamp(){
+        return new Timestamp(new Date().getTime()).toString();
+    }
+
     public Profile createProfile(String name,String profileImg,String hash,String salt,String serverId, String publicKey,String privateKey){
         String id = UUID.randomUUID().toString();
         String date = new Date().toString();
@@ -178,6 +199,19 @@ public class DatabaseHandler {
         content.put(UPDATED_DATE, date);
         db.insert(PROFILE_TABLE_NAME,null,content);
         return new Profile(id,name,profileImg,hash,salt,serverId,publicKey,privateKey);
+    }
+
+    public CreatedSubmission createSubmission(String submissionId, String cardId){
+        String id = UUID.randomUUID().toString();
+        ContentValues content = new ContentValues();
+        content.put(ID, id);
+        content.put(SUBMISSION_ID,submissionId);
+        content.put(SUBMISSION_STATUS, CardStatus.PENDING.toString());
+        content.put(CARD_ID,cardId);
+        content.put(CREATION_DATE, getTimestamp());
+        content.put(UPDATED_DATE, getTimestamp());
+        db.insert(SUBMISSION_TABLE_NAME,null,content);
+        return new CreatedSubmission(id,submissionId,cardId,CardStatus.PENDING.toString());
     }
 
     public AvailableCard createAvailableCard(String title, String iconUrl, String coverUrl,String versionNumber){
@@ -229,6 +263,11 @@ public class DatabaseHandler {
         return (int) DatabaseUtils.queryNumEntries(db, FCM_TABLE_NAME);
     }
 
+    public int returnSubmissionCount()
+    {
+        return (int) DatabaseUtils.queryNumEntries(db, SUBMISSION_TABLE_NAME);
+    }
+
     public int returnAmountOfAvailableCards()
     {
         return (int) DatabaseUtils.queryNumEntries(db, AVAILABLE_CARD_TABLE_NAME);
@@ -237,6 +276,26 @@ public class DatabaseHandler {
     public int returnAmountOfProfiles()
     {
         return (int) DatabaseUtils.queryNumEntries(db, PROFILE_TABLE_NAME);
+    }
+
+    public CreatedSubmission getSubmission(String id) {
+        String selectQuery = "SELECT ID, SUBMISSION_ID,CARD_ID,SUBMISSION_STATUS,CREATION_DATE,UPDATED_DATE FROM " + SUBMISSION_TABLE_NAME + " WHERE " + SUBMISSION_ID + "='" + id + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        CreatedSubmission createdSubmission = new CreatedSubmission();
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                createdSubmission = new CreatedSubmission(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5)
+                );
+            }
+            return createdSubmission;
+        }
+        return null;
     }
 
     public Profile getProfile(String id) {

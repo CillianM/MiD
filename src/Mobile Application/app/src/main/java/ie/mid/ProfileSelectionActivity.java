@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,6 +30,7 @@ public class ProfileSelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_selection);
+        PreferenceManager.setDefaultValues(this, R.xml.pref_main, false);
         profileImage = (RoundedImageView) findViewById(R.id.user_profile_photo);
 
         DatabaseHandler handler = new DatabaseHandler(this);

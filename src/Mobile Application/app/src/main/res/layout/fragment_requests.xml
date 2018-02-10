@@ -1,27 +1,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical" android:layout_height="fill_parent" android:layout_width="fill_parent"
     android:baselineAligned="false">
-    <LinearLayout android:layout_weight="1" android:layout_height="0dp" android:layout_width="fill_parent"
+    <RelativeLayout android:layout_weight="1" android:layout_height="0dp" android:layout_width="fill_parent"
         android:orientation="vertical">
         <TextView
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
             android:id="@+id/submissions_explain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Current Submissions" />
-
+            android:text="Current Submissions"
+            android:textSize="20sp"/>
 
         <TextView
+            android:layout_centerInParent="true"
             android:visibility="gone"
             android:gravity="center"
             android:layout_gravity="center"
             android:id="@+id/submission_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Created Requests" />
+            android:text="List Info" />
         <ProgressBar
-            android:layout_gravity="center"
+            android:layout_centerInParent="true"
             android:id="@+id/submissions_list_progress"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -30,29 +31,32 @@
             android:visibility="gone"
             android:id="@+id/submissions_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="0dp"/>
+    </RelativeLayout>
 
-    <LinearLayout android:layout_weight="1" android:layout_height="0dp" android:layout_width="fill_parent"
+    <RelativeLayout android:layout_weight="1" android:layout_height="0dp" android:layout_width="fill_parent"
         android:orientation="vertical">
         <TextView
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
             android:id="@+id/requests_explain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Created Requests" />
+            android:text="Created Requests"
+            android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/requests_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="Created Requests"
-            android:visibility="visible" />
+            android:text="List Info"
+            android:visibility="gone" />
         <ProgressBar
-            android:layout_gravity="center"
+            android:layout_centerInParent="true"
             android:id="@+id/requests_list_progress"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -61,7 +65,9 @@
             android:visibility="gone"
             android:id="@+id/requests_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="0dp"/>
+    </RelativeLayout>
 </LinearLayout>
 

@@ -12,7 +12,9 @@ public class CardType {
     private String partyId;
     private String cardId;
     private String ownerId;
+    private String submissionId;
     private String title;
+    private int versionNumber;
     private String description;
     private int defaultColor;
     private String imageUrl;
@@ -100,5 +102,21 @@ public class CardType {
 
     public void setPartyId(String partyId) {
         this.partyId = partyId;
+    }
+
+    public String getSubmissionId() {
+        return submissionId;
+    }
+
+    public void setSubmissionId(String submissionId) {
+        this.submissionId = submissionId;
+    }
+
+    public int getVersionNumber() {
+        return versionNumber;
+    }
+
+    public void setVersionNumber(int versionNumber) {
+        this.versionNumber = versionNumber;
     }
 }

@@ -17,9 +17,11 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ie.mid.CardCreateActivity;
 import ie.mid.CardSubmissionActivity;
 import ie.mid.R;
 import ie.mid.adapter.CardDataAdapter;
+import ie.mid.enums.CardStatus;
 import ie.mid.interfaces.ItemClickListener;
 import ie.mid.model.CardType;
 
@@ -55,12 +57,14 @@ public class ListFragment extends Fragment {
         recyclerView.setAdapter(new CardDataAdapter(getContext(),cardType, new ItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                if(position == 0 && Objects.equals(cardType.getStatus(), "NOT_VERIFIED")) {
-                    Toast.makeText(getActivity().getApplicationContext(), cardType.getTitle(), Toast.LENGTH_SHORT).show();
+                if(position == 0 && Objects.equals(cardType.getStatus(), CardStatus.NOT_VERIFIED.toString())) {
                     Intent intent = new Intent(getActivity(), CardSubmissionActivity.class);
                     intent.putExtra("userId",cardType.getOwnerId());
                     intent.putExtra("cardId",cardType.getId());
                     startActivity(intent);
+                }
+                if(position == 0 && Objects.equals(cardType.getStatus(), CardStatus.DELETED.toString())) {
+                    Toast.makeText(getActivity().getApplicationContext(), cardType.getTitle() + " has been upgraded/deleted from the server", Toast.LENGTH_SHORT).show();
                 }
             }
         }));

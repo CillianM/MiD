@@ -60,10 +60,10 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             String status = dataObject.getString("status");
             DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
             handler.open();
-            CreatedSubmission submission = handler.getSubmission(submissionId);
-            if(submission != null){
-                handler.updateCardStatus(submission.getCardId(), status);
-                cardType = handler.getUserCard(submission.getCardId());
+
+            cardType = handler.getUserCardBySubmission(submissionId);
+            if(cardType != null){
+                handler.updateCardStatus(cardType.getId(), status);
                 cardName = cardType.getTitle();
             }
             else{

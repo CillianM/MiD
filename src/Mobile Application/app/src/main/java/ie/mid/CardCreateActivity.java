@@ -325,7 +325,8 @@ public class CardCreateActivity extends AppCompatActivity {
                 userId, getFieldTitleString(identityType.getFields()),
                 getFieldValueString(entryList),
                 identityType.getCoverImg(),
-                CardStatus.NOT_VERIFIED.toString()
+                CardStatus.NOT_VERIFIED.toString(),
+                identityType.getVersionNumber()
         );
         handler.close();
         Intent intent = new Intent(CardCreateActivity.this, MainActivity.class);

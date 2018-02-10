@@ -36,6 +36,7 @@ import ie.mid.model.SubmissionData;
 import ie.mid.pojo.IdentityType;
 import ie.mid.pojo.Submission;
 import ie.mid.util.HashUtil;
+import ie.mid.util.InternetUtil;
 
 public class CardSubmissionActivity extends AppCompatActivity implements SubmitTaskCompleted{
 
@@ -251,13 +252,22 @@ public class CardSubmissionActivity extends AppCompatActivity implements SubmitT
         String imageData = HashUtil.byteToBase64(stream.toByteArray());
 
         Profile profile = getProfile();
-        SubmissionData submissionData = new SubmissionData(imageData,cardType.getDataList());
+        SubmissionData submissionData = new SubmissionData(cardType.getVersionNumber(), imageData,cardType.getDataList());
         Submission submission = new Submission();
         submission.setData(submissionData.toString());
         submission.setUserId(profile.getServerId());
         submission.setPartyId(cardType.getPartyId());
-        new SubmitRunner(this,new SubmissionService(getApplicationContext())).execute(submission);
-        showLoading();
+        if(InternetUtil.isNetworkAvailable(getApplicationContext())) {
+            new SubmitRunner(this, new SubmissionService(getApplicationContext())).execute(submission);
+            showLoading();
+        }
+        else{
+            noInternetError();
+        }
+    }
+
+    public void noInternetError(){
+        Toast.makeText(getApplicationContext(), "Error Processing Submission", Toast.LENGTH_LONG).show();
     }
 
     private String getFieldValueString(List<String> entryList) {
@@ -294,10 +304,11 @@ public class CardSubmissionActivity extends AppCompatActivity implements SubmitT
         intent.putExtra("userId",userId);
         intent.putExtra("tab",1);
         startActivity(intent);
+        finish();
     }
 
     public void error(){
-        Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Error Processing Submission", Toast.LENGTH_LONG).show();
     }
 
     public int getDateOffset() {
@@ -323,7 +334,8 @@ public class CardSubmissionActivity extends AppCompatActivity implements SubmitT
             cardType.setStatus(submission.getStatus());
             DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
             handler.open();
-            handler.updateCardStatus(cardType.getId(), submission.getStatus());
+            handler.updateCardStatus(cardId, submission.getStatus());
+            handler.updateSubmissionId(cardId, submission.getId());
             handler.createSubmission(submission.getId(),cardId);
             handler.close();
             finishActivity();

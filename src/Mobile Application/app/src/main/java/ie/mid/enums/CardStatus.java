@@ -8,6 +8,8 @@ public enum CardStatus {
     ACCEPTED,
     REJECTED,
     PENDING,
+    DELETED,
+    UPDATED,
     NOT_VERIFIED;
 
     public static String enumToString(String enumString) {
@@ -16,6 +18,10 @@ public enum CardStatus {
                 return "Accepted";
             case "REJECTED":
                 return "Rejected";
+            case "DELETED":
+                return "Deleted";
+            case "UPDATED":
+                return "Updated";
             case "PENDING":
                 return "Pending";
             case "NOT_VERIFIED":

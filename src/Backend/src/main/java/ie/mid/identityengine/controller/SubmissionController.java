@@ -94,22 +94,38 @@ public class SubmissionController {
         submission.setStatus(submissionToUpdate.getStatus());
         submissionRepository.save(submission);
 
+        String message;
+        if (submissionToUpdate.getStatus().equals(RequestStatus.ACCEPTED.toString())) {
+            //TODO implement ties into the hyperledger service here if the submission is successful
+            message = "Your submission has been accepted";
+        }
+        else{
+            message = "Your submission has been rejected";
+        }
+
+        //Contact the user
+        User user = userRepository.findById(submissionToUpdate.getUserId());
+        if (user == null) throw new ResourceNotFoundException("User does not exist");
+
+
+        //Contact the user with the id of the request
+        JSONObject notificationObject = pushNotificationService.createNotification(
+                SUBMISSION_HEADER,
+                NotificationType.REQUEST,
+                new String[]{"title", "body"},
+                new Object[]{"MiD Submission Request", message}
+        );
+
+        //Contact the user with the id of the request
+        JSONObject dataObject = pushNotificationService.createNotification(
+                SUBMISSION_HEADER,
+                NotificationType.REQUEST,
+                new String[]{"submissionId", "status"},
+                new Object[]{submissionToUpdate.getId(), submissionToUpdate.getStatus()}
+        );
+        pushNotificationService.sendNotification(user.getFcmToken(), notificationObject,dataObject);
 
         if (submissionToUpdate.getStatus().equals(RequestStatus.ACCEPTED.toString())) {
-            //Contact the user
-            User user = userRepository.findById(submissionToUpdate.getUserId());
-            if (user == null) throw new ResourceNotFoundException("User does not exist");
-
-
-            //Contact the user with the id of the request
-            JSONObject notificationObject = pushNotificationService.createNotification(
-                    SUBMISSION_HEADER,
-                    NotificationType.REQUEST,
-                    new String[]{"submissionId", "status"},
-                    new Object[]{submissionToUpdate.getId(), submissionToUpdate.getStatus()}
-            );
-            pushNotificationService.sendNotification(user.getFcmToken(), notificationObject);
-
             //TODO implement ties into the hyperledger service here if the submission is successful
         }
         return submissionToUpdate;

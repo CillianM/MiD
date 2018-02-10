@@ -77,6 +77,8 @@ public class CardDataAdapter extends RecyclerView.Adapter<CardDataAdapter.ViewHo
                 drawable = context.getResources().getDrawable(R.drawable.ic_assignment_turned_in_black_24dp);
             } else if (contents.getStatus().equals(CardStatus.PENDING.toString())) {
                 drawable = context.getResources().getDrawable(R.drawable.ic_assignment_return_black_24dp);
+            } else if (contents.getStatus().equals(CardStatus.DELETED.toString())) {
+                drawable = context.getResources().getDrawable(R.drawable.ic_error_black_24dp);
             }
             holder.dataIcon.setImageDrawable(drawable);
         } else {

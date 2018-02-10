@@ -15,6 +15,6 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     @Query("SELECT i FROM Submission i WHERE i.partyId=?1 AND i.status = 'PENDING'")
     List<Submission> findByPartyId(String partyId);
 
-    @Query("SELECT i FROM Submission i WHERE i.userId=?1 AND i.status <> 'ACCEPTED'")
+    @Query("SELECT i FROM Submission i WHERE i.userId=?1")
     List<Submission> findByUserId(String userId);
 }

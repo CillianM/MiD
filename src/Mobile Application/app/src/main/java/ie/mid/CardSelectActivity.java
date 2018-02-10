@@ -18,6 +18,7 @@ import ie.mid.backend.IdentityTypeService;
 import ie.mid.interfaces.IdentityTaskCompleted;
 import ie.mid.model.AvailableCard;
 import ie.mid.pojo.IdentityType;
+import ie.mid.util.InternetUtil;
 
 public class CardSelectActivity extends AppCompatActivity implements IdentityTaskCompleted {
 
@@ -41,8 +42,14 @@ public class CardSelectActivity extends AppCompatActivity implements IdentityTas
 
         TextView description = (TextView) findViewById(R.id.desciption_text);
         description.setText(getResources().getString(R.string.select_description));
-
-        new IdentityTypeGetter(this,new IdentityTypeService(getApplicationContext())).execute();
+        if(InternetUtil.isNetworkAvailable(getApplicationContext())) {
+            new IdentityTypeGetter(this, new IdentityTypeService(getApplicationContext())).execute();
+        }
+        else{
+            TextView cardText = (TextView) findViewById(R.id.card_info);
+            findViewById(R.id.card_progress).setVisibility(View.GONE);
+            cardText.setText("No Internet Connection");
+        }
     }
 
     @Override

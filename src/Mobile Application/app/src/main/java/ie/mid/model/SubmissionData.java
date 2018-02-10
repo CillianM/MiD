@@ -12,12 +12,14 @@ import java.util.List;
 
 public class SubmissionData {
 
+    private int versionNumber;
     private String imageData;
     private List<CardField> cardFields;
 
     public SubmissionData(){}
 
-    public SubmissionData(String imageData, List<CardField> cardFields) {
+    public SubmissionData(int versionNumber, String imageData, List<CardField> cardFields) {
+        this.versionNumber = versionNumber;
         this.imageData = imageData;
         this.cardFields = cardFields;
     }
@@ -36,6 +38,14 @@ public class SubmissionData {
 
     public void setCardFields(List<CardField> cardFields) {
         this.cardFields = cardFields;
+    }
+
+    public int getVersionNumber() {
+        return versionNumber;
+    }
+
+    public void setVersionNumber(int versionNumber) {
+        this.versionNumber = versionNumber;
     }
 
     @Override

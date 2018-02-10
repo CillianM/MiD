@@ -9,10 +9,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import java.util.List;
+
 import ie.mid.fragments.CardFragment;
 import ie.mid.fragments.MoreFragment;
 import ie.mid.fragments.RequestsFragment;
 import ie.mid.handler.DatabaseHandler;
+import ie.mid.model.CardType;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         DatabaseHandler handler = new DatabaseHandler(this);
         handler.open();
+        List<CardType> userCards = handler.getUserCards(userId);
 
         if (!handler.hasCards(userId)) {
             handler.close();

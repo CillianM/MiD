@@ -84,14 +84,15 @@ public class RequestController {
         User user = userRepository.findById(informationRequestDTO.getRecipientId());
         if (user == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
 
+        //TODO make notification body
         //Contact the user with the id of the request
-        JSONObject notificationObject = pushNotificationService.createNotification(
+        JSONObject dataObject = pushNotificationService.createNotification(
                 REQUESTHEADER,
                 NotificationType.REQUEST,
                 new String[]{"fields"},
                 new Object[]{fields}
         );
-        pushNotificationService.sendNotification(user.getFcmToken(), notificationObject);
+        pushNotificationService.sendNotification(user.getFcmToken(), dataObject,dataObject);
         request.setStatus(RequestStatus.PENDING.toString());
         requestRepository.save(request);
 

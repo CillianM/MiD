@@ -24,7 +24,6 @@ import ie.mid.model.CardType;
 import ie.mid.model.CreatedSubmission;
 import ie.mid.model.Field;
 import ie.mid.model.Profile;
-import ie.mid.pojo.Submission;
 
 public class DatabaseHandler {
 
@@ -64,7 +63,9 @@ public class DatabaseHandler {
     private static final String COVER_IMG_URL = "cover_img_url";
     private static final String FIELD_NAME = "field_name";
     private static final String FIELD_VALUE = "field_value";
-    private static final String OWNER = "owner";
+    private static final String OWNER_ID = "owner_id";
+    private static final String SUBMISSION_ID = "submission_id";
+    private static final String VERSION_NUMBER = "version_number";
     private static final String STATUS_CODE = "status_code";
     private static final String CARD_TABLE_NAME = "cards";
     private static final String CARD_TABLE_CREATE = "create table " + CARD_TABLE_NAME + " (" +
@@ -72,10 +73,12 @@ public class DatabaseHandler {
             TITLE + " text not null," +
             CARD_ID + " text not null," +
             PARTY_ID + " text not null," +
-            OWNER + " text not null," +
+            OWNER_ID + " text not null," +
+            SUBMISSION_ID + " text," +
             FIELD_NAME + " text not null," +
             FIELD_VALUE + " text not null," +
             COVER_IMG_URL + " text not null," +
+            VERSION_NUMBER + " integer not null," +
             STATUS_CODE + " text not null," +
             CREATION_DATE + " text not null," +
             UPDATED_DATE + " text not null" +
@@ -86,7 +89,6 @@ public class DatabaseHandler {
     private static final String CARD_FIELDS = "card_fields";
     private static final String ICON_IMG_URL = "icon_img_url";
     private static final String BACKEND_ID = "backend_id";
-    private static final String VERSION_NUMBER = "version_number";
     private static final String AVAILABLE_CARD_TABLE_NAME = "available_cards";
     private static final String AVAILABLE_CARD_TABLE_CREATE = "create table " + AVAILABLE_CARD_TABLE_NAME + " (" +
             ID + " text not null, " +
@@ -110,7 +112,6 @@ public class DatabaseHandler {
             ");";
 
     //Submission database
-    private static final String SUBMISSION_ID = "submission_id";
     private static final String SUBMISSION_STATUS = "submission_status";
     private static final String SUBMISSION_TABLE_NAME = "submission_table";
     private static final String SUBMISSION_TABLE_NAME_CREATE = "create table " + SUBMISSION_TABLE_NAME + " (" +
@@ -134,8 +135,7 @@ public class DatabaseHandler {
         dbhelper = new DataBaseHelper(ctx);
     }
 
-    private static class DataBaseHelper extends SQLiteOpenHelper
-    {
+    private static class DataBaseHelper extends SQLiteOpenHelper {
 
         DataBaseHelper(Context ctx)
         {
@@ -168,8 +168,7 @@ public class DatabaseHandler {
         }
     }
 
-    public DatabaseHandler open()
-    {
+    public DatabaseHandler open() {
         db = dbhelper.getWritableDatabase();
         return this;
     }
@@ -179,7 +178,7 @@ public class DatabaseHandler {
         dbhelper.close();
     }
 
-    public String getTimestamp(){
+    private String getTimestamp(){
         return new Timestamp(new Date().getTime()).toString();
     }
 
@@ -214,20 +213,7 @@ public class DatabaseHandler {
         return new CreatedSubmission(id,submissionId,cardId,CardStatus.PENDING.toString());
     }
 
-    public AvailableCard createAvailableCard(String title, String iconUrl, String coverUrl,String versionNumber){
-        String id = UUID.randomUUID().toString();
-        ContentValues content = new ContentValues();
-        content.put(ID, id);
-        content.put(TITLE,title);
-        content.put(COVER_IMG_URL,coverUrl);
-        content.put(ICON_IMG_URL,iconUrl);
-        content.put(VERSION_NUMBER, versionNumber);
-        db.insert(AVAILABLE_CARD_TABLE_NAME,null,content);
-        return new AvailableCard(id,title,iconUrl,coverUrl,versionNumber);
-    }
-
-    public String createCard(String partyId, String cardId, String title, String owner, String fieldName, String fieldValue, String coverImg, String statusCode)
-    {
+    public String createCard(String partyId, String cardId, String title, String owner, String fieldName, String fieldValue, String coverImg, String statusCode, int versionNumber) {
         String id = UUID.randomUUID().toString();
         String date = new Date().toString();
         ContentValues content = new ContentValues();
@@ -235,13 +221,14 @@ public class DatabaseHandler {
         content.put(CARD_ID, cardId);
         content.put(PARTY_ID, partyId);
         content.put(TITLE,title);
-        content.put(OWNER,owner);
+        content.put(OWNER_ID,owner);
         content.put(COVER_IMG_URL, coverImg);
         content.put(FIELD_NAME, fieldName);
         content.put(FIELD_VALUE, fieldValue);
         content.put(STATUS_CODE,statusCode);
         content.put(CREATION_DATE, date);
         content.put(UPDATED_DATE, date);
+        content.put(VERSION_NUMBER,versionNumber);
         db.insert(CARD_TABLE_NAME,null,content);
         return id;
     }
@@ -263,18 +250,11 @@ public class DatabaseHandler {
         return (int) DatabaseUtils.queryNumEntries(db, FCM_TABLE_NAME);
     }
 
-    public int returnSubmissionCount()
-    {
+    public int returnSubmissionCount() {
         return (int) DatabaseUtils.queryNumEntries(db, SUBMISSION_TABLE_NAME);
     }
 
-    public int returnAmountOfAvailableCards()
-    {
-        return (int) DatabaseUtils.queryNumEntries(db, AVAILABLE_CARD_TABLE_NAME);
-    }
-
-    public int returnAmountOfProfiles()
-    {
+    public int returnAmountOfProfiles() {
         return (int) DatabaseUtils.queryNumEntries(db, PROFILE_TABLE_NAME);
     }
 
@@ -321,7 +301,7 @@ public class DatabaseHandler {
     }
 
     public List<CardType> getUserCards(String id) {
-        String selectQuery = "SELECT ID ,TITLE ,CARD_ID ,OWNER ,FIELD_NAME ,FIELD_VALUE, COVER_IMG_URL,STATUS_CODE,PARTY_ID FROM " + CARD_TABLE_NAME + " WHERE " + OWNER + "='" + id + "'";
+        String selectQuery = "SELECT ID ,TITLE ,CARD_ID ,OWNER_ID ,FIELD_NAME ,FIELD_VALUE, COVER_IMG_URL,STATUS_CODE,PARTY_ID,SUBMISSION_ID,VERSION_NUMBER FROM " + CARD_TABLE_NAME + " WHERE " + OWNER_ID + "='" + id + "'";
         Cursor cursor = db.rawQuery(selectQuery, null);
         List<CardType> cardDataList = new ArrayList<>();
 
@@ -336,6 +316,8 @@ public class DatabaseHandler {
                 cardType.setStatus(cursor.getString(7));
                 cardType.setImageUrl(cursor.getString(6));
                 cardType.setPartyId(cursor.getString(8));
+                cardType.setSubmissionId(cursor.getString(9));
+                cardType.setVersionNumber(cursor.getInt(10));
                 List<Field> fieldList = getFieldList(cursor.getString(4));
                 cardType.setDataList(getCardData(fieldList, cursor.getString(5)));
                 cardDataList.add(cardType);
@@ -345,8 +327,8 @@ public class DatabaseHandler {
         return null;
     }
 
-    public CardType getUserCard(String id) {
-        String selectQuery = "SELECT ID ,TITLE ,CARD_ID ,OWNER ,FIELD_NAME ,FIELD_VALUE, COVER_IMG_URL,STATUS_CODE,PARTY_ID FROM " + CARD_TABLE_NAME + " WHERE " + ID + "='" + id + "'";
+    public CardType getUserCardBySubmission(String submissionId) {
+        String selectQuery = "SELECT ID ,TITLE ,CARD_ID ,OWNER_ID ,FIELD_NAME ,FIELD_VALUE, COVER_IMG_URL,STATUS_CODE,PARTY_ID,SUBMISSION_ID,VERSION_NUMBER FROM " + CARD_TABLE_NAME + " WHERE " + SUBMISSION_ID + "='" + submissionId + "'";
         Cursor cursor = db.rawQuery(selectQuery, null);
         CardType cardType = new CardType();
         if (cursor.getCount() != 0) {
@@ -359,6 +341,32 @@ public class DatabaseHandler {
                 cardType.setStatus(cursor.getString(7));
                 cardType.setImageUrl(cursor.getString(6));
                 cardType.setPartyId(cursor.getString(8));
+                cardType.setSubmissionId(cursor.getString(9));
+                cardType.setVersionNumber(cursor.getInt(10));
+                List<Field> fieldList = getFieldList(cursor.getString(4));
+                cardType.setDataList(getCardData(fieldList, cursor.getString(5)));
+            }
+            return cardType;
+        }
+        return null;
+    }
+
+    public CardType getUserCard(String id) {
+        String selectQuery = "SELECT ID ,TITLE ,CARD_ID ,OWNER_ID ,FIELD_NAME ,FIELD_VALUE, COVER_IMG_URL,STATUS_CODE,PARTY_ID,SUBMISSION_ID,VERSION_NUMBER FROM " + CARD_TABLE_NAME + " WHERE " + ID + "='" + id + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        CardType cardType = new CardType();
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                cardType.setId(cursor.getString(0));
+                cardType.setTitle(cursor.getString(1));
+                cardType.setCardId(cursor.getString(2));
+                cardType.setOwnerId(cursor.getString(3));
+                cardType.setDefaultColor(R.color.blue);
+                cardType.setStatus(cursor.getString(7));
+                cardType.setImageUrl(cursor.getString(6));
+                cardType.setPartyId(cursor.getString(8));
+                cardType.setSubmissionId(cursor.getString(9));
+                cardType.setVersionNumber(cursor.getInt(10));
                 List<Field> fieldList = getFieldList(cursor.getString(4));
                 cardType.setDataList(getCardData(fieldList, cursor.getString(5)));
             }
@@ -410,8 +418,7 @@ public class DatabaseHandler {
         }
     }
 
-    public List<Profile> returnProfiles()
-    {
+    public List<Profile> returnProfiles() {
         Cursor cursor =  db.query(PROFILE_TABLE_NAME, new String[]{ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,SERVER_ID,PRIVATE_KEY,PUBLIC_KEY}, null, null, null, null, null);
         List<Profile> profiles = new ArrayList<>();
         if(cursor.getCount() != 0){
@@ -451,8 +458,7 @@ public class DatabaseHandler {
         return null;
     }
 
-    public boolean updateFcm(String fcm)
-    {
+    public boolean updateFcm(String fcm) {
         String id = getFcmTokenId();
         ContentValues content = new ContentValues();
         content.put(FCM_TOKEN,fcm);
@@ -460,39 +466,41 @@ public class DatabaseHandler {
         return true;
     }
 
-    public boolean hasCards(String id)
-    {
-        String selectQuery = "SELECT ID FROM " + CARD_TABLE_NAME + " WHERE " + OWNER + "='" + id + "'";
+    public boolean hasCards(String id) {
+        String selectQuery = "SELECT ID FROM " + CARD_TABLE_NAME + " WHERE " + OWNER_ID + "='" + id + "'";
         Cursor cursor = db.rawQuery(selectQuery, null);
         return cursor.getCount() != 0;
     }
 
-    public boolean updateCardStatus(String id, String status)
-    {
+    public boolean updateCardStatus(String id, String status) {
         ContentValues content = new ContentValues();
         content.put(STATUS_CODE, status);
         db.update(CARD_TABLE_NAME,content,ID + " = ?", new String[] { id });
         return true;
     }
 
-    public boolean updateCard(String id,String fields)
-    {
+    public boolean updateSubmissionId(String id, String submissionId) {
+        ContentValues content = new ContentValues();
+        content.put(SUBMISSION_ID, submissionId);
+        db.update(CARD_TABLE_NAME,content,ID + " = ?", new String[] { id });
+        return true;
+    }
+
+    public boolean updateCard(String id,String fields) {
         ContentValues content = new ContentValues();
         content.put(FIELD_VALUE,fields);
         db.update(CARD_TABLE_NAME,content,ID + " = ?", new String[] { id });
         return true;
     }
 
-    public boolean updateProfileName(String id,String name)
-    {
+    public boolean updateProfileName(String id,String name) {
         ContentValues content = new ContentValues();
         content.put(PROFILE_NAME,name);
         db.update(PROFILE_TABLE_NAME,content,ID + " = ?", new String[] { id });
         return true;
     }
 
-    public boolean updateProfileSecurity(String id,String salt, String hash)
-    {
+    public boolean updateProfileSecurity(String id,String salt, String hash) {
         ContentValues content = new ContentValues();
         content.put(SALT,salt);
         content.put(HASH,hash);
@@ -505,13 +513,11 @@ public class DatabaseHandler {
         db.delete(CARD_TABLE_NAME, ID + " = ?", new String[]{id});
     }
 
-    public void removeProfile(String id)
-    {
+    public void removeProfile(String id) {
         db.delete(PROFILE_TABLE_NAME, ID + " = ?", new String[]{id});
     }
 
-    public void removeAvailableCard(String id)
-    {
+    public void removeAvailableCard(String id) {
         db.delete(AVAILABLE_CARD_TABLE_NAME, ID + " = ?", new String[]{id});
     }
 }

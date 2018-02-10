@@ -54,4 +54,18 @@ public class SubmissionService {
         }
         return null;
     }
+
+    public Submission getSubmission(String submissionId) {
+        backendService.setEndpointExtention("/submission/" + submissionId);
+
+        String returnedSubmissions = backendService.sendGet();
+        if (returnedSubmissions != null) {
+            try {
+                return mapper.readValue(returnedSubmissions, Submission.class);
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return null;
+    }
 }

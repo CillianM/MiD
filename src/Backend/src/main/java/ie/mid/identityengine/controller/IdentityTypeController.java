@@ -82,30 +82,37 @@ public class IdentityTypeController {
     @ResponseBody
     public IdentityTypeDTO updateIdentityType(@PathVariable String partyId, @PathVariable String id, @RequestBody IdentityTypeDTO identityTypeDTO) {
         if (isInvalidIdentityType(identityTypeDTO)) throw new BadRequestException();
-
-        IdentityType updatedIdentityType = new IdentityType();
         IdentityType identityType = identityTypeRepository.findById(id);
         if (identityType == null) throw new ResourceNotFoundException();
 
-        updatedIdentityType.setPartyId(identityTypeDTO.getPartyId());
-        updatedIdentityType.setName(identityTypeDTO.getName());
-        updatedIdentityType.setIconImg(identityTypeDTO.getIconImg());
-        updatedIdentityType.setCoverImg(identityTypeDTO.getCoverImg());
-        updatedIdentityType.setFields(getFieldString(identityTypeDTO.getFields()));
-        updatedIdentityType.setStatus(IdentityTypeStatus.ACTIVE.toString());
-        updatedIdentityType.setVersionNumber(identityType.getVersionNumber() + 1);
-        identityType.setStatus(IdentityTypeStatus.UPGRADED.toString());
-        identityTypeRepository.save(updatedIdentityType);
-        identityTypeDTO.setId(updatedIdentityType.getId());
-        identityTypeDTO.setStatus(updatedIdentityType.getStatus());
-        identityTypeDTO.setVersionNumber(updatedIdentityType.getVersionNumber());
-        identityTypeDTO.setPartyId(updatedIdentityType.getPartyId());
-        identityTypeDTO.setFields(getFieldList(updatedIdentityType.getFields()));
-        identityTypeDTO.setName(updatedIdentityType.getName());
-        identityTypeDTO.setIconImg(updatedIdentityType.getIconImg());
-        identityTypeDTO.setCoverImg(updatedIdentityType.getCoverImg());
+        //Check if we're doing a non-cosmetic update
+        if(identityType.getFields().equals(getFieldString(identityTypeDTO.getFields())) && identityType.getName().equals(identityTypeDTO.getName())){
+            //no need to update version number as its cosmetic
+            identityType.setIconImg(identityTypeDTO.getIconImg());
+            identityType.setCoverImg(identityTypeDTO.getCoverImg());
+            identityTypeRepository.save(identityType);
+        }
+        else{
+            IdentityType updatedIdentityType = new IdentityType();
+            updatedIdentityType.setPartyId(identityTypeDTO.getPartyId());
+            updatedIdentityType.setName(identityTypeDTO.getName());
+            updatedIdentityType.setIconImg(identityTypeDTO.getIconImg());
+            updatedIdentityType.setCoverImg(identityTypeDTO.getCoverImg());
+            updatedIdentityType.setFields(getFieldString(identityTypeDTO.getFields()));
+            updatedIdentityType.setStatus(IdentityTypeStatus.ACTIVE.toString());
+            updatedIdentityType.setVersionNumber(identityType.getVersionNumber() + 1);
+            identityType.setStatus(IdentityTypeStatus.UPGRADED.toString());
+            identityTypeRepository.save(updatedIdentityType);
+            identityTypeDTO.setId(updatedIdentityType.getId());
+            identityTypeDTO.setStatus(updatedIdentityType.getStatus());
+            identityTypeDTO.setVersionNumber(updatedIdentityType.getVersionNumber());
+            identityTypeDTO.setPartyId(updatedIdentityType.getPartyId());
+            identityTypeDTO.setFields(getFieldList(updatedIdentityType.getFields()));
+            identityTypeDTO.setName(updatedIdentityType.getName());
+            identityTypeDTO.setIconImg(updatedIdentityType.getIconImg());
+            identityTypeDTO.setCoverImg(updatedIdentityType.getCoverImg());
+        }
         return identityTypeDTO;
-
     }
 
     @DeleteMapping(value = "/{partyId}/{id}")

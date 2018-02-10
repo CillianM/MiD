@@ -1,6 +1,7 @@
 package ie.mid.fragments;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,21 +20,30 @@ import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 
 import java.util.List;
+import java.util.Objects;
 
 import ie.mid.CardCreateActivity;
 import ie.mid.ProfileSelectionActivity;
 import ie.mid.R;
+import ie.mid.backend.IdentityTypeService;
+import ie.mid.backend.SubmissionService;
+import ie.mid.enums.CardStatus;
 import ie.mid.handler.DatabaseHandler;
+import ie.mid.interfaces.CardTaskCompleted;
+import ie.mid.interfaces.IdentityTaskCompleted;
 import ie.mid.model.CardType;
+import ie.mid.pojo.IdentityType;
+import ie.mid.pojo.Submission;
+import ie.mid.util.InternetUtil;
 
 /**
  * Created by Cillian on 21/10/2017.
  */
 
-public class CardFragment extends Fragment  {
+public class CardFragment extends Fragment implements CardTaskCompleted {
 
-    private MaterialViewPager mViewPager;
     private List<CardType> cardTypes;
+    private List<CardType> localCardTypes;
     private CardType currentCardType;
     String userId;
 
@@ -91,8 +101,32 @@ public class CardFragment extends Fragment  {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        cardTypes = getCards();
-        mViewPager = view.findViewById(R.id.materialViewPager);
+        getCards();
+    }
+
+    public void getCards(){
+        DatabaseHandler handler = new DatabaseHandler(getActivity().getApplicationContext());
+        handler.open();
+        List<CardType> listOfCards = handler.getUserCards(userId);
+        localCardTypes = handler.getUserCards(userId);
+        handler.close();
+        if(InternetUtil.isNetworkAvailable(getActivity().getApplicationContext())) {
+            new CardRunner(
+                    this,
+                    new IdentityTypeService(getActivity().getApplicationContext()),
+                    new SubmissionService(getActivity().getApplicationContext()),
+                    listOfCards
+            ).execute();
+        }
+        else {
+            cardTypes = localCardTypes;
+            setupViewPager();
+            Toast.makeText(getActivity().getApplicationContext(),"No Internet Connection, Using Local Cards",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void setupViewPager(){
+        MaterialViewPager mViewPager = getView().findViewById(R.id.materialViewPager);
         mViewPager.getViewPager().setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
 
             @Override
@@ -131,14 +165,6 @@ public class CardFragment extends Fragment  {
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
     }
 
-    public List<CardType> getCards(){
-        DatabaseHandler handler = new DatabaseHandler(getActivity().getApplicationContext());
-        handler.open();
-        List<CardType> listOfCards = handler.getUserCards(userId);
-        handler.close();
-        return listOfCards;
-    }
-
     private void deleteCard(){
         DatabaseHandler handler = new DatabaseHandler(getActivity().getApplicationContext());
         handler.open();
@@ -147,5 +173,84 @@ public class CardFragment extends Fragment  {
         Intent intent = getActivity().getIntent();
         getActivity().finish();
         startActivity(intent);
+    }
+
+    @Override
+    public void onTaskComplete(List<CardType> cardTypes) {
+        if(cardTypes != null && !cardTypes.isEmpty()){
+            this.cardTypes = cardTypes;
+            updateDB();
+            setupViewPager();
+        }
+        else{
+            this.cardTypes = localCardTypes;
+            setupViewPager();
+        }
+    }
+
+    private void updateDB(){
+        DatabaseHandler handler = new DatabaseHandler(getActivity().getApplicationContext());
+        handler.open();
+        for(int i = 0; i < cardTypes.size(); i++){
+            if(!cardTypes.get(i).getStatus().equals(localCardTypes.get(i).getStatus())){
+                handler.updateCardStatus(cardTypes.get(i).getId(),cardTypes.get(i).getStatus());
+            }
+        }
+        handler.close();
+    }
+
+    private static class CardRunner extends AsyncTask<Void, Void, List<CardType>> {
+
+        private CardTaskCompleted callBack;
+        private SubmissionService submissionService;
+        private List<CardType> cardTypes;
+        List<IdentityType> identityTypes;
+        private IdentityTypeService identityTypeService;
+
+        CardRunner(CardTaskCompleted callBack, IdentityTypeService identityTypeService, SubmissionService submissionService,List<CardType> cardTypes){
+            this.callBack = callBack;
+            this.identityTypeService = identityTypeService;
+            this.submissionService = submissionService;
+            this.cardTypes = cardTypes;
+        }
+
+        @Override
+        protected List<CardType> doInBackground(Void... voids) {
+            identityTypes = identityTypeService.getIdentityTypes();
+            if(identityTypes != null){
+                for(CardType cardType:cardTypes){
+                    if(cardType.getSubmissionId() != null && !Objects.equals(cardType.getSubmissionId(), CardStatus.NOT_VERIFIED.toString())){
+                        Submission submission = submissionService.getSubmission(cardType.getSubmissionId());
+                        if (submission != null) {
+                            cardType.setStatus(submission.getStatus());
+                        }
+                        IdentityType identityType = getIdentityById(cardType.getCardId());
+                        if(identityType == null) {
+                            cardType.setStatus(CardStatus.DELETED.toString());
+                        }
+                    }
+                }
+                return cardTypes;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<CardType> result) {
+            callBack.onTaskComplete(result);
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        private IdentityType getIdentityById(String id){
+            for(IdentityType identityType: identityTypes){
+                if(identityType.getId().equals(id))
+                    return identityType;
+            }
+            return null;
+        }
+
     }
 }

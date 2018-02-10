@@ -22,7 +22,7 @@ public class PushNotificationService {
     private static final String FIREBASE_SERVER_KEY = "AAAAf-To7f8:APA91bHrZGYfe9rUg_BOP1qHg-2p7_d-2USBuPuZpybo6Y3nt-XixzNK1DTsNRW1nx95YxTfudyLz0FfL5fbqEP2F3cLBv556rgK0vrRC3-dPdy12fMBWhrG0AEK73cP8tSbAkzDbWi6";
     private static final String FIREBASE_API_URL = "https://fcm.googleapis.com/fcm/send";
 
-    public String sendNotification(String deviceId, JSONObject message){
+    public String sendNotification(String deviceId, JSONObject notification,JSONObject data){
         try {
             URL url = new URL(FIREBASE_API_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -34,11 +34,12 @@ public class PushNotificationService {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", "key=" + FIREBASE_SERVER_KEY);
             conn.setRequestProperty("Content-Type", "application/json");
-            JSONObject data = new JSONObject();
-            data.put("to", deviceId.trim());
-            data.put("notification", message);
+            JSONObject message = new JSONObject();
+            message.put("to", deviceId.trim());
+            message.put("notification", notification);
+            message.put("data", data);
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-            wr.write(data.toString());
+            wr.write(message.toString());
             wr.flush();
             wr.close();
 

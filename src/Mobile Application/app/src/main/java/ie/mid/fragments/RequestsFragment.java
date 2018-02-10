@@ -22,6 +22,7 @@ import ie.mid.interfaces.RequestTaskCompleted;
 import ie.mid.model.Profile;
 import ie.mid.pojo.Request;
 import ie.mid.pojo.Submission;
+import ie.mid.util.InternetUtil;
 
 public class RequestsFragment extends Fragment implements RequestTaskCompleted {
     ListView submissionList;
@@ -55,7 +56,23 @@ public class RequestsFragment extends Fragment implements RequestTaskCompleted {
         profile = getProfile();
         SubmissionService submissionService = new SubmissionService(getActivity().getApplicationContext());
         RequestService requestService = new RequestService(getActivity().getApplicationContext());
-        new ListGetters(this,profile,submissionService,requestService).execute();
+        if(InternetUtil.isNetworkAvailable(getActivity().getApplicationContext())) {
+            new ListGetters(this, profile, submissionService, requestService).execute();
+        }
+        else{
+            noInternetError();
+        }
+    }
+
+    private void noInternetError(){
+        TextView submissionText = (TextView) getView().findViewById(R.id.submission_info);
+        TextView requestText = (TextView) getView().findViewById(R.id.requests_info);
+        getView().findViewById(R.id.submissions_list_progress).setVisibility(View.GONE);
+        getView().findViewById(R.id.requests_list_progress).setVisibility(View.GONE);
+        submissionText.setText("No Internet Connection");
+        submissionText.setVisibility(View.VISIBLE);
+        requestText.setText("No Internet Connection");
+        requestText.setVisibility(View.VISIBLE);
     }
 
     private void getSubmissionList() {

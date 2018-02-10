@@ -35,7 +35,7 @@ public class ProfileSelectionActivity extends AppCompatActivity {
 
         DatabaseHandler handler = new DatabaseHandler(this);
         handler.open();
-
+        //handler.runScrips();
         if(handler.returnAmountOfProfiles() == 0){
             handler.close();
             Intent intent = new Intent(getApplicationContext(),ProfileCreationActivity.class);

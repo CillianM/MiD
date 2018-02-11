@@ -1,7 +1,9 @@
 package ie.mid.identityengine.controller;
 
+import com.google.gson.JsonObject;
 import ie.mid.identityengine.dto.InformationRequestDTO;
 import ie.mid.identityengine.dto.RequestDTO;
+import ie.mid.identityengine.enums.FieldType;
 import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.exception.BadRequestException;
@@ -11,11 +13,13 @@ import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.RequestRepository;
 import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.PushNotificationService;
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +27,7 @@ import java.util.List;
 @RequestMapping("/request")
 public class RequestController {
 
-    private static final String REQUESTHEADER = "Information request";
+    private static final String REQUEST_HEADER = "MiD Information Request";
 
     @Autowired
     RequestRepository requestRepository;
@@ -32,7 +36,16 @@ public class RequestController {
     @Autowired
     PushNotificationService pushNotificationService;
 
+    Logger logger = Logger.getLogger(RequestController.class.getName());
+
     private static final String USER_NOT_EXIST = "User does not exits";
+
+    //Allow requester to see what can be asked
+    @GetMapping(value = "/types")
+    @ResponseBody
+    public List<String> getRequestTypes() {
+        return FieldType.getRequestFields();
+    }
 
     @GetMapping(value = "/recipient/{recipientId}")
     @ResponseBody
@@ -81,18 +94,25 @@ public class RequestController {
 
         String[] fields = request.getIdentityTypeFields().split(",");
 
-        User user = userRepository.findById(informationRequestDTO.getRecipientId());
-        if (user == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
+        User recipient = userRepository.findById(informationRequestDTO.getRecipientId());
+        if (recipient == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
+        User sender = userRepository.findById(informationRequestDTO.getSenderId());
+        if (sender == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
 
-        //TODO make notification body
+
         //Contact the user with the id of the request
-        JSONObject dataObject = pushNotificationService.createNotification(
-                REQUESTHEADER,
-                NotificationType.REQUEST,
-                new String[]{"fields"},
-                new Object[]{fields}
+        JsonObject messageObject = pushNotificationService.createMessageObject(
+                REQUEST_HEADER,
+                sender.getNickname() + " has requested information");
+
+        JsonObject dataObject = pushNotificationService.createDataObject(NotificationType.REQUEST, new String[]{"fields"},
+               fields
         );
-        pushNotificationService.sendNotification(user.getFcmToken(), dataObject,dataObject);
+        try {
+            pushNotificationService.sendNotifictaionAndData(recipient.getFcmToken(), messageObject,dataObject);
+        } catch (IOException e) {
+            logger.error("Error occured sending notification",e);
+        }
         request.setStatus(RequestStatus.PENDING.toString());
         requestRepository.save(request);
 
@@ -141,6 +161,17 @@ public class RequestController {
     }
 
     private boolean isInvalidRequest(InformationRequestDTO requestDTO) {
-        return requestDTO.getRecipientId() == null || requestDTO.getSenderId() == null || requestDTO.getIndentityTypeId() == null || requestDTO.getIdentityTypeFields() == null;
+        if( requestDTO.getRecipientId() == null || requestDTO.getSenderId() == null || requestDTO.getIndentityTypeId() == null || requestDTO.getIdentityTypeFields() == null){
+            return true;
+        }
+        //Check for invalid request fields
+        String[] fieldsRequested = requestDTO.getIdentityTypeFields().split(",");
+        List<String> fieldsAvailable = FieldType.getRequestFields();
+        for(String field: fieldsRequested){
+            if(!fieldsAvailable.contains(field)){
+                return true; // asking for illegal field
+            }
+        }
+        return false;
     }
 }

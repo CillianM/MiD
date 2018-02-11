@@ -3,6 +3,7 @@ package ie.mid.pojo;
 public class User {
 
     private String id;
+    private String nickname;
     private String fcmToken;
     private String status;
     private String keyId;
@@ -49,5 +50,13 @@ public class User {
 
     public void setKeyId(String keyId) {
         this.keyId = keyId;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

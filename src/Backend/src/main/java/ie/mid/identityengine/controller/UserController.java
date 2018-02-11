@@ -28,6 +28,7 @@ public class UserController {
         if (user == null) throw new ResourceNotFoundException("No user exists");
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
+        userDTO.setNickname(user.getNickname());
         userDTO.setFcmToken(user.getFcmToken());
         userDTO.setStatus(user.getStatus());
         KeyDTO latestKey = keyController.getKey(id);
@@ -42,6 +43,7 @@ public class UserController {
     public UserDTO createUser(@RequestBody UserDTO userToCreate) {
         if (isInvalidUser(userToCreate)) throw new BadRequestException();
         User user = new User();
+        user.setNickname(userToCreate.getNickname());
         user.setFcmToken(userToCreate.getFcmToken());
         user.setStatus(EntityStatus.ACTIVE.toString());
         user = userRepository.save(user);
@@ -85,6 +87,6 @@ public class UserController {
     }
 
     private boolean isInvalidUser(UserDTO userDTO) {
-        return userDTO.getFcmToken() == null || userDTO.getPublicKey() == null;
+        return userDTO.getNickname() == null || userDTO.getFcmToken() == null || userDTO.getPublicKey() == null;
     }
 }

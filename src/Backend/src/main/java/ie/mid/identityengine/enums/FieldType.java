@@ -1,5 +1,8 @@
 package ie.mid.identityengine.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum FieldType {
     KEY("KEY"),
     EXPIRY("EXPIRY"),
@@ -26,5 +29,15 @@ public enum FieldType {
     @Override
     public String toString() {
         return type;
+    }
+
+    public static List<String> getRequestFields(){
+        List<String> requestFields = new ArrayList<>();
+        for(FieldType fieldType : values()){
+            if (!fieldType.equals(KEY) || !fieldType.equals(EXPIRY)) {
+                requestFields.add(fieldType.type);
+            }
+        }
+        return requestFields;
     }
 }

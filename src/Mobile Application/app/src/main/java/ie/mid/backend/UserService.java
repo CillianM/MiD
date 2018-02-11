@@ -56,6 +56,7 @@ public class UserService {
             //save to backend
             backendService.setEndpointExtention("/user");
             User user = new User();
+            user.setNickname(profile.getName());
             user.setPublicKey(profile.getPublicKey());
             user.setFcmToken(fcm);
             String json = mapper.writeValueAsString(user);

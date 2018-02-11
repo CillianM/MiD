@@ -56,7 +56,7 @@ public class CardSelectActivity extends AppCompatActivity implements IdentityTas
     public void onTaskComplete(List<IdentityType> identityTypes) {
         TextView cardText = (TextView) findViewById(R.id.card_info);
         findViewById(R.id.card_progress).setVisibility(View.GONE);
-        if(identityTypes != null && identityTypes.size() >1) {
+        if(identityTypes != null && !identityTypes.isEmpty()) {
             ArrayList<AvailableCard> listOfData = new ArrayList<>();
             for (IdentityType identityType : identityTypes) {
                 AvailableCard availableCard = new AvailableCard(identityType.getName(), identityType.getIconImg());
@@ -77,7 +77,7 @@ public class CardSelectActivity extends AppCompatActivity implements IdentityTas
             });
             findViewById(R.id.card_select).setVisibility(View.VISIBLE);
         }
-        else if(identityTypes != null && identityTypes.size() == 1){
+        else if(identityTypes != null && identityTypes.isEmpty()){
             cardText.setText("List empty");
             cardText.setVisibility(View.VISIBLE);
         }

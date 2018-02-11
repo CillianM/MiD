@@ -11,11 +11,13 @@ import ie.mid.identityengine.repository.SubmissionRepository;
 import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.PushNotificationService;
 import ie.mid.identityengine.service.StorageService;
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,9 @@ public class SubmissionController {
     @Autowired
     StorageService storageService;
 
-    private static final String SUBMISSION_HEADER = "Submission Update";
+    private static final String SUBMISSION_HEADER = "MiD Submission Update";
+    private static final Logger log = Logger.getLogger(SubmissionController.class.getName());
+
 
     @GetMapping(value = "/party/{partyId}")
     @ResponseBody
@@ -108,22 +112,26 @@ public class SubmissionController {
         if (user == null) throw new ResourceNotFoundException("User does not exist");
 
 
-        //Contact the user with the id of the request
-        JSONObject notificationObject = pushNotificationService.createNotification(
-                SUBMISSION_HEADER,
-                NotificationType.REQUEST,
-                new String[]{"title", "body"},
-                new Object[]{"MiD Submission Request", message}
-        );
 
-        //Contact the user with the id of the request
-        JSONObject dataObject = pushNotificationService.createNotification(
+        JsonObject messageObject = pushNotificationService.createMessageObject(
                 SUBMISSION_HEADER,
-                NotificationType.REQUEST,
-                new String[]{"submissionId", "status"},
-                new Object[]{submissionToUpdate.getId(), submissionToUpdate.getStatus()}
+                message);
+        JsonObject dataObject = pushNotificationService.createDataObject(
+                NotificationType.APPLICATION_UPDATE,
+                new String[]{
+                        "submissionId",
+                        "status"
+                },
+                new String[]{
+                        submissionToUpdate.getId(),
+                        submissionToUpdate.getStatus()
+                }
         );
-        pushNotificationService.sendNotification(user.getFcmToken(), notificationObject,dataObject);
+        try {
+            pushNotificationService.sendNotifictaionAndData(user.getFcmToken(),messageObject,dataObject);
+        } catch (IOException e) {
+            log.error("Error sending FCM message",e);
+        }
 
         if (submissionToUpdate.getStatus().equals(RequestStatus.ACCEPTED.toString())) {
             //TODO implement ties into the hyperledger service here if the submission is successful

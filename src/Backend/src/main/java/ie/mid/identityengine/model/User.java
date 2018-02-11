@@ -15,6 +15,8 @@ public class User {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private String id;
+    @Column(name = "user_nickname", nullable = false)
+    private String nickname;
     @Column(name = "fcm_token", nullable = false)
     private String fcmToken;
     @Column(name = "status", nullable = false)
@@ -66,5 +68,13 @@ public class User {
 
     public void setFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

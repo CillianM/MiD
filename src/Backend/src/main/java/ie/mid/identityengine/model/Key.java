@@ -15,7 +15,6 @@ public class Key {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(name = "key_id", nullable = false)
     private String id;
     @Column(name = "user_id", nullable = false)
     private String userId;

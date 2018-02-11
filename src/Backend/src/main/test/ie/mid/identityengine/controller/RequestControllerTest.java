@@ -1,5 +1,6 @@
 package ie.mid.identityengine.controller;
 
+import com.google.gson.JsonObject;
 import ie.mid.identityengine.dto.InformationRequestDTO;
 import ie.mid.identityengine.dto.RequestDTO;
 import ie.mid.identityengine.enums.NotificationType;
@@ -59,7 +60,9 @@ public class RequestControllerTest {
         when(requestRepository.findById(anyString())).thenReturn(request);
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(userRepository.findById(anyString())).thenReturn(user);
-        when(pushNotificationService.createNotification(anyString(), any(NotificationType.class), any(), any())).thenReturn(new JSONObject());
+        when(pushNotificationService.createMessageObject(anyString(), anyString())).thenReturn(new JsonObject());
+        when(pushNotificationService.createDataObject(any(NotificationType.class), any(), any())).thenReturn(new JsonObject());
+
     }
 
     @Test

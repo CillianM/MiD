@@ -8,6 +8,32 @@
       <input type="text" placeholder="email"/>
       <input type="password" placeholder="password"/>
       <button id="login-button" routerLink="/party" routerLinkActive="active">login</button>
+      <button (click)="show()" routerLinkActive="active">create</button>
     </form>
+  </div>
+</div>
+
+<div (click)="onContainerClicked($event)" class="modal fade" tabindex="8" [ngClass]="{'show': visibleAnimate}"
+      [ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': visibleAnimate ? 1 : 0}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+            <h2>Create MiD Profile</h2>
+      </div>
+      <div class="modal-body">
+          <form>
+              <div class="form-group">
+                <input #partyName type="text"class="name-input" placeholder="MiD ID" >
+              </div>
+            </form>
+            <div class="button-container">
+              <button type="button" class="create-button" (click)="createNewParty(partyName.value)">
+                <span>Submit</span>
+              </button>
+            </div>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
   </div>
 </div>

@@ -1,6 +1,7 @@
 package ie.mid;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -45,5 +46,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     public void processNotification(String body, Map<String, String> data){
             Log.i(LOG_TAG,"Notification Body: " + body);
             Log.i(LOG_TAG,"Notification Data: " + data.toString());
+            Toast.makeText(getApplicationContext(),"Test",Toast.LENGTH_LONG).show();
     }
 }

@@ -13,6 +13,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import ie.mid.CardSelectActivity;
+import ie.mid.ProfileViewActivity;
 import ie.mid.R;
 import ie.mid.SettingsActivity;
 import ie.mid.adapter.SettingsListAdapter;
@@ -54,6 +55,11 @@ public class MoreFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent;
                 switch (position) {
+                    case 0:
+                        intent = new Intent(getActivity(), ProfileViewActivity.class);
+                        intent.putExtra("userId", userId);
+                        startActivity(intent);
+                        break;
                     case 1:
                         intent = new Intent(getActivity(), CardSelectActivity.class);
                         intent.putExtra("userId", userId);

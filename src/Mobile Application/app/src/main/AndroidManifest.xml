@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <uses-feature android:name="android.hardware.camera" />
 
     <application
@@ -58,8 +59,8 @@
         <activity
             android:name=".CardSubmissionActivity"
             android:label="Submit Identity"
-            android:theme="@style/AppBaseTheme"
-        />
+            android:theme="@style/AppBaseTheme" />
+        <activity android:name=".ProfileViewActivity"></activity>
     </application>
 
 </manifest>

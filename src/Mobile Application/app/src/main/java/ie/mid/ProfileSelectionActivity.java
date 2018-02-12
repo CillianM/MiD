@@ -12,9 +12,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ie.mid.handler.DatabaseHandler;
 import ie.mid.model.Profile;
@@ -33,9 +35,13 @@ public class ProfileSelectionActivity extends AppCompatActivity {
         PreferenceManager.setDefaultValues(this, R.xml.pref_main, false);
         profileImage = (RoundedImageView) findViewById(R.id.user_profile_photo);
 
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            //TODO implement handling of notification data here
+        }
+
         DatabaseHandler handler = new DatabaseHandler(this);
         handler.open();
-        //handler.runScrips();
         if(handler.returnAmountOfProfiles() == 0){
             handler.close();
             Intent intent = new Intent(getApplicationContext(),ProfileCreationActivity.class);

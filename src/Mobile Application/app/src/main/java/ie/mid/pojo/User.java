@@ -4,6 +4,7 @@ public class User {
 
     private String id;
     private String nickname;
+    private String mid;
     private String fcmToken;
     private String status;
     private String keyId;
@@ -58,5 +59,13 @@ public class User {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getMid() {
+        return mid;
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid;
     }
 }

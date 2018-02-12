@@ -64,7 +64,7 @@ public class UserService {
             if (createdUser != null) {
                 user = mapper.readValue(createdUser, User.class);
                 //save to local storage
-                profile = handler.createProfile(profile.getName(), profile.getImageUrl(), profile.getHash(), profile.getSalt(), user.getId(), profile.getPublicKey(), profile.getPrivateKey());
+                profile = handler.createProfile(profile.getName(), profile.getImageUrl(), profile.getHash(), profile.getSalt(), user.getMid(),user.getId(), profile.getPublicKey(), profile.getPrivateKey());
                 handler.close();
                 return profile;
             }

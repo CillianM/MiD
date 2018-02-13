@@ -20,20 +20,39 @@
       <div class="modal-header">
             <h2>Create MiD Profile</h2>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" [ngClass]="{'show': visibleAnimateId}" [ngStyle]="{'display': visibleId ? 'block' : 'none', 'opacity': visibleAnimateId ? 1 : 0}">
           <form>
               <div class="form-group">
-                <input #partyName type="text"class="name-input" placeholder="MiD ID" >
+                <select>
+                    <option (change)="updateParty(i)"*ngFor="let party of parties; let i = index" value="{{party.name}}">{{party.name}}</option>
+                </select>
+                <input #midId type="text"class="name-input" placeholder="MiD ID" >
               </div>
             </form>
             <div class="button-container">
-              <button type="button" class="create-button" (click)="createNewParty(partyName.value)">
+              <button type="button" class="create-button" (click)="showCreate(midId.value)">
                 <span>Submit</span>
               </button>
             </div>
       </div>
-      <div class="modal-footer">
-      </div>
+      <div class="modal-body" [ngClass]="{'show': visibleAnimateCreate}" [ngStyle]="{'display': visibleCreate ? 'block' : 'none', 'opacity': visibleAnimateCreate ? 1 : 0}">
+        <form>
+            <div class="form-group">
+              <select>
+                <option (change)="updateSelectedType(i)"*ngFor="let identity of identityTypes; let i = index" value="{{identity.name}}">{{identity.name}}</option>
+              </select>
+              <br><input  type="checkbox" (click)="useIdentityType()">Use Identity Type?<br>
+              <div *ngFor="let type of viewableRequestTypes; let j = index">
+                <input  (click)="updateSelectedTypes(j)" type="checkbox" name="{{type}}" [checked]="selectedTypes[j]">{{type}}<br>
+              </div>
+            </div>
+          </form>
+          <div class="button-container">
+            <button type="button" class="create-button" (click)="submitRequest()">
+              <span>Submit</span>
+            </button>
+          </div>
+    </div>
     </div>
   </div>
 </div>

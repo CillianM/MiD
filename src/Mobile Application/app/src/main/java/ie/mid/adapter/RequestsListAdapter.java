@@ -88,7 +88,7 @@ public class RequestsListAdapter  extends BaseAdapter {
         }
         else{
             titleView.setText(requests.get(position).getStatus());
-            subtitleView.setText(requests.get(position).getSender());
+            subtitleView.setText(requests.get(position).getIdentityTypeFields());
         }
 
         return view;

@@ -32,6 +32,7 @@
             android:id="@+id/submissions_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/submissions_explain"
             android:divider="@null"
             android:dividerHeight="0dp"/>
     </RelativeLayout>
@@ -66,6 +67,7 @@
             android:id="@+id/requests_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/requests_explain"
             android:divider="@null"
             android:dividerHeight="0dp"/>
     </RelativeLayout>

@@ -17,6 +17,7 @@ import { Globals } from './app-properties';
 import { PartyService } from './services/party-service';
 import { IdentityTypeViewComponent } from './identity-type-view/identity-type-view.component';
 import { IdentityTypeService } from './services/identitytype-service';
+import { RequestService } from './services/request-service';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { IdentityTypeService } from './services/identitytype-service';
     SubmissionService,
     PartyService,
     IdentityTypeService,
+    RequestService,
     Globals
   ],
   bootstrap: [

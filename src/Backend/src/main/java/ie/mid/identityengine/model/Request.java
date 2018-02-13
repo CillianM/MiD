@@ -19,11 +19,11 @@ public class Request {
     private String sender;
     @Column(name = "recipient", nullable = false)
     private String recipient;
-    @Column(name = "type_id", nullable = false)
+    @Column(name = "type_id")
     private String indentityTypeId;
     @Column(name = "type_fields", nullable = false)
     private String identityTypeFields;
-    @Column(name = "user_response", nullable = false)
+    @Column(name = "user_response")
     private String userResponse;
     @Column(name = "status", nullable = false)
     private String status;

@@ -1,5 +1,11 @@
 package ie.mid;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,6 +23,7 @@ import static android.content.ContentValues.TAG;
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
     private static final String LOG_TAG="FIREBASE_SERVICE";
+    String NOTIFICATION_CHANNEL_ID = "MID";
     public FirebaseMessagingService() {
     }
 
@@ -44,8 +51,34 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     }
 
     public void processNotification(String body, Map<String, String> data){
-            Log.i(LOG_TAG,"Notification Body: " + body);
-            Log.i(LOG_TAG,"Notification Data: " + data.toString());
-            Toast.makeText(getApplicationContext(),"Test",Toast.LENGTH_LONG).show();
+        Log.i(LOG_TAG,"Notification Body: " + body);
+        Log.i(LOG_TAG,"Notification Data: " + data.toString());
+
+        String title = "MiD ";
+        if(data.get("type").equals("REQUEST")){
+            title += " Information Request";
+        } else{
+            title += " Submission Update";
+        }
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(getApplicationContext(), NOTIFICATION_CHANNEL_ID)
+                        .setSmallIcon(R.mipmap.ic_launcher_round)
+                        .setContentTitle(title)
+                        .setContentText(body);
+
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_HIGH);
+            // Configure the notification channel.
+            notificationChannel.setDescription("Channel description");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.BLUE);
+            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+        notificationManager.notify(1, notificationBuilder.build());
     }
 }

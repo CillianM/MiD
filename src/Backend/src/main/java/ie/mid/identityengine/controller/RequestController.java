@@ -8,8 +8,10 @@ import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.exception.BadRequestException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
+import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.model.Request;
 import ie.mid.identityengine.model.User;
+import ie.mid.identityengine.repository.PartyRepository;
 import ie.mid.identityengine.repository.RequestRepository;
 import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.PushNotificationService;
@@ -34,9 +36,11 @@ public class RequestController {
     @Autowired
     UserRepository userRepository;
     @Autowired
+    PartyRepository partyRepository;
+    @Autowired
     PushNotificationService pushNotificationService;
 
-    Logger logger = Logger.getLogger(RequestController.class.getName());
+    private Logger logger = Logger.getLogger(RequestController.class.getName());
 
     private static final String USER_NOT_EXIST = "User does not exits";
 
@@ -83,38 +87,43 @@ public class RequestController {
     @ResponseBody
     public RequestDTO createRequest(@RequestBody InformationRequestDTO informationRequestDTO) {
         if (isInvalidRequest(informationRequestDTO)) throw new BadRequestException();
-        //Create the request to be tracked
-        Request request = new Request();
-        request.setRecipient(informationRequestDTO.getRecipientId());
-        request.setSender(informationRequestDTO.getSenderId());
-        request.setIdentityTypeFields(informationRequestDTO.getIdentityTypeFields());
-        request.setIndentityTypeId(informationRequestDTO.getIndentityTypeId());
-        request.setStatus(RequestStatus.SUBMITTED.toString());
-        request = requestRepository.save(request);
-
-        String[] fields = request.getIdentityTypeFields().split(",");
-
         User recipient = userRepository.findById(informationRequestDTO.getRecipientId());
+        if (recipient == null) recipient = userRepository.findByMid(informationRequestDTO.getRecipientId()); //take mid into account here
         if (recipient == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
         User sender = userRepository.findById(informationRequestDTO.getSenderId());
-        if (sender == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
-
+        Party partySender = new Party();
+        if (sender == null) partySender = partyRepository.findById(informationRequestDTO.getSenderId());
+        if (partySender == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
+        //Create the request to be tracked
+        Request request = new Request();
+        request.setRecipient(recipient.getId());
+        String message = " has requested information";
+        if(sender == null) {
+            message = partySender.getName() + message;
+            request.setSender(partySender.getId());
+        }
+        else {
+            message = sender.getNickname() + message;
+            request.setSender(sender.getId());
+        }
+        request.setIdentityTypeFields(informationRequestDTO.getIdentityTypeFields());
+        request.setIndentityTypeId(informationRequestDTO.getIndentityTypeId());
+        request.setStatus(RequestStatus.PENDING.toString());
+        request = requestRepository.save(request);
 
         //Contact the user with the id of the request
         JsonObject messageObject = pushNotificationService.createMessageObject(
                 REQUEST_HEADER,
-                sender.getNickname() + " has requested information");
+                message);
 
         JsonObject dataObject = pushNotificationService.createDataObject(NotificationType.REQUEST, new String[]{"fields"},
-               fields
+                new String[]{request.getIdentityTypeFields()}
         );
         try {
             pushNotificationService.sendNotifictaionAndData(recipient.getFcmToken(), messageObject,dataObject);
         } catch (IOException e) {
             logger.error("Error occured sending notification",e);
         }
-        request.setStatus(RequestStatus.PENDING.toString());
-        requestRepository.save(request);
 
         //return the new request to the requestee
         return getRequest(request.getId());

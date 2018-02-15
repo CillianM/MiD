@@ -88,7 +88,6 @@ public class RequestController {
     public RequestDTO createRequest(@RequestBody InformationRequestDTO informationRequestDTO) {
         if (isInvalidRequest(informationRequestDTO)) throw new BadRequestException();
         User recipient = userRepository.findById(informationRequestDTO.getRecipientId());
-        if (recipient == null) recipient = userRepository.findByMid(informationRequestDTO.getRecipientId()); //take mid into account here
         if (recipient == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
         User sender = userRepository.findById(informationRequestDTO.getSenderId());
         Party partySender = new Party();
@@ -137,7 +136,43 @@ public class RequestController {
         if (isInvalidRequest(informationRequestDTO)) throw new BadRequestException();
         request.setIndentityTypeId(informationRequestDTO.getIndentityTypeId());
         request.setIdentityTypeFields(informationRequestDTO.getIdentityTypeFields());
-        request.setUserResponse(informationRequestDTO.getIdentityTypeValues());
+        String message;
+        if(informationRequestDTO.getIdentityTypeValues().equals(RequestStatus.REJECTED.toString())) {
+            request.setStatus(RequestStatus.REJECTED.toString());
+            message = " has rejected your request";
+        }
+        else if(informationRequestDTO.getIdentityTypeValues().equals(RequestStatus.RESCINDED.toString())) {
+            request.setStatus(RequestStatus.RESCINDED.toString());
+            message = " has rescinded their request";
+        }
+        else {
+            request.setUserResponse(informationRequestDTO.getIdentityTypeValues());
+            request.setStatus(RequestStatus.ACCEPTED.toString());
+            message = " has answered your request";
+        }
+
+
+        //send notification
+        User sender = userRepository.findById(informationRequestDTO.getSenderId());
+
+        if(sender != null) {
+            User recipient = userRepository.findById(informationRequestDTO.getRecipientId());
+            message = recipient.getNickname() + message;
+            //Contact the user with the id of the request
+            JsonObject messageObject = pushNotificationService.createMessageObject(
+                    REQUEST_HEADER,
+                    message);
+
+            JsonObject dataObject = pushNotificationService.createDataObject(NotificationType.REQUEST, new String[]{"response"},
+                    new String[]{request.getUserResponse()}
+            );
+            try {
+                pushNotificationService.sendNotifictaionAndData(sender.getFcmToken(), messageObject,dataObject);
+            } catch (IOException e) {
+                logger.error("Error occured sending notification",e);
+            }
+        }
+
         requestRepository.save(request);
         return getRequest(id);
     }

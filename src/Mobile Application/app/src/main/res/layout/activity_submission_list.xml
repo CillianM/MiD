@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/submission_explain"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Current Submissions"
+        android:textSize="20sp"/>
+
+    <ListView
+        android:id="@+id/submissions_list"
+        android:layout_below="@id/submission_explain"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"/>
+
+    <TextView
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:id="@+id/submission_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="List Info" />
+    <ProgressBar
+        android:layout_centerInParent="true"
+        android:id="@+id/submissions_list_progress"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:indeterminate="true"/>
+
+</RelativeLayout>

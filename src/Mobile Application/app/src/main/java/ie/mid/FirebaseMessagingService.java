@@ -2,8 +2,12 @@ package ie.mid;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -60,25 +64,24 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         } else{
             title += " Submission Update";
         }
-
+        int requestID = (int) System.currentTimeMillis();
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        long[] pattern = {500,500,500,500,500,500,500,500,500};
+        Intent notificationIntent = new Intent(getApplicationContext(), ProfileSelectionActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, requestID,notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(getApplicationContext(), NOTIFICATION_CHANNEL_ID)
                         .setSmallIcon(R.mipmap.ic_launcher_round)
                         .setContentTitle(title)
-                        .setContentText(body);
+                        .setContentText(body)
+                        .setSound(alarmSound)
+                        .setContentIntent(contentIntent)
+                        .setAutoCancel(true)
+                        .setLights(Color.BLUE, 500, 500)
+                        .setVibrate(pattern);
 
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_HIGH);
-            // Configure the notification channel.
-            notificationChannel.setDescription("Channel description");
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.BLUE);
-            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
-            notificationChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
         notificationManager.notify(1, notificationBuilder.build());
     }
 }

@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -34,11 +33,11 @@ import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.UUID;
 
+import ie.mid.async.ProfileCreator;
 import ie.mid.backend.UserService;
 import ie.mid.interfaces.ProfileTaskCompleted;
 import ie.mid.model.Profile;
 import ie.mid.util.HashUtil;
-import ie.mid.util.InternetUtil;
 import ie.mid.view.RoundedImageView;
 
 public class ProfileCreationActivity extends AppCompatActivity implements Validator.ValidationListener, ProfileTaskCompleted {
@@ -115,7 +114,7 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
         profile.setHash(HashUtil.byteToHex(hashedPassword));
         profile.setImageUrl(selectedImagePath);
         UserService userService = new UserService(this);
-        new ProfileCreator(this,userService).execute(profile);
+        new ProfileCreator(getApplicationContext(),this,userService).execute(profile);
 
     }
 
@@ -244,31 +243,5 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
             Toast.makeText(getApplicationContext(), "Error creating profile please try again later", Toast.LENGTH_LONG).show();
             hideLoading();
         }
-    }
-
-    private static class ProfileCreator extends AsyncTask<Profile, Void, Profile> {
-
-        private ProfileTaskCompleted callBack;
-        private UserService userService;
-
-        ProfileCreator(ProfileTaskCompleted callBack, UserService userService){
-            this.callBack = callBack;
-            this.userService = userService;
-        }
-
-        @Override
-        protected Profile doInBackground(Profile... profiles) {
-            return userService.createUser(profiles[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Profile result) {
-            callBack.onTaskComplete(result);
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
     }
 }

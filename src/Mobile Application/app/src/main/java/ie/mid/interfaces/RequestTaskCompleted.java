@@ -1,10 +1,12 @@
 package ie.mid.interfaces;
 
-import java.util.List;
+import ie.mid.model.ViewableRequest;
+import ie.mid.pojo.IdentityType;
 
-import ie.mid.pojo.Request;
-import ie.mid.pojo.Submission;
+/**
+ * Created by Cillian on 13/02/2018.
+ */
 
 public interface RequestTaskCompleted {
-    void onTaskComplete(List<Submission> submissionList, List<Request> requestList);
+    void onTaskComplete(IdentityType identityType, ViewableRequest request);
 }

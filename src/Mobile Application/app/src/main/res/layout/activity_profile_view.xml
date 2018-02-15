@@ -26,4 +26,12 @@
         android:gravity="center"
         android:text="MiD: 1234567890"/>
 
+    <ImageView
+        android:id="@+id/qr_code"
+        android:layout_marginTop="20dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/mid_text"
+        android:layout_centerInParent="true"/>
+
 </RelativeLayout>

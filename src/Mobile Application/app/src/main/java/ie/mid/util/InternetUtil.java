@@ -7,11 +7,9 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.Socket;
-
-/**
- * Created by Cillian on 28/01/2018.
- */
+import java.net.URL;
 
 public class InternetUtil {
 
@@ -22,30 +20,16 @@ public class InternetUtil {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private static boolean isServerLive(Context context) {
+    public static boolean isServerLive(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String address = prefs.getString("key_server_address", null);
-        if (address != null) {
-            String host = address.substring(0, address.lastIndexOf(":"));
-            if (host.equals("http://10.0.2.2")) return true;
-
-            try (Socket socket = new Socket()) {
-                Runtime runtime = Runtime.getRuntime();
-                Process proc = runtime.exec("ping -c 1 " + host);
-                int mPingResult = proc.waitFor();
-                return mPingResult == 0;
-            } catch (IOException | InterruptedException e) {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    private class ServerChecker implements Runnable {
-
-        @Override
-        public void run() {
-
+        String address = prefs.getString("key_server_address", null) + "/swagger-ui.html";
+        try {
+            URL url = new URL(address);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(4000);
+            return connection.getResponseCode() == 200;
+        } catch (IOException e) {
+            return false;
         }
     }
 }

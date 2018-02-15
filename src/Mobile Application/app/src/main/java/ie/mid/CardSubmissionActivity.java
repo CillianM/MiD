@@ -4,8 +4,9 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
+import android.os.Build;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import ie.mid.async.SubmissionCreator;
 import ie.mid.backend.SubmissionService;
 import ie.mid.enums.DataType;
 import ie.mid.handler.DatabaseHandler;
@@ -33,7 +35,6 @@ import ie.mid.interfaces.SubmitTaskCompleted;
 import ie.mid.model.CardType;
 import ie.mid.model.Profile;
 import ie.mid.model.SubmissionData;
-import ie.mid.pojo.IdentityType;
 import ie.mid.pojo.Submission;
 import ie.mid.util.HashUtil;
 import ie.mid.util.InternetUtil;
@@ -76,21 +77,25 @@ public class CardSubmissionActivity extends AppCompatActivity implements SubmitT
         birth_dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                birthSet = true;
-                birth_year = i;
-                birth_month = i1 + 1;
-                birth_day = i2;
-                updateDisplays();
+                if(i != 0) {
+                    birthSet = true;
+                    birth_year = i;
+                    birth_month = i1 + 1;
+                    birth_day = i2;
+                    updateDisplays();
+                }
             }
         };
         exp_dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                expSet = true;
-                exp_year = i;
-                exp_month = i1 + 1;
-                exp_day = i2;
-                updateDisplays();
+                if(i != 0) {
+                    expSet = true;
+                    exp_year = i;
+                    exp_month = i1 + 1;
+                    exp_day = i2;
+                    updateDisplays();
+                }
             }
         };
 
@@ -149,6 +154,8 @@ public class CardSubmissionActivity extends AppCompatActivity implements SubmitT
                     birthSet = true;
                     setBirthDate(cardType.getDataList().get(i).getFieldEntry());
                     birthButton = new Button(this);
+                    birthButton.setBackgroundColor(getResources().getColor(R.color.grey));
+                    birthButton.setTextColor(getResources().getColor(R.color.white));
                     birthButton.setText(cardType.getDataList().get(i).getFieldEntry());
                     birthButton.setLayoutParams(editTextLayoutParams);
                     birthButton.setOnClickListener(new View.OnClickListener() {
@@ -165,6 +172,8 @@ public class CardSubmissionActivity extends AppCompatActivity implements SubmitT
                     expSet = true;
                     setExpiryDate(cardType.getDataList().get(i).getFieldEntry());
                     expButton = new Button(this);
+                    expButton.setBackgroundColor(getResources().getColor(R.color.grey));
+                    expButton.setTextColor(getResources().getColor(R.color.white));
                     expButton.setText(cardType.getDataList().get(i).getFieldEntry());
                     expButton.setLayoutParams(editTextLayoutParams);
                     expButton.setOnClickListener(new View.OnClickListener() {
@@ -257,17 +266,18 @@ public class CardSubmissionActivity extends AppCompatActivity implements SubmitT
         submission.setData(submissionData.toString());
         submission.setUserId(profile.getServerId());
         submission.setPartyId(cardType.getPartyId());
+        showLoading();
         if(InternetUtil.isNetworkAvailable(getApplicationContext())) {
-            new SubmitRunner(this, new SubmissionService(getApplicationContext())).execute(submission);
-            showLoading();
+            new SubmissionCreator(this, new SubmissionService(getApplicationContext())).execute(submission);
         }
         else{
+            hideLoading();
             noInternetError();
         }
     }
 
     public void noInternetError(){
-        Toast.makeText(getApplicationContext(), "Error Processing Submission", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "No internet connection", Toast.LENGTH_LONG).show();
     }
 
     private String getFieldValueString(List<String> entryList) {
@@ -289,13 +299,31 @@ public class CardSubmissionActivity extends AppCompatActivity implements SubmitT
     }
 
     public void takePicture(View view){
-        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE); }
+        if (Build.VERSION.SDK_INT > 22) {
+            requestPermissions(new String[]{"android.permission.CAMERA"}, 1);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    Toast.makeText(this, "Permission denied to access your camera.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+                }
+            }
+        }
+    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             profilePhoto = (Bitmap) data.getExtras().get("data");
             profileImage.setImageBitmap(profilePhoto);
+            findViewById(R.id.image_prompt).setVisibility(View.GONE);
         }
     }
 
@@ -344,31 +372,5 @@ public class CardSubmissionActivity extends AppCompatActivity implements SubmitT
             error();
             hideLoading();
         }
-    }
-
-    private static class SubmitRunner extends AsyncTask<Submission, Void, Submission> {
-
-        private SubmitTaskCompleted callBack;
-        private SubmissionService submissionService;
-
-        SubmitRunner(SubmitTaskCompleted callBack, SubmissionService submissionService){
-            this.callBack = callBack;
-            this.submissionService = submissionService;
-        }
-
-        @Override
-        protected Submission doInBackground(Submission... submissions) {
-            return submissionService.submitIdentity(submissions[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Submission result) {
-            callBack.onTaskComplete(result);
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
     }
 }

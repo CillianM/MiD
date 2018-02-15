@@ -13,7 +13,6 @@ public class Profile {
     private String publicKey;
     private String privateKey;
     private String imageUrl;
-    private String mid;
 
     public Profile() {
     }
@@ -25,7 +24,7 @@ public class Profile {
         this.salt = salt;
     }
 
-    public Profile(String id, String name, String imageUrl, String hash, String salt, String mid,String serverId, String publicKey, String privateKey) {
+    public Profile(String id, String name, String imageUrl, String hash, String salt,String serverId, String publicKey, String privateKey) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -34,7 +33,6 @@ public class Profile {
         this.serverId = serverId;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
-        this.mid = mid;
     }
 
     public String getId() {
@@ -100,13 +98,5 @@ public class Profile {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public String getMid() {
-        return mid;
-    }
-
-    public void setMid(String mid) {
-        this.mid = mid;
     }
 }

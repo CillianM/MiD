@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
 
     <com.github.florent37.materialviewpager.MaterialViewPager
+        android:visibility="gone"
         android:id="@+id/materialViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,5 +25,12 @@
         app:viewpager_animatedHeaderImage="true"
 
         />
+
+    <ProgressBar
+        android:id="@+id/card_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>

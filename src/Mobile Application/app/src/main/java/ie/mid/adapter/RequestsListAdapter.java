@@ -14,6 +14,7 @@ import java.util.List;
 
 import ie.mid.R;
 import ie.mid.enums.CardStatus;
+import ie.mid.model.ViewableRequest;
 import ie.mid.pojo.Request;
 import ie.mid.pojo.Submission;
 
@@ -23,35 +24,24 @@ import ie.mid.pojo.Submission;
 
 public class RequestsListAdapter  extends BaseAdapter {
 
-    Context context;
-    List<Submission> submissions ;
-    List<Request> requests ;
-    int code;
+    private Context context;
+    private List<ViewableRequest> requests ;
+    private String serverId;
 
-    public RequestsListAdapter(Context context) {
+    public RequestsListAdapter(Context context,List<ViewableRequest> requests, String serverId) {
         this.context = context;
-    }
-
-    public void setSubmissions(List<Submission> submissions) {
-        this.submissions = submissions;
-        this.code = 0;
-    }
-
-    public void setRequests(List<Request> requests) {
         this.requests = requests;
-        this.code = 1;
+        this.serverId = serverId;
     }
 
     @Override
     public int getCount() {
-        if(code == 0) return submissions.size();
-        else return requests.size();
+        return requests.size();
     }
 
     @Override
     public Object getItem(int position) {
-        if(code ==0)return submissions.get(position);
-        else return requests.get(position);
+        return requests.get(position);
     }
 
     @Override
@@ -74,22 +64,18 @@ public class RequestsListAdapter  extends BaseAdapter {
         TextView subtitleView = view.findViewById(R.id.sub_text_area);
         ImageView iconView = view.findViewById(R.id.dataImage);
 
-        if(code == 0) {
-
-            titleView.setText(submissions.get(position).getStatus());
-            subtitleView.setText(submissions.get(position).getDate());
-            Drawable drawable = context.getResources().getDrawable(R.drawable.ic_assignment_late_black_24dp);
-            if (submissions.get(position).getStatus().equals(CardStatus.ACCEPTED.toString())) {
-                drawable = context.getResources().getDrawable(R.drawable.ic_assignment_turned_in_black_24dp);
-            } else if (submissions.get(position).getStatus().equals(CardStatus.PENDING.toString())) {
-                drawable = context.getResources().getDrawable(R.drawable.ic_assignment_return_black_24dp);
-            }
-            iconView.setImageDrawable(drawable);
+        Drawable drawable;
+        String title;
+        if (requests.get(position).getSender().equals(serverId)) {
+            drawable = context.getResources().getDrawable(R.drawable.ic_arrow_forward_black_24dp);
+            title = "Request to " + requests.get(position).getSenderReceiverName();
+        } else {
+            drawable = context.getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp);
+            title = "Request from " + requests.get(position).getSenderReceiverName();
         }
-        else{
-            titleView.setText(requests.get(position).getStatus());
-            subtitleView.setText(requests.get(position).getIdentityTypeFields());
-        }
+        iconView.setImageDrawable(drawable);
+        titleView.setText(title);
+        subtitleView.setText(requests.get(position).getStatus());
 
         return view;
     }

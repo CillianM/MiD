@@ -1,11 +1,12 @@
 package ie.mid.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -20,20 +21,16 @@ import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 
 import java.util.List;
-import java.util.Objects;
 
 import ie.mid.CardCreateActivity;
 import ie.mid.ProfileSelectionActivity;
 import ie.mid.R;
+import ie.mid.async.CardGetter;
 import ie.mid.backend.IdentityTypeService;
 import ie.mid.backend.SubmissionService;
-import ie.mid.enums.CardStatus;
 import ie.mid.handler.DatabaseHandler;
 import ie.mid.interfaces.CardTaskCompleted;
-import ie.mid.interfaces.IdentityTaskCompleted;
 import ie.mid.model.CardType;
-import ie.mid.pojo.IdentityType;
-import ie.mid.pojo.Submission;
 import ie.mid.util.InternetUtil;
 
 /**
@@ -73,21 +70,8 @@ public class CardFragment extends Fragment implements CardTaskCompleted {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.edit_card:
-                if(!currentCardType.getStatus().equals("PENDING")) {
-                    intent = new Intent(getActivity(), CardCreateActivity.class);
-                    intent.putExtra("userId", userId);
-                    intent.putExtra("isUpdate", true);
-                    intent.putExtra("cardId", currentCardType.getId());
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }
-                else{
-                    Toast.makeText(getActivity().getApplicationContext(),"Cannot Update a pending card",Toast.LENGTH_SHORT).show();
-                }
-                break;
             case R.id.delete_card:
-                deleteCard();
+                confirmDelete();
                 break;
             default:
                 intent = new Intent(getActivity(), ProfileSelectionActivity.class);
@@ -110,8 +94,10 @@ public class CardFragment extends Fragment implements CardTaskCompleted {
         List<CardType> listOfCards = handler.getUserCards(userId);
         localCardTypes = handler.getUserCards(userId);
         handler.close();
+        showLoading();
         if(InternetUtil.isNetworkAvailable(getActivity().getApplicationContext())) {
-            new CardRunner(
+            new CardGetter(
+                    getActivity().getApplicationContext(),
                     this,
                     new IdentityTypeService(getActivity().getApplicationContext()),
                     new SubmissionService(getActivity().getApplicationContext()),
@@ -165,6 +151,26 @@ public class CardFragment extends Fragment implements CardTaskCompleted {
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
     }
 
+    private void confirmDelete(){
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        deleteCard();
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.AlertDialog);
+        builder.setMessage("Do you want to delete \"" + currentCardType.getTitle() + "\" from your cards?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+
+    }
+
+
     private void deleteCard(){
         DatabaseHandler handler = new DatabaseHandler(getActivity().getApplicationContext());
         handler.open();
@@ -175,14 +181,27 @@ public class CardFragment extends Fragment implements CardTaskCompleted {
         startActivity(intent);
     }
 
+    private void showLoading(){
+        getView().findViewById(R.id.materialViewPager).setVisibility(View.GONE);
+        getView().findViewById(R.id.card_progress).setVisibility(View.VISIBLE);
+
+    }
+
+    private void hideLoading(){
+        getView().findViewById(R.id.materialViewPager).setVisibility(View.VISIBLE);
+        getView().findViewById(R.id.card_progress).setVisibility(View.GONE);
+    }
+
     @Override
     public void onTaskComplete(List<CardType> cardTypes) {
+        hideLoading();
         if(cardTypes != null && !cardTypes.isEmpty()){
             this.cardTypes = cardTypes;
             updateDB();
             setupViewPager();
         }
         else{
+            Toast.makeText(getActivity().getApplicationContext(),"Could not contact server Using Local Cards",Toast.LENGTH_LONG).show();
             this.cardTypes = localCardTypes;
             setupViewPager();
         }
@@ -197,60 +216,5 @@ public class CardFragment extends Fragment implements CardTaskCompleted {
             }
         }
         handler.close();
-    }
-
-    private static class CardRunner extends AsyncTask<Void, Void, List<CardType>> {
-
-        private CardTaskCompleted callBack;
-        private SubmissionService submissionService;
-        private List<CardType> cardTypes;
-        List<IdentityType> identityTypes;
-        private IdentityTypeService identityTypeService;
-
-        CardRunner(CardTaskCompleted callBack, IdentityTypeService identityTypeService, SubmissionService submissionService,List<CardType> cardTypes){
-            this.callBack = callBack;
-            this.identityTypeService = identityTypeService;
-            this.submissionService = submissionService;
-            this.cardTypes = cardTypes;
-        }
-
-        @Override
-        protected List<CardType> doInBackground(Void... voids) {
-            identityTypes = identityTypeService.getIdentityTypes();
-            if(identityTypes != null){
-                for(CardType cardType:cardTypes){
-                    if(cardType.getSubmissionId() != null && !Objects.equals(cardType.getSubmissionId(), CardStatus.NOT_VERIFIED.toString())){
-                        Submission submission = submissionService.getSubmission(cardType.getSubmissionId());
-                        if (submission != null) {
-                            cardType.setStatus(submission.getStatus());
-                        }
-                        IdentityType identityType = getIdentityById(cardType.getCardId());
-                        if(identityType == null) {
-                            cardType.setStatus(CardStatus.DELETED.toString());
-                        }
-                    }
-                }
-                return cardTypes;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<CardType> result) {
-            callBack.onTaskComplete(result);
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        private IdentityType getIdentityById(String id){
-            for(IdentityType identityType: identityTypes){
-                if(identityType.getId().equals(id))
-                    return identityType;
-            }
-            return null;
-        }
-
     }
 }

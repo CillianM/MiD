@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#1e2763</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#FFFFFF</color>
+    <color name="colorBackground">#fafafa</color>
     <color name="black">#000</color>
     <color name="transparent">#00000000</color>
     <color name="transparent_10">#1A000000</color>
@@ -15,4 +16,6 @@
     <color name="transparent_70">#B3000000</color>
     <color name="transparent_80">#CC000000</color>
     <color name="transparent_90">#E6000000</color>
+    <color name="semi_white_transparant">#70ffffff</color>
+    <color name="grey">#7E7E7E</color>
 </resources>

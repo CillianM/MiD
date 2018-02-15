@@ -40,7 +40,6 @@ public class DatabaseHandler {
     private static final String SALT = "salt";
     private static final String HASH = "hash";
     private static final String SERVER_ID = "server_id";
-    private static final String MID = "mid";
     private static final String PRIVATE_KEY = "private_key";
     private static final String PUBLIC_KEY = "public_key";
     private static final String PROFILE_TABLE_NAME = "profiles";
@@ -50,7 +49,6 @@ public class DatabaseHandler {
             PROFILE_IMG + " text not null," +
             SALT + " text not null," +
             HASH + " text not null," +
-            MID + " text not null," +
             SERVER_ID + " text not null," +
             PRIVATE_KEY + " text not null," +
             PUBLIC_KEY + " text not null," +
@@ -137,6 +135,8 @@ public class DatabaseHandler {
         dbhelper = new DataBaseHelper(ctx);
     }
 
+
+
     private static class DataBaseHelper extends SQLiteOpenHelper {
 
         DataBaseHelper(Context ctx)
@@ -184,14 +184,13 @@ public class DatabaseHandler {
         return new Timestamp(new Date().getTime()).toString();
     }
 
-    public Profile createProfile(String name,String profileImg,String hash,String salt,String mid,String serverId, String publicKey,String privateKey){
+    public Profile createProfile(String name,String profileImg,String hash,String salt,String serverId, String publicKey,String privateKey){
         String id = UUID.randomUUID().toString();
         String date = new Date().toString();
         ContentValues content = new ContentValues();
         content.put(ID, id);
         content.put(PROFILE_NAME,name);
         content.put(PROFILE_IMG,profileImg);
-        content.put(MID,mid);
         content.put(SERVER_ID,serverId);
         content.put(HASH, hash);
         content.put(SALT, salt);
@@ -200,7 +199,7 @@ public class DatabaseHandler {
         content.put(CREATION_DATE, date);
         content.put(UPDATED_DATE, date);
         db.insert(PROFILE_TABLE_NAME,null,content);
-        return new Profile(id,name,profileImg,hash,salt,mid,serverId,publicKey,privateKey);
+        return new Profile(id,name,profileImg,hash,salt,serverId,publicKey,privateKey);
     }
 
     public CreatedSubmission createSubmission(String submissionId, String cardId){
@@ -282,7 +281,7 @@ public class DatabaseHandler {
     }
 
     public Profile getProfile(String id) {
-        String selectQuery = "SELECT ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,MID,SERVER_ID,PRIVATE_KEY,PUBLIC_KEY FROM " + PROFILE_TABLE_NAME + " WHERE " + ID + "='" + id + "'";
+        String selectQuery = "SELECT ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,SERVER_ID,PRIVATE_KEY,PUBLIC_KEY FROM " + PROFILE_TABLE_NAME + " WHERE " + ID + "='" + id + "'";
         Cursor cursor = db.rawQuery(selectQuery, null);
         Profile profile = new Profile();
         if (cursor.getCount() != 0) {
@@ -295,8 +294,7 @@ public class DatabaseHandler {
                         cursor.getString(4),
                         cursor.getString(5),
                         cursor.getString(6),
-                        cursor.getString(7),
-                        cursor.getString(8)
+                        cursor.getString(7)
                 );
             }
             return profile;
@@ -333,6 +331,30 @@ public class DatabaseHandler {
 
     public CardType getUserCardBySubmission(String submissionId) {
         String selectQuery = "SELECT ID ,TITLE ,CARD_ID ,OWNER_ID ,FIELD_NAME ,FIELD_VALUE, COVER_IMG_URL,STATUS_CODE,PARTY_ID,SUBMISSION_ID,VERSION_NUMBER FROM " + CARD_TABLE_NAME + " WHERE " + SUBMISSION_ID + "='" + submissionId + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        CardType cardType = new CardType();
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                cardType.setId(cursor.getString(0));
+                cardType.setTitle(cursor.getString(1));
+                cardType.setCardId(cursor.getString(2));
+                cardType.setOwnerId(cursor.getString(3));
+                cardType.setDefaultColor(R.color.blue);
+                cardType.setStatus(cursor.getString(7));
+                cardType.setImageUrl(cursor.getString(6));
+                cardType.setPartyId(cursor.getString(8));
+                cardType.setSubmissionId(cursor.getString(9));
+                cardType.setVersionNumber(cursor.getInt(10));
+                List<Field> fieldList = getFieldList(cursor.getString(4));
+                cardType.setDataList(getCardData(fieldList, cursor.getString(5)));
+            }
+            return cardType;
+        }
+        return null;
+    }
+
+    public CardType getUserCardByIdentityType(String userId,String identityId) {
+        String selectQuery = "SELECT ID ,TITLE ,CARD_ID ,OWNER_ID ,FIELD_NAME ,FIELD_VALUE, COVER_IMG_URL,STATUS_CODE,PARTY_ID,SUBMISSION_ID,VERSION_NUMBER FROM " + CARD_TABLE_NAME + " WHERE " + CARD_ID + "='" + identityId +"' AND " +OWNER_ID + " ='"+userId+ "'";
         Cursor cursor = db.rawQuery(selectQuery, null);
         CardType cardType = new CardType();
         if (cursor.getCount() != 0) {
@@ -423,7 +445,7 @@ public class DatabaseHandler {
     }
 
     public List<Profile> returnProfiles() {
-        Cursor cursor =  db.query(PROFILE_TABLE_NAME, new String[]{ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,MID,SERVER_ID,PRIVATE_KEY,PUBLIC_KEY}, null, null, null, null, null);
+        Cursor cursor =  db.query(PROFILE_TABLE_NAME, new String[]{ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,SERVER_ID,PRIVATE_KEY,PUBLIC_KEY}, null, null, null, null, null);
         List<Profile> profiles = new ArrayList<>();
         if(cursor.getCount() != 0){
             while(cursor.moveToNext()){
@@ -435,8 +457,7 @@ public class DatabaseHandler {
                         cursor.getString(4),
                         cursor.getString(5),
                         cursor.getString(6),
-                        cursor.getString(7),
-                        cursor.getString(8)
+                        cursor.getString(7)
                 ));
             }
         }

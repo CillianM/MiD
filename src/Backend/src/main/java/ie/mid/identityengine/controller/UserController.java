@@ -45,7 +45,6 @@ public class UserController {
         if (isInvalidUser(userToCreate)) throw new BadRequestException();
         User user = new User();
         user.setNickname(userToCreate.getNickname());
-        user.setMid(Random.getRandomString(10));
         user.setFcmToken(userToCreate.getFcmToken());
         user.setStatus(EntityStatus.ACTIVE.toString());
         user = userRepository.save(user);
@@ -55,7 +54,6 @@ public class UserController {
         keyDTO.setPublicKey(userToCreate.getPublicKey());
         keyDTO.setUserId(user.getId());
         keyDTO = keyController.createKey(keyDTO);
-        userToCreate.setMid(user.getMid());
         userToCreate.setKeyId(keyDTO.getId());
         userToCreate.setStatus(user.getStatus());
         return userToCreate;

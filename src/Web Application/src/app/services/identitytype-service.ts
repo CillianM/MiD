@@ -17,14 +17,14 @@ export class IdentityTypeService{
     }
 
     getPartyIdentityTypes(partyId:string) : Observable<IdentityType[]> {
-                 return this.http.get(this.ENDPOINT + "/" + partyId)
+                 return this.http.get(this.ENDPOINT + "/party/" + partyId)
                                  .map((res:Response) => res.json())                               
                                  .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
         
     }
 
-    getIdentityType(partyId:string,id:string) : Observable<IdentityType> {
-        return this.http.get(this.ENDPOINT + "/" + partyId + "/" + id)
+    getIdentityType(id:string) : Observable<IdentityType> {
+        return this.http.get(this.ENDPOINT + "/" + id)
                         .map((res:Response) => res.json())                               
                         .catch((error:any) => Observable.throw(error.json().error || 'Server error'));
 
@@ -40,21 +40,21 @@ export class IdentityTypeService{
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); 
     } 
 
-    updateIdentityType (partyId:string,id:string,body: Object): Observable<IdentityType> {
+    updateIdentityType (id:string,body: Object): Observable<IdentityType> {
         let bodyString = JSON.stringify(body); 
         let headers      = new Headers({ 'Content-Type': 'application/json' }); 
         let options       = new RequestOptions({ headers: headers }); 
 
-        return this.http.put(this.ENDPOINT + "/" + partyId + "/" + id, body) 
+        return this.http.put(this.ENDPOINT + "/" + id, body) 
                          .map((res:Response) => res.json()) 
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); 
     } 
     
-    deleteIdentityType (partyId:string,id:string): Observable<IdentityType> {
+    deleteIdentityType (id:string): Observable<IdentityType> {
         let headers      = new Headers({ 'Content-Type': 'application/json' }); 
         let options       = new RequestOptions({ headers: headers }); 
 
-        return this.http.delete(this.ENDPOINT + "/" + partyId + "/" + id) 
+        return this.http.delete(this.ENDPOINT + "/" + id) 
                          .map((res:Response) => res.json()) 
                          .catch((error:any) => Observable.throw(error.json().error || 'Server error')); 
     } 

@@ -2,9 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ie.mid.CardActivity">
     <item
-        android:id="@+id/edit_card"
-        android:title="Edit Card" />
-    <item
         android:id="@+id/delete_card"
         android:title="Delete Card" />
 </menu>

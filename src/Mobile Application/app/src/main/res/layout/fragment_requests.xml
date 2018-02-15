@@ -1,75 +1,94 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical" android:layout_height="fill_parent" android:layout_width="fill_parent"
-    android:baselineAligned="false">
-    <RelativeLayout android:layout_weight="1" android:layout_height="0dp" android:layout_width="fill_parent"
+    android:baselineAligned="false" android:weightSum="10">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="View your requests \nor submissions"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/submission_layout"
+        android:layout_weight="4"
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
         android:orientation="vertical">
-        <TextView
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:id="@+id/submissions_explain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Current Submissions"
-            android:textSize="20sp"/>
+
+        <ie.mid.view.RoundedImageView
+            android:id="@+id/submission_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/circle"
+            android:src="@drawable/ic_assignment_returned_white_48dp" />
 
         <TextView
-            android:layout_centerInParent="true"
-            android:visibility="gone"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:id="@+id/submission_info"
+            android:id="@+id/submission_heading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="List Info" />
-        <ProgressBar
-            android:layout_centerInParent="true"
-            android:id="@+id/submissions_list_progress"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:indeterminate="true"/>
-        <ListView
-            android:visibility="gone"
-            android:id="@+id/submissions_list"
+            android:gravity="center"
+            android:text="Submission List"
+            android:layout_below="@id/submission_image"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/submission_explain"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/submissions_explain"
-            android:divider="@null"
-            android:dividerHeight="0dp"/>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_below="@id/submission_heading"
+            android:text="View any submissions you've created \n and what their current status is"
+            android:textSize="14sp"/>
+
     </RelativeLayout>
 
-    <RelativeLayout android:layout_weight="1" android:layout_height="0dp" android:layout_width="fill_parent"
+    <RelativeLayout
+        android:id="@+id/request_layout"
+        android:layout_weight="4"
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
         android:orientation="vertical">
+
+        <ie.mid.view.RoundedImageView
+            android:id="@+id/request_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_compare_arrows_white_48dp"
+            android:background="@drawable/circle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"/>
+
         <TextView
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
+            android:id="@+id/requests_heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Request List"
+            android:layout_below="@id/request_image"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+
+        <TextView
             android:id="@+id/requests_explain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Created Requests"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:id="@+id/requests_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="List Info"
-            android:visibility="gone" />
-        <ProgressBar
-            android:layout_centerInParent="true"
-            android:id="@+id/requests_list_progress"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:indeterminate="true"/>
-        <ListView
-            android:visibility="gone"
-            android:id="@+id/requests_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/requests_explain"
-            android:divider="@null"
-            android:dividerHeight="0dp"/>
-    </RelativeLayout>
+            android:layout_below="@id/requests_heading"
+            android:text="View any requests made to and  from your \n profile and edit them as you please"
+            android:textSize="14sp"/>
+
+        </RelativeLayout>
 </LinearLayout>
 

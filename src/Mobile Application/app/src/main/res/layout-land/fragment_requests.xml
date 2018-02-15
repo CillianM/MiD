@@ -1,0 +1,83 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:orientation="horizontal" android:layout_height="fill_parent" android:layout_width="fill_parent"
+    android:baselineAligned="false" android:weightSum="10">
+
+    <RelativeLayout
+        android:id="@+id/submission_layout"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="5"
+        android:orientation="horizontal">
+
+        <ie.mid.view.RoundedImageView
+            android:id="@+id/submission_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/circle"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_assignment_returned_white_48dp" />
+
+        <TextView
+            android:id="@+id/submission_heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/submission_image"
+            android:gravity="center"
+            android:text="Submission List"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/submission_explain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/submission_heading"
+            android:gravity="center"
+            android:text="View any submissions you've created \n and what their current status is"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/request_layout"
+        android:layout_weight="5"
+        android:layout_height="fill_parent"
+        android:layout_width="0dp"
+        android:orientation="horizontal">
+
+        <ie.mid.view.RoundedImageView
+            android:id="@+id/request_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_compare_arrows_white_48dp"
+            android:background="@drawable/circle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"/>
+
+        <TextView
+            android:id="@+id/requests_heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Request List"
+            android:layout_below="@id/request_image"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/requests_explain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_below="@id/requests_heading"
+            android:text="View any requests made to and  from your \n profile and edit them as you please"
+            android:textSize="14sp"/>
+
+        </RelativeLayout>
+</LinearLayout>
+

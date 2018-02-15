@@ -10,6 +10,8 @@ public class CardField {
     private String fieldTitle;
     private int dataIcon;
 
+    public CardField(){}
+
     public CardField(String fieldEntry, String fieldType) {
         this.fieldEntry = fieldEntry;
         this.fieldType = fieldType;

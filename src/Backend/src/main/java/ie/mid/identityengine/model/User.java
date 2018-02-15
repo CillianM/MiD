@@ -17,8 +17,6 @@ public class User {
     private String id;
     @Column(name = "user_nickname", nullable = false)
     private String nickname;
-    @Column(name = "mid", nullable = false)
-    private String mid;
     @Column(name = "fcm_token", nullable = false)
     private String fcmToken;
     @Column(name = "status", nullable = false)
@@ -78,13 +76,5 @@ public class User {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public String getMid() {
-        return mid;
-    }
-
-    public void setMid(String mid) {
-        this.mid = mid;
     }
 }

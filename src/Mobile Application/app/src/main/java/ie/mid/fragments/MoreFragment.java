@@ -13,6 +13,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import ie.mid.CardSelectActivity;
+import ie.mid.CreateRequestActivity;
 import ie.mid.ProfileViewActivity;
 import ie.mid.R;
 import ie.mid.SettingsActivity;
@@ -66,6 +67,11 @@ public class MoreFragment extends Fragment {
                         startActivity(intent);
                         break;
                     case 2:
+                        intent = new Intent(getActivity(), CreateRequestActivity.class);
+                        intent.putExtra("userId", userId);
+                        startActivity(intent);
+                        break;
+                    case 3:
                         intent = new Intent(getActivity(), SettingsActivity.class);
                         intent.putExtra("userId", userId);
                         startActivity(intent);
@@ -77,8 +83,9 @@ public class MoreFragment extends Fragment {
 
 
     public void getSettingsList() {
-        settingItems.add(new SettingItem("Profile", "Manage Profile Settings", R.drawable.ic_person_black_24dp));
+        settingItems.add(new SettingItem("Profile", "Manage Profile Settings", R.drawable.ic_face_black_24dp));
         settingItems.add(new SettingItem("Add Card", "Add a new card", R.drawable.ic_credit_card_black_24dp));
+        settingItems.add(new SettingItem("Request Information", "Request information from a user", R.drawable.ic_person_black_24dp));
         settingItems.add(new SettingItem("Settings", "Manage Application Settings", R.drawable.ic_settings_black_24dp));
     }
 }

@@ -56,6 +56,18 @@ public class PinLayout extends LinearLayout {
 
     }
 
+    public void addChar(String c){
+        invisiblePinEditText.setText(invisiblePinEditText.getText() + c);
+    }
+
+    public void removeChar() {
+        if(invisiblePinEditText.getText().length() > 0) {
+            String current = invisiblePinEditText.getText().toString();
+            current = current.substring(0, current.length() - 1);
+            invisiblePinEditText.setText(current);
+        }
+    }
+
     private void addPins() {
         int marginSize = getResources().getDimensionPixelSize(R.dimen.pin_margins);
         int height = getResources().getDimensionPixelSize(R.dimen.pin_size);
@@ -191,4 +203,6 @@ public class PinLayout extends LinearLayout {
     private void unfillPin(View pin) {
         pin.setBackground(getResources().getDrawable(R.drawable.empty_dot));
     }
+
+
 }

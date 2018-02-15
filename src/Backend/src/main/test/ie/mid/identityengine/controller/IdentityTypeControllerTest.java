@@ -85,19 +85,19 @@ public class IdentityTypeControllerTest {
 
     @Test
     public void getIdentityType() throws Exception {
-        IdentityTypeDTO identityTypeDTO = identityTypeController.getIdentityType(ID, ID);
+        IdentityTypeDTO identityTypeDTO = identityTypeController.getIdentityType(ID);
         assertNotNull(identityTypeDTO);
     }
 
     @Test
     public void updateIdentityType() throws Exception {
-        IdentityTypeDTO identityType = identityTypeController.updateIdentityType(ID, ID, identityTypeDTO);
+        IdentityTypeDTO identityType = identityTypeController.updateIdentityType(ID, identityTypeDTO);
         assertNotNull(identityType);
     }
 
     @Test
     public void deleteIdentityType() throws Exception {
-        IdentityTypeDTO identityTypeDTO = identityTypeController.deleteIdentityType(ID, ID);
+        IdentityTypeDTO identityTypeDTO = identityTypeController.deleteIdentityType(ID);
         assertNotNull(identityTypeDTO);
     }
 }

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 
@@ -64,13 +65,27 @@ public class UserService {
             if (createdUser != null) {
                 user = mapper.readValue(createdUser, User.class);
                 //save to local storage
-                profile = handler.createProfile(profile.getName(), profile.getImageUrl(), profile.getHash(), profile.getSalt(), user.getMid(),user.getId(), profile.getPublicKey(), profile.getPrivateKey());
+                profile = handler.createProfile(profile.getName(), profile.getImageUrl(), profile.getHash(), profile.getSalt(),user.getId(), profile.getPublicKey(), profile.getPrivateKey());
                 handler.close();
                 return profile;
             }
             return null;
         } catch (Exception e) {
             Log.e(TAG, "Error: " + e.toString());
+        }
+        return null;
+    }
+
+    public User getUser(String userId) {
+        backendService.setEndpointExtention("/user/" + userId);
+
+        String returnedParty = backendService.sendGet();
+        if (returnedParty != null) {
+            try {
+                return mapper.readValue(returnedParty, User.class);
+            } catch (IOException e) {
+                return null;
+            }
         }
         return null;
     }

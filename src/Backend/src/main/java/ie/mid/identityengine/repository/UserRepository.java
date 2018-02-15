@@ -9,6 +9,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findById(String id);
 
-    User findByMid(String mid);
-
 }

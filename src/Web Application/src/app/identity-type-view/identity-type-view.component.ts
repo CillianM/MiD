@@ -29,7 +29,7 @@ export class IdentityTypeViewComponent implements OnInit {
   party:Party;
 
   getIdentityTypes(){
-    this.idenityTypeService.getIdentityType(this.partyId,this.identityId)
+    this.idenityTypeService.getIdentityType(this.identityId)
     .subscribe(
       identityType => {
         this.identityType = identityType,
@@ -39,7 +39,7 @@ export class IdentityTypeViewComponent implements OnInit {
   }
 
   updateIdentityType(idenityType:IdentityType){
-    this.idenityTypeService.updateIdentityType(this.partyId,this.identityId,idenityType)
+    this.idenityTypeService.updateIdentityType(this.identityId,idenityType)
     .subscribe(
       identityType => {
         console.log(this.identityType);
@@ -84,7 +84,7 @@ export class IdentityTypeViewComponent implements OnInit {
 
   deleteIdentity(){
     if(confirm("Are you sure to delete "+ this.identityType.name)) {
-      this.idenityTypeService.deleteIdentityType(this.partyId,this.identityId)
+      this.idenityTypeService.deleteIdentityType(this.identityId)
     .subscribe(
       identityType => {
         this.router.navigateByUrl('/party/' + this.partyId);

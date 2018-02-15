@@ -51,7 +51,7 @@ public class IdentityTypeController {
 
     }
 
-    @GetMapping(value = "/{partyId}")
+    @GetMapping(value = "/party/{partyId}")
     @ResponseBody
     public List<IdentityTypeDTO> getPartyIdentityTypes(@PathVariable String partyId) {
         List<IdentityType> identityTypes = identityTypeRepository.findLatestByPartyId(partyId);
@@ -59,9 +59,9 @@ public class IdentityTypeController {
         return getDtoList(identityTypes);
     }
 
-    @GetMapping(value = "/{partyId}/{id}")
+    @GetMapping(value = "/{id}")
     @ResponseBody
-    public IdentityTypeDTO getIdentityType(@PathVariable String partyId, @PathVariable String id) {
+    public IdentityTypeDTO getIdentityType(@PathVariable String id) {
 
         IdentityType identityType = identityTypeRepository.findById(id);
         if (identityType == null) throw new ResourceNotFoundException();
@@ -78,9 +78,9 @@ public class IdentityTypeController {
         return dto;
     }
 
-    @PutMapping(value = "/{partyId}/{id}")
+    @PutMapping(value = "/{id}")
     @ResponseBody
-    public IdentityTypeDTO updateIdentityType(@PathVariable String partyId, @PathVariable String id, @RequestBody IdentityTypeDTO identityTypeDTO) {
+    public IdentityTypeDTO updateIdentityType(@PathVariable String id, @RequestBody IdentityTypeDTO identityTypeDTO) {
         if (isInvalidIdentityType(identityTypeDTO)) throw new BadRequestException();
         IdentityType identityType = identityTypeRepository.findById(id);
         if (identityType == null) throw new ResourceNotFoundException();
@@ -115,9 +115,9 @@ public class IdentityTypeController {
         return identityTypeDTO;
     }
 
-    @DeleteMapping(value = "/{partyId}/{id}")
+    @DeleteMapping(value = "/{id}")
     @ResponseBody
-    public IdentityTypeDTO deleteIdentityType(@PathVariable String partyId, @PathVariable String id) {
+    public IdentityTypeDTO deleteIdentityType(@PathVariable String id) {
         IdentityType identityType = identityTypeRepository.findById(id);
         if (identityType == null) throw new ResourceNotFoundException();
         identityType.setStatus(IdentityTypeStatus.DELETED.toString());

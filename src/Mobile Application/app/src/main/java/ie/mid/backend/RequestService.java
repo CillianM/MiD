@@ -4,6 +4,8 @@ import android.content.Context;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
+
+import ie.mid.pojo.InformationRequest;
 import ie.mid.pojo.Request;
 
 public class RequestService {
@@ -17,7 +19,7 @@ public class RequestService {
         this.backendService = new BackendService(context, "/request");
     }
 
-    public Request submitRequest(Request request) {
+    public Request submitRequest(InformationRequest request) {
         backendService.setEndpointExtention("/request");
         String returnedSubmission = backendService.sendPost(request.toJsonString());
         if (returnedSubmission != null) {
@@ -30,16 +32,60 @@ public class RequestService {
         return null;
     }
 
-    public List<Request> getRequests(String userID) {
+    public List<Request> getRecipientRequests(String userID) {
         backendService.setEndpointExtention("/request/recipient/" + userID);
 
-        String returnedSubmissions = backendService.sendGet();
-        if (returnedSubmissions != null) {
+        String returnedRequests = backendService.sendGet();
+        if (returnedRequests != null) {
             try {
                 return mapper.readValue(
-                        returnedSubmissions,
+                        returnedRequests,
                         mapper.getTypeFactory().constructParametricType(List.class, Request.class)
                 );
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public List<Request> getSenderRequests(String userID) {
+        backendService.setEndpointExtention("/request/sender/" + userID);
+
+        String returnedRequests = backendService.sendGet();
+        if (returnedRequests != null) {
+            try {
+                return mapper.readValue(
+                        returnedRequests,
+                        mapper.getTypeFactory().constructParametricType(List.class, Request.class)
+                );
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public Request getRequest(String requestId) {
+        backendService.setEndpointExtention("/request/" + requestId);
+
+        String returnedRequest = backendService.sendGet();
+        if (returnedRequest != null) {
+            try {
+                return mapper.readValue(returnedRequest, Request.class);
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public Request updateRequest(String requestId, InformationRequest request) {
+        backendService.setEndpointExtention("/request/" + requestId);
+        String returnedSubmission = backendService.sendPut(request.toJsonString());
+        if (returnedSubmission != null) {
+            try {
+                return mapper.readValue(returnedSubmission, Request.class);
             } catch (IOException e) {
                 return null;
             }

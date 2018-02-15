@@ -39,10 +39,8 @@ public class CardCreateActivity extends AppCompatActivity {
     private List<String> cardFields;
     private IdentityType identityType;
     private List<TextInputEditText> fields;
-    private List<DatePickerDialog> datePickerDialogs;
     private String userId;
     private CardType cardType;
-    private boolean isUpdate;
     int exp_year, exp_month, exp_day,birth_year, birth_month, birth_day;
     boolean expSet,birthSet,birthUsed,expUsed;
     DatePickerDialog.OnDateSetListener exp_dateListener,birth_dateListener;
@@ -60,25 +58,12 @@ public class CardCreateActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Card Creation");
 
         Intent intent = getIntent();
-        isUpdate = intent.getBooleanExtra("isUpdate", false);
         userId = intent.getStringExtra("userId");
-        if (isUpdate) {
-            String cardId = intent.getStringExtra("cardId");
-            DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
-            handler.open();
-            cardType = handler.getUserCard(cardId);
-            handler.close();
-            getSupportActionBar().setTitle(cardType.getTitle());
-            constructUpdateForm();
-        } else {
-            identityType = intent.getParcelableExtra("card");
-            getSupportActionBar().setTitle(identityType.getName());
-            getCardFields();
-            constructCreateForm();
-        }
+        identityType = intent.getParcelableExtra("card");
+        getSupportActionBar().setTitle(identityType.getName());
+        getCardFields();
+        constructCreateForm();
         Button button = (Button) findViewById(R.id.create_button);
-        if(isUpdate)
-            button.setText("Update");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,21 +73,25 @@ public class CardCreateActivity extends AppCompatActivity {
         birth_dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                birthSet = true;
-                birth_year = i;
-                birth_month = i1 + 1;
-                birth_day = i2;
-                updateDisplays();
+                if(i != 0) {
+                    birthSet = true;
+                    birth_year = i;
+                    birth_month = i1 + 1;
+                    birth_day = i2;
+                    updateDisplays();
+                }
             }
         };
         exp_dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                expSet = true;
-                exp_year = i;
-                exp_month = i1 + 1;
-                exp_day = i2;
-                updateDisplays();
+                if(i != 0) {
+                    expSet = true;
+                    exp_year = i;
+                    exp_month = i1 + 1;
+                    exp_day = i2;
+                    updateDisplays();
+                }
             }
         };
     }
@@ -136,78 +125,6 @@ public class CardCreateActivity extends AppCompatActivity {
         exp_day = Integer.parseInt(array[0]);
         exp_month = Integer.parseInt(array[1]);
         exp_year =Integer.parseInt(array[2]);
-    }
-
-    public void constructUpdateForm() {
-        Uri imageUri = Uri.parse(cardType.getImageUrl());
-        SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.coverImg);
-        draweeView.setImageURI(imageUri);
-
-        fields = new ArrayList<>();
-        float d = getResources().getDisplayMetrics().density;
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.form_layout);
-        for (int i = 0; i < cardType.getDataList().size(); i++) {
-            TextInputLayout textInputLayout = new TextInputLayout(this);
-            textInputLayout.setId(i + 1);
-            RelativeLayout.LayoutParams textInputLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            textInputLayoutParams.setMarginStart((int) (d * 15));
-            textInputLayoutParams.setMarginEnd((int) (d * 15));
-            if (i > 0)
-                textInputLayoutParams.addRule(RelativeLayout.BELOW, i);
-            textInputLayout.setLayoutParams(textInputLayoutParams);
-            LinearLayout.LayoutParams editTextLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            boolean isBirthField = DataType.BIRTHDAY.toString().equals(cardType.getDataList().get(i).getFieldType());
-            boolean isExpField = DataType.EXPIRY.toString().equals(cardType.getDataList().get(i).getFieldType());
-            if(!isBirthField && !isExpField) {
-
-                TextInputEditText editText = new TextInputEditText(this);
-                editText.setLayoutParams(editTextLayoutParams);
-                editText.setHint(cardType.getDataList().get(i).getFieldTitle());
-                editText.setText(cardType.getDataList().get(i).getFieldEntry());
-                editText.setLines(1);
-                textInputLayout.addView(editText);
-                relativeLayout.addView(textInputLayout);
-                fields.add(editText);
-            }
-            else{
-                if(DataType.BIRTHDAY.toString().equals(cardType.getDataList().get(i).getFieldType())){
-                    birthIndex = i;
-                    birthUsed = true;
-                    birthSet = true;
-                    setBirthDate(cardType.getDataList().get(i).getFieldEntry());
-                    birthButton = new Button(this);
-                    birthButton.setText(cardType.getDataList().get(i).getFieldEntry());
-                    birthButton.setLayoutParams(editTextLayoutParams);
-                    birthButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            showDialog(DATE_PICKER_BIRTH);
-                        }
-                    });
-                    textInputLayout.addView(birthButton);
-                }
-                else {
-                    expIndex = i;
-                    expUsed = true;
-                    expSet = true;
-                    setExpiryDate(cardType.getDataList().get(i).getFieldEntry());
-                    expButton = new Button(this);
-                    expButton.setText(cardType.getDataList().get(i).getFieldEntry());
-                    expButton.setLayoutParams(editTextLayoutParams);
-                    expButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            showDialog(DATE_PICKER_EXP);
-                        }
-                    });
-                    textInputLayout.addView(expButton);
-                }
-                relativeLayout.addView(textInputLayout);
-            }
-        }
     }
 
     public void constructCreateForm(){
@@ -250,6 +167,8 @@ public class CardCreateActivity extends AppCompatActivity {
                     birthIndex = i;
                     birthUsed = true;
                     birthButton = new Button(this);
+                    birthButton.setBackgroundColor(getResources().getColor(R.color.grey));
+                    birthButton.setTextColor(getResources().getColor(R.color.white));
                     birthButton.setText("Set Birth Date");
                     birthButton.setLayoutParams(editTextLayoutParams);
                     birthButton.setOnClickListener(new View.OnClickListener() {
@@ -263,6 +182,8 @@ public class CardCreateActivity extends AppCompatActivity {
                 else {
                     expIndex = i;
                     expButton = new Button(this);
+                    expButton.setBackgroundColor(getResources().getColor(R.color.grey));
+                    expButton.setTextColor(getResources().getColor(R.color.white));
                     expButton.setText("Set Expiry Date");
                     expButton.setLayoutParams(editTextLayoutParams);
                     expButton.setOnClickListener(new View.OnClickListener() {
@@ -299,22 +220,7 @@ public class CardCreateActivity extends AppCompatActivity {
                 }
             }
         }
-        if(isUpdate)
-            updateCard(entryList);
-        else
-            submitCard(entryList);
-    }
-
-    public void updateCard(List<String> entryList) {
-        DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
-        handler.open();
-        handler.updateCard(cardType.getId(),getFieldValueString(entryList));
-        handler.close();
-        Intent intent = new Intent(CardCreateActivity.this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("userId", userId);
-        startActivity(intent);
-        finish();
+        submitCard(entryList);
     }
 
     public void submitCard(List<String> entryList) {

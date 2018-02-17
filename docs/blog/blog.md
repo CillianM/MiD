@@ -83,7 +83,7 @@ With the backend finished I can also start on the interface for the blockchain. 
 
 
 ## Backend Swagger Definitions
-<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/backend_swagger.png" alt="Web login page mockup"width="1013" height="757">
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/backend_swagger.png" alt="Web login page mockup"width="864" height="374">
 
 ## 29th January 2018
 I was extremely busy over the course of the christmas break which lead to a decrease in the amount of free time i had to work on the project. With the start of the new semester I will hopefully be able to use the first few weeks to get the bulk
@@ -98,4 +98,29 @@ I have also added [sonar](https://www.sonarqube.org/) to keep track of developme
 
 ### Sonar Dashboard - Initial Setup
 
-<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/sonar_dash.png" alt="Web login page mockup"width="896" height="504">
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/sonar_dash.png" alt="Web login page mockup"width="1148" height="569">
+
+## 15th February 2018
+Since the last blog post I've had several meetings with Geoff and numerous updates to the application.<br>
+I've updated the admin portal to streamline party creation along with identity creation for each party and submission handling. This has allowed functional testing to proceed a lot smoother as I can use it to fine tune variables where I see fit.<br>
+The backend hasn't seen many updates beyond patches to smoothen out functionality on the mobile interface. The mobile side has be the area where a lot of the work has been done<br>
+As It stands now the app has:
+* Profile Creation
+* Card selection and local saving
+* Submission of created cards
+* Responses on reviewed verifications
+* Request creation and response handling
+
+### Web Screens
+
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/web_screen.png" alt="Web login page mockup"width="1157" height="521">
+
+### Mobile Screens
+
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mobile_screens.png" alt="Web login page mockup"width="1083" height="768">
+
+These are the core functions of the app I outlined in the functional spec so I'm on track to getting the core done. With this done I can focus on user testing the UI and fine tuning it where needs be.<br>
+The next step will be to implement calls on the backend to the blockchain and have request/responses call back to the backend to view certificates from the blockchain. This is a key part of the identity verification process
+so the sooner this is up and running the more fune tuning I can perform.<br>
+I will need to start implementing more unit and integration tests. As it stands now I'm maintaining 80% code coverage of the backend but this must be the same for the mobile application. Integration tests will be in the form of cucumber BDDs
+that will be runnable  along with the unit tests. This suite will provide sufficient error checking on top of the functional testing I've been performing.<br>

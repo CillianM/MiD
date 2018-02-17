@@ -16,6 +16,7 @@ public class IdentityTypeDTO {
     private String status;
 
     public IdentityTypeDTO() {
+        //Implemented for mapping
     }
 
     public String getPartyId() {

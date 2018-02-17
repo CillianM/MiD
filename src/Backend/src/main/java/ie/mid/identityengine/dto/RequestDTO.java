@@ -11,6 +11,7 @@ public class RequestDTO {
     private String identityTypeValues;
 
     public RequestDTO() {
+        //Implemented for mapping
     }
 
     public String getId() {

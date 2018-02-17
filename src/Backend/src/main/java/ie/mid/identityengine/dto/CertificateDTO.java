@@ -8,6 +8,7 @@ public class CertificateDTO {
     private String createdAt;
 
     public CertificateDTO() {
+        //Implemented for mapping
     }
 
     public String getId() {

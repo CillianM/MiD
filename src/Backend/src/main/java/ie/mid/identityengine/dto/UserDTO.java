@@ -10,6 +10,7 @@ public class UserDTO {
     private String publicKey;
 
     public UserDTO() {
+        //Implemented for mapping
     }
 
     public String getId() {

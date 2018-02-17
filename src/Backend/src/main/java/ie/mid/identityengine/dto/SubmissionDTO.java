@@ -10,6 +10,7 @@ public class SubmissionDTO {
     private String date;
 
     public SubmissionDTO() {
+        //Implemented for mapping
     }
 
     public String getId() {

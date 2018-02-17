@@ -33,7 +33,7 @@ public class IdentityTypeControllerTest {
     private static final String URL = "url";
     private static final String NAME = "name";
     private static final String FIELD = "field";
-    private static final String FIELDS = "1:2,3:4";
+    private static final String FIELDS = "1:" + FieldType.ADDRESS + ",2:" + FieldType.ADDRESS;
     private IdentityTypeDTO identityTypeDTO = new IdentityTypeDTO();
     private List<IdentityTypeDTO> identityTypeDTOList = new ArrayList<>();
 
@@ -91,6 +91,18 @@ public class IdentityTypeControllerTest {
 
     @Test
     public void updateIdentityType() throws Exception {
+        IdentityTypeDTO identityType = identityTypeController.updateIdentityType(ID, identityTypeDTO);
+        assertNotNull(identityType);
+    }
+
+    @Test
+    public void updateIdentityTypeCosmetic() throws Exception {
+        Field field1 = new Field("1", FieldType.ADDRESS);
+        Field field2 = new Field("2", FieldType.ADDRESS);
+        List<Field> fieldList = new ArrayList<>();
+        fieldList.add(field1);
+        fieldList.add(field2);
+        identityTypeDTO.setFields(fieldList);
         IdentityTypeDTO identityType = identityTypeController.updateIdentityType(ID, identityTypeDTO);
         assertNotNull(identityType);
     }

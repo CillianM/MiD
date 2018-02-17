@@ -1,11 +1,14 @@
 package ie.mid.identityengine.controller;
 
+import com.google.gson.JsonObject;
 import ie.mid.identityengine.dto.SubmissionDTO;
+import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.model.Submission;
 import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.SubmissionRepository;
 import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.PushNotificationService;
+import ie.mid.identityengine.service.StorageService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,12 +38,16 @@ public class SubmissionControllerTest {
     private PushNotificationService pushNotificationService;
 
     @Mock
+    private StorageService storageService;
+
+    @Mock
     private UserRepository userRepository;
 
     private static final String ID = "id";
     private static final String DATA = "data";
     private static final String ACCEPTED = "ACCEPTED";
     private static final String FCM = "fcm";
+    private static final String PATH = "path";
 
     private SubmissionDTO submissionDTO = new SubmissionDTO();
 
@@ -49,6 +56,7 @@ public class SubmissionControllerTest {
     public void setUp() throws Exception {
         Submission submission = new Submission();
         submission.setId(ID);
+        submission.setData(PATH);
         submission.setCreatedAt(new Date());
         submission.setUpdatedAt(new Date());
         submissionDTO.setId(ID);
@@ -65,7 +73,12 @@ public class SubmissionControllerTest {
         when(submissionRepository.findById(anyString())).thenReturn(submission);
         when(submissionRepository.findByPartyId(anyString())).thenReturn(submissionList);
         when(submissionRepository.findByUserId(anyString())).thenReturn(submissionList);
+        when(pushNotificationService.sendNotifictaionAndData(anyString(), any(JsonObject.class), any(JsonObject.class))).thenReturn(DATA);
+        when(pushNotificationService.createMessageObject(anyString(), anyString())).thenReturn(new JsonObject());
+        when(pushNotificationService.createDataObject(any(NotificationType.class), any(), any())).thenReturn(new JsonObject());
         when(userRepository.findById(anyString())).thenReturn(user);
+        when(storageService.saveData(anyString())).thenReturn(PATH);
+        when(storageService.loadData(PATH)).thenReturn(DATA);
     }
 
     @Test

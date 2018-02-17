@@ -31,6 +31,7 @@ public class Submission {
     private Date updatedAt;
 
     public Submission() {
+        //Implemented for mapping
     }
 
     public String getId() {

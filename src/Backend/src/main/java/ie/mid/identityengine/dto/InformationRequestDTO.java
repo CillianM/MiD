@@ -9,6 +9,7 @@ public class InformationRequestDTO {
     private String identityTypeValues;
 
     public InformationRequestDTO() {
+        //Implemented for mapping
     }
 
     public String getSenderId() {

@@ -29,6 +29,7 @@ public class User {
     private Date updatedAt;
 
     public User() {
+        //Implemented for mapping
     }
 
     public String getId() {

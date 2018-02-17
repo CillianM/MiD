@@ -10,10 +10,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class StorageService {
@@ -26,16 +23,16 @@ public class StorageService {
         this.uploadPath = Paths.get(uploadPathString);
     }
 
-    private List<File> loadAll() {
+    private List<File> getFileList() {
         File f = new File(uploadPathString);
         if (f.exists())
-            return new ArrayList<File>(Arrays.asList(f.listFiles()));
+            return new ArrayList<>(Arrays.asList(f.listFiles()));
         else
-            return null;
+            return Collections.emptyList();
     }
 
     public String saveData(String data) {
-        String name = UUID.randomUUID().toString();
+        String name = getUUID();
         String path = uploadPathString + name;
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(path), "utf-8"))) {
@@ -44,6 +41,10 @@ public class StorageService {
             return null;
         }
         return path;
+    }
+
+    private String getUUID() {
+        return UUID.randomUUID().toString();
     }
 
     public String loadData(String filePath) {
@@ -67,7 +68,6 @@ public class StorageService {
     public void init() {
         try {
             Files.createDirectories(uploadPath);
-            List<File> fileList = loadAll();
         } catch (IOException e) {
             throw new StorageException("Could not initialize storage", e);
         }

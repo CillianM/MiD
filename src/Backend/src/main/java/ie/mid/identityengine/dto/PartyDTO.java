@@ -9,6 +9,7 @@ public class PartyDTO {
     private String publicKey;
 
     public PartyDTO() {
+        //Implemented for mapping
     }
 
     public String getId() {

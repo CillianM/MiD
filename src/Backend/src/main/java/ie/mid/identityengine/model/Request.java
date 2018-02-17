@@ -35,6 +35,7 @@ public class Request {
     private Date updatedAt;
 
     public Request() {
+        //Implemented for mapping
     }
 
     public String getId() {

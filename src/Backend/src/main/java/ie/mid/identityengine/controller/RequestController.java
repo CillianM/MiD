@@ -16,7 +16,6 @@ import ie.mid.identityengine.repository.RequestRepository;
 import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.PushNotificationService;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -144,11 +143,12 @@ public class RequestController {
         else if(informationRequestDTO.getIdentityTypeValues().equals(RequestStatus.RESCINDED.toString())) {
             request.setStatus(RequestStatus.RESCINDED.toString());
             message = " has rescinded their request";
-        }
-        else {
+        } else if (informationRequestDTO.getIdentityTypeValues().equals(RequestStatus.ACCEPTED.toString())) {
             request.setUserResponse(informationRequestDTO.getIdentityTypeValues());
             request.setStatus(RequestStatus.ACCEPTED.toString());
-            message = " has answered your request";
+            message = " has accepted your request";
+        } else {
+            throw new BadRequestException();
         }
 
 

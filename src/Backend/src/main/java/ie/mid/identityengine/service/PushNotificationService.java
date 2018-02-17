@@ -14,13 +14,15 @@ import java.io.IOException;
 
 @Service
 public class PushNotificationService {
-
-    private final String FIREBASE_URL = "https://fcm.googleapis.com/fcm/send";
-
     @Value("${mid.fcm}")
     private String fcmServerKey;
+    private static final String FIREBASE_URL = "https://fcm.googleapis.com/fcm/send";
+    private static final String TOPIC_URL = "/topics/";
+    HttpClient httpClient;
 
-    public PushNotificationService(){}
+    public PushNotificationService() {
+        this.httpClient = HttpClientBuilder.create().build();
+    }
 
     public JsonObject createMessageObject(String title, String body){
         JsonObject notificationObject = new JsonObject();
@@ -39,15 +41,15 @@ public class PushNotificationService {
     }
 
     public String sendTopicData(String topic, JsonObject dataObject) throws IOException{
-        return sendNotifictaionAndData("/topics/" + topic, null,dataObject);
+        return sendNotifictaionAndData(TOPIC_URL + topic, null, dataObject);
     }
 
     public String sendTopicNotification(String topic, JsonObject notificationObject) throws IOException{
-        return sendNotifictaionAndData("/topics/" + topic, notificationObject,null);
+        return sendNotifictaionAndData(TOPIC_URL + topic, notificationObject, null);
     }
 
     public String sendTopicNotificationAndData(String topic, JsonObject notificationObject, JsonObject dataObject) throws IOException{
-        return sendNotifictaionAndData("/topics/" + topic, notificationObject, dataObject);
+        return sendNotifictaionAndData(TOPIC_URL + topic, notificationObject, dataObject);
     }
 
     public String sendNotifictaionAndData(String to, JsonObject notificationObject, JsonObject dataObject) throws IOException {
@@ -70,7 +72,6 @@ public class PushNotificationService {
         StringEntity entity = new StringEntity(data);
         httpPost.setEntity(entity);
 
-        HttpClient httpClient = HttpClientBuilder.create().build();
         BasicResponseHandler responseHandler = new BasicResponseHandler();
         return httpClient.execute(httpPost, responseHandler);
     }

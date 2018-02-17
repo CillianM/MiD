@@ -30,6 +30,7 @@ public class UserControllerTest {
 
     private static final String ID = "id";
     private static final String KEY = "key";
+    private static final String NAME = "name";
     private static final String FCM = "fcm";
     private UserDTO userDTO = new UserDTO();
 
@@ -37,6 +38,7 @@ public class UserControllerTest {
     public void setUp() throws Exception {
         User user = new User();
         user.setId(ID);
+        userDTO.setNickname(NAME);
         userDTO.setPublicKey(KEY);
         userDTO.setFcmToken(FCM);
         KeyDTO key = new KeyDTO();

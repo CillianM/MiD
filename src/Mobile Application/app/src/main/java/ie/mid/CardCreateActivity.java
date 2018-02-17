@@ -2,15 +2,14 @@ package ie.mid;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
@@ -28,7 +27,6 @@ import java.util.List;
 
 import ie.mid.enums.CardStatus;
 import ie.mid.enums.DataType;
-import ie.mid.fragments.DatePickerFragment;
 import ie.mid.handler.DatabaseHandler;
 import ie.mid.model.CardType;
 import ie.mid.model.Field;
@@ -48,6 +46,7 @@ public class CardCreateActivity extends AppCompatActivity {
     int expIndex,birthIndex;
     private final int DATE_PICKER_EXP = 0;
     private final int DATE_PICKER_BIRTH = 1;
+    private boolean isRequestCreation;
 
 
     @Override
@@ -58,6 +57,7 @@ public class CardCreateActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Card Creation");
 
         Intent intent = getIntent();
+        isRequestCreation = intent.getBooleanExtra("isRequest", false);
         userId = intent.getStringExtra("userId");
         identityType = intent.getParcelableExtra("card");
         getSupportActionBar().setTitle(identityType.getName());
@@ -98,8 +98,12 @@ public class CardCreateActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this,CardSelectActivity.class));
-        finish();
+        if (isRequestCreation) {
+            finish();
+        } else {
+            startActivity(new Intent(this, CardSelectActivity.class));
+            finish();
+        }
     }
 
     private void updateDisplays() {
@@ -157,7 +161,10 @@ public class CardCreateActivity extends AppCompatActivity {
                 TextInputEditText editText = new TextInputEditText(this);
                 editText.setLayoutParams(editTextLayoutParams);
                 editText.setHint(cardFields.get(i));
+                editText.setSingleLine(true);
+                editText.setMaxLines(1);
                 editText.setLines(1);
+                editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                 textInputLayout.addView(editText);
                 relativeLayout.addView(textInputLayout);
                 fields.add(editText);

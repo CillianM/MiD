@@ -60,7 +60,7 @@
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter A Pin"
+                android:hint="Enter A 4 Digit Pin"
                 android:inputType="numberPassword"
                 android:maxLines="1"
                 android:textColor="@color/black" />
@@ -78,7 +78,7 @@
                 android:id="@+id/input_password_confirm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Confirm Your Pin"
+                android:hint="Confirm Your 4 Digit Pin"
                 android:inputType="numberPassword"
                 android:maxLines="1"
                 android:textColor="@color/black" />

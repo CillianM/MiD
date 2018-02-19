@@ -3,7 +3,9 @@ package ie.mid.identityengine.dto;
 public class SubmissionDTO {
 
     private String id;
+    private String userName;
     private String userId;
+    private String partyName;
     private String partyId;
     private String data;
     private String status;
@@ -59,5 +61,21 @@ public class SubmissionDTO {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPartyName() {
+        return partyName;
+    }
+
+    public void setPartyName(String partyName) {
+        this.partyName = partyName;
     }
 }

@@ -1,17 +1,19 @@
 package ie.mid.identityengine.controller;
 
+import com.google.gson.JsonObject;
 import ie.mid.identityengine.dto.SubmissionDTO;
 import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.exception.BadRequestException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
+import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.model.Submission;
 import ie.mid.identityengine.model.User;
+import ie.mid.identityengine.repository.PartyRepository;
 import ie.mid.identityengine.repository.SubmissionRepository;
 import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.PushNotificationService;
 import ie.mid.identityengine.service.StorageService;
-import com.google.gson.JsonObject;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,9 @@ public class SubmissionController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    PartyRepository partyRepository;
 
     @Autowired
     PushNotificationService pushNotificationService;
@@ -65,7 +70,9 @@ public class SubmissionController {
         SubmissionDTO dto = new SubmissionDTO();
         dto.setData(storageService.loadData(submission.getData()));
         dto.setId(submission.getId());
+        dto.setUserName(getUserName(submission.getUserId()));
         dto.setUserId(submission.getUserId());
+        dto.setPartyName(getPartyName(submission.getPartyId()));
         dto.setPartyId(submission.getPartyId());
         dto.setStatus(submission.getStatus());
         dto.setDate(submission.getCreatedAt().toString());
@@ -145,7 +152,9 @@ public class SubmissionController {
             SubmissionDTO dto = new SubmissionDTO();
             dto.setData(storageService.loadData(submission.getData()));
             dto.setId(submission.getId());
+            dto.setUserName(getUserName(submission.getUserId()));
             dto.setUserId(submission.getUserId());
+            dto.setPartyName(getPartyName(submission.getPartyId()));
             dto.setPartyId(submission.getPartyId());
             dto.setStatus(submission.getStatus());
             dto.setDate(submission.getCreatedAt().toString());
@@ -156,5 +165,23 @@ public class SubmissionController {
 
     private boolean isInvalidSubmission(SubmissionDTO submissionDTO) {
         return submissionDTO.getPartyId() == null || submissionDTO.getUserId() == null || submissionDTO.getData() == null;
+    }
+
+    private String getUserName(String id) {
+        User user = userRepository.findById(id);
+        if (user != null) {
+            return user.getNickname();
+        } else {
+            return null;
+        }
+    }
+
+    private String getPartyName(String id) {
+        Party party = partyRepository.findById(id);
+        if (party != null) {
+            return party.getName();
+        } else {
+            return null;
+        }
     }
 }

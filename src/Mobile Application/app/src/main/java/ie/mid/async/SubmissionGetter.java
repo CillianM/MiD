@@ -21,37 +21,33 @@ import ie.mid.util.InternetUtil;
  * Created by Cillian on 13/02/2018.
  */
 
-public class SubmissionGetter extends AsyncTask<Void, Void, ViewableSubmission> {
+public class SubmissionGetter extends AsyncTask<Void, Void, Submission> {
 
     private String submissionId;
     private SubmissionTaskCompleted callBack;
     private SubmissionService submissionService;
-    private PartyService partyService;
     private WeakReference<Context> context;
 
     public SubmissionGetter(Context context, SubmissionTaskCompleted callBack, String submissionId){
         this.context = new WeakReference<>(context);
         this.callBack = callBack;
         this.submissionService = new SubmissionService(context);
-        this.partyService = new PartyService(context);
         this.submissionId = submissionId;
     }
 
     @Override
-    protected ViewableSubmission doInBackground(Void... voids) {
+    protected Submission doInBackground(Void... voids) {
         if(InternetUtil.isServerLive(context.get())) {
             Submission submission = submissionService.getSubmission(submissionId);
             if(submission != null) {
-                Party party = partyService.getParty(submission.getPartyId());
-                if(party != null)
-                    return new ViewableSubmission(submission,party.getName());
+                return submission;
             }
         }
         return null;
     }
 
     @Override
-    protected void onPostExecute(ViewableSubmission result) {
+    protected void onPostExecute(Submission result) {
         callBack.onTaskComplete(result);
     }
 

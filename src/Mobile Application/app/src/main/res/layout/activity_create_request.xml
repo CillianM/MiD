@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ie.mid.CreateRequestActivity">
+    tools:context="ie.mid.RequestCreateActivity">
 
     <RelativeLayout
         android:id="@+id/request_layout"
@@ -37,19 +37,39 @@
                 android:textColor="#ffffffff" />
         </RelativeLayout>
 
+        <TextView
+            android:id="@+id/spinner_header"
+            android:layout_marginStart="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Select Desired Identity Type"
+            android:layout_below="@id/qr_code_layout"/>
+
         <Spinner
             android:id="@+id/identity_types"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/qr_code_layout"
-            android:layout_margin="20dp" />
+            android:layout_below="@id/spinner_header"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp" />
+
+        <TextView
+            android:id="@+id/list_header"
+            android:layout_marginStart="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Select Fields From Identity Type"
+            android:layout_below="@id/identity_types"/>
 
         <ListView
             android:id="@+id/identity_type_values"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_above="@id/create_button"
-            android:layout_below="@id/identity_types"
+            android:layout_below="@id/list_header"
             android:divider="@null"
             android:dividerHeight="0dp" />
 

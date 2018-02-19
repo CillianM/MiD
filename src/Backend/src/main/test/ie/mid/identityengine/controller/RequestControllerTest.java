@@ -79,8 +79,8 @@ public class RequestControllerTest {
         requestDTO.setIdentityTypeValues(FIELDS);
         when(requestRepository.save(any(Request.class))).thenReturn(request);
         when(requestRepository.findById(anyString())).thenReturn(request);
-        when(requestRepository.findByRecipient(anyString())).thenReturn(requests);
-        when(requestRepository.findBySender(anyString())).thenReturn(requests);
+        when(requestRepository.findByRecipientId(anyString())).thenReturn(requests);
+        when(requestRepository.findBySenderId(anyString())).thenReturn(requests);
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(userRepository.findById(anyString())).thenReturn(user);
         when(partyRepository.save(any(Party.class))).thenReturn(party);

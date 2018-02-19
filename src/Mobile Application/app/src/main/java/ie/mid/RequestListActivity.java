@@ -8,7 +8,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import ie.mid.adapter.RequestsListAdapter;
@@ -22,7 +23,7 @@ import ie.mid.util.InternetUtil;
 
 public class RequestListActivity extends AppCompatActivity implements RequestListTaskCompleted {
     ListView requestList;
-    List<ViewableRequest> requestItems;
+    List<Request> requestItems;
     String userId;
     Profile profile;
 
@@ -30,6 +31,7 @@ public class RequestListActivity extends AppCompatActivity implements RequestLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_list);
+        getSupportActionBar().setTitle("Current Requests");
         userId = getIntent().getStringExtra("userId");
         requestList = findViewById(R.id.requests_list);
         profile = getProfile();
@@ -42,7 +44,7 @@ public class RequestListActivity extends AppCompatActivity implements RequestLis
     }
 
     private void noInternetError(){
-        TextView requestText = (TextView) findViewById(R.id.requests_info);
+        TextView requestText = findViewById(R.id.requests_info);
         findViewById(R.id.requests_list_progress).setVisibility(View.GONE);
         requestText.setText("No Internet Connection");
         requestText.setVisibility(View.VISIBLE);
@@ -80,7 +82,7 @@ public class RequestListActivity extends AppCompatActivity implements RequestLis
     }
 
     public boolean isRequest(Request request) {
-        if(profile.getServerId().equals(request.getRecipient())){
+        if(profile.getServerId().equals(request.getRecipientId())){
             return true;
         } else{
             return false;
@@ -88,12 +90,18 @@ public class RequestListActivity extends AppCompatActivity implements RequestLis
     }
 
     @Override
-    public void onTaskComplete(List<ViewableRequest> requestList) {
-        TextView requestText = (TextView) findViewById(R.id.requests_info);
+    public void onTaskComplete(List<Request> requestList) {
+        TextView requestText = findViewById(R.id.requests_info);
         findViewById(R.id.requests_list_progress).setVisibility(View.GONE);
 
         if(requestList != null && requestList.size() > 0) {
             requestItems = requestList;
+            Collections.sort(requestItems , new Comparator<Request>() {
+                @Override
+                public int compare(Request t, Request t1) {
+                    return t1.getCreatedAt().compareTo(t.getCreatedAt());
+                }
+            });
             getRequestsList();
         }
         else if(requestList != null && requestList.size() == 0) {

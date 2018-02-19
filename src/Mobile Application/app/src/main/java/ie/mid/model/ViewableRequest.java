@@ -17,9 +17,10 @@ public class ViewableRequest extends Request {
         this.setIdentityTypeFields(request.getIdentityTypeFields());
         this.setIdentityTypeValues(request.getIdentityTypeValues());
         this.setIndentityTypeId(request.getIndentityTypeId());
-        this.setSender(request.getSender());
+        this.setSenderId(request.getSenderId());
         this.setStatus(request.getStatus());
-        this.setRecipient(request.getRecipient());
+        this.setRecipientId(request.getRecipientId());
+        this.setCreatedAt(request.getCreatedAt());
         this.senderReceiverName = senderReceiverName;
     }
 

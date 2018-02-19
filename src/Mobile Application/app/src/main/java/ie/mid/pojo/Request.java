@@ -8,12 +8,16 @@ import java.io.IOException;
 public class Request {
 
     private String id;
-    private String sender;
-    private String recipient;
+    private String senderName;
+    private String senderId;
+    private String recipientName;
+    private String recipientId;
     private String status;
     private String indentityTypeId;
     private String identityTypeFields;
     private String identityTypeValues;
+    private String createdAt;
+
 
     public Request() {
     }
@@ -26,20 +30,36 @@ public class Request {
         this.id = id;
     }
 
-    public String getSender() {
-        return sender;
+    public String getSenderName() {
+        return senderName;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 
-    public String getRecipient() {
-        return recipient;
+    public String getRecipientName() {
+        return recipientName;
     }
 
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
+    public void setRecipientName(String recipientName) {
+        this.recipientName = recipientName;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+
+    public String getRecipientId() {
+        return recipientId;
+    }
+
+    public void setRecipientId(String recipientId) {
+        this.recipientId = recipientId;
     }
 
     public String getStatus() {
@@ -82,5 +102,13 @@ public class Request {
             return null;
         }
 
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

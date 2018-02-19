@@ -3,18 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/requests_explain"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Current Requests"
-        android:textSize="20sp"/>
-
     <ListView
         android:id="@+id/requests_list"
-        android:layout_below="@id/requests_explain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"

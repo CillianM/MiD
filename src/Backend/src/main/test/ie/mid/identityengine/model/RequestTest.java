@@ -29,8 +29,8 @@ public class RequestTest {
     public void setUp() throws Exception {
         request = new Request();
         request.setId(ID);
-        request.setSender(ID);
-        request.setRecipient(ID);
+        request.setSenderId(ID);
+        request.setRecipientId(ID);
         request.setIndentityTypeId(ID);
         request.setIdentityTypeFields(FIELDS);
         request.setUserResponse(FIELDS);
@@ -54,26 +54,26 @@ public class RequestTest {
 
     @Test
     public void getSender() throws Exception {
-        assertEquals(ID, request.getSender());
+        assertEquals(ID, request.getSenderId());
     }
 
     @Test
     public void setSender() throws Exception {
-        request.setSender(NEW_ID);
-        assertEquals(NEW_ID, request.getSender());
-        request.setSender(ID);
+        request.setSenderId(NEW_ID);
+        assertEquals(NEW_ID, request.getSenderId());
+        request.setSenderId(ID);
     }
 
     @Test
     public void getRecipient() throws Exception {
-        assertEquals(ID, request.getRecipient());
+        assertEquals(ID, request.getRecipientId());
     }
 
     @Test
     public void setRecipient() throws Exception {
-        request.setRecipient(NEW_ID);
-        assertEquals(NEW_ID, request.getRecipient());
-        request.setRecipient(ID);
+        request.setRecipientId(NEW_ID);
+        assertEquals(NEW_ID, request.getRecipientId());
+        request.setRecipientId(ID);
     }
 
     @Test

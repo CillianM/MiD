@@ -3,12 +3,15 @@ package ie.mid.identityengine.dto;
 public class RequestDTO {
 
     private String id;
-    private String sender;
-    private String recipient;
+    private String senderName;
+    private String senderId;
+    private String recipientName;
+    private String recipientId;
     private String status;
     private String indentityTypeId;
     private String identityTypeFields;
     private String identityTypeValues;
+    private String createdAt;
 
     public RequestDTO() {
         //Implemented for mapping
@@ -22,20 +25,20 @@ public class RequestDTO {
         this.id = id;
     }
 
-    public String getSender() {
-        return sender;
+    public String getSenderId() {
+        return senderId;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 
-    public String getRecipient() {
-        return recipient;
+    public String getRecipientId() {
+        return recipientId;
     }
 
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
+    public void setRecipientId(String recipientId) {
+        this.recipientId = recipientId;
     }
 
     public String getStatus() {
@@ -68,5 +71,29 @@ public class RequestDTO {
 
     public void setIdentityTypeValues(String identityTypeValues) {
         this.identityTypeValues = identityTypeValues;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public String getRecipientName() {
+        return recipientName;
+    }
+
+    public void setRecipientName(String recipientName) {
+        this.recipientName = recipientName;
     }
 }

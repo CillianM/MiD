@@ -13,7 +13,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import ie.mid.CardSelectActivity;
-import ie.mid.CreateRequestActivity;
+import ie.mid.RequestCreateActivity;
 import ie.mid.ProfileViewActivity;
 import ie.mid.R;
 import ie.mid.SettingsActivity;
@@ -67,7 +67,7 @@ public class MoreFragment extends Fragment {
                         startActivity(intent);
                         break;
                     case 2:
-                        intent = new Intent(getActivity(), CreateRequestActivity.class);
+                        intent = new Intent(getActivity(), RequestCreateActivity.class);
                         intent.putExtra("userId", userId);
                         startActivity(intent);
                         break;

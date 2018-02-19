@@ -3,18 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/submission_explain"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Current Submissions"
-        android:textSize="20sp"/>
-
     <ListView
         android:id="@+id/submissions_list"
-        android:layout_below="@id/submission_explain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"

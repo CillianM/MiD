@@ -45,7 +45,7 @@ import ie.mid.pojo.InformationRequest;
 import ie.mid.pojo.Request;
 import ie.mid.util.InternetUtil;
 
-public class CreateRequestActivity extends AppCompatActivity implements IdentityTaskCompleted,RequestCreateTaskCompleted {
+public class RequestCreateActivity extends AppCompatActivity implements IdentityTaskCompleted,RequestCreateTaskCompleted {
 
     private Profile profile;
     private String recipientId;
@@ -126,6 +126,7 @@ public class CreateRequestActivity extends AppCompatActivity implements Identity
         request.setIdentityTypeFields(builder.toString());
         request.setSenderId(profile.getServerId());
         request.setRecipientId(recipientId);
+        showLoading();
         if(InternetUtil.isNetworkAvailable(getApplicationContext())){
             new RequestCreator(getApplicationContext(),this).execute(request);
         } else{
@@ -141,7 +142,10 @@ public class CreateRequestActivity extends AppCompatActivity implements Identity
     }
 
     private void intiateScan(){
-        new IntentIntegrator(this).initiateScan();
+        new IntentIntegrator(this)
+                .setOrientationLocked(false)
+                .setPrompt("Scan User QR Code")
+                .initiateScan();
     }
 
     private void createQrCode(String contents){

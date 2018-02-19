@@ -8,6 +8,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import ie.mid.adapter.SubmissionListAdapter;
@@ -30,6 +32,7 @@ public class SubmissionListActivity extends AppCompatActivity implements Submiss
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submission_list);
+        getSupportActionBar().setTitle("Current Submissions");
         userId = getIntent().getStringExtra("userId");
         submissionList = findViewById(R.id.submissions_list);
         profile = getProfile();
@@ -86,6 +89,12 @@ public class SubmissionListActivity extends AppCompatActivity implements Submiss
 
         if(submissionList != null && submissionList.size() > 0) {
             submissionItems = submissionList;
+            Collections.sort(submissionItems , new Comparator<Submission>() {
+                @Override
+                public int compare(Submission t, Submission t1) {
+                    return t1.getDate().compareTo(t.getDate());
+                }
+            });
             getSubmissionList();
         }
         else if(submissionList != null && submissionList.size() == 0) {

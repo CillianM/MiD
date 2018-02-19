@@ -12,15 +12,6 @@
         android:layout_height="match_parent"
         >
 
-        <TextView
-            android:id="@+id/submission_title"
-            android:gravity="center"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Submission"
-            android:textSize="20sp"/>
-
         <ImageView
             android:id="@+id/submission_image"
             android:layout_width="100dp"

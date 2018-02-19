@@ -8,7 +8,9 @@ import java.io.IOException;
 public class Submission {
 
     private String id;
+    private String userName;
     private String userId;
+    private String partyName;
     private String partyId;
     private String data;
     private String status;
@@ -63,6 +65,22 @@ public class Submission {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPartyName() {
+        return partyName;
+    }
+
+    public void setPartyName(String partyName) {
+        this.partyName = partyName;
     }
 
     public String toJsonString() {

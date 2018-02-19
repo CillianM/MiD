@@ -51,6 +51,7 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_view);
+        getSupportActionBar().setTitle("Request");
         userId = getIntent().getStringExtra("userId");
         DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
         handler.open();
@@ -104,10 +105,10 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
 
     private void rejectRequest() {
         InformationRequest informationRequest = new InformationRequest();
-        informationRequest.setRecipientId(viewableRequest.getRecipient());
-        informationRequest.setSenderId(viewableRequest.getSender());
+        informationRequest.setRecipientId(viewableRequest.getRecipientId());
+        informationRequest.setSenderId(viewableRequest.getSenderId());
         informationRequest.setIdentityTypeFields(viewableRequest.getIdentityTypeFields());
-        informationRequest.setIdentityTypeValues(CardStatus.REJECTED.toString());
+        informationRequest.setStatus(CardStatus.REJECTED.toString());
         informationRequest.setIndentityTypeId(viewableRequest.getIndentityTypeId());
         submitRequest(informationRequest);
     }
@@ -115,11 +116,12 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
     private void acceptRequest() {
         if (hasValidId()) {
             InformationRequest informationRequest = new InformationRequest();
-            informationRequest.setRecipientId(viewableRequest.getRecipient());
-            informationRequest.setSenderId(viewableRequest.getSender());
+            informationRequest.setRecipientId(viewableRequest.getRecipientId());
+            informationRequest.setSenderId(viewableRequest.getSenderId());
             informationRequest.setIdentityTypeFields(getIdentityTypeFields());
             informationRequest.setIdentityTypeValues(getIdentityTypeValues());
             informationRequest.setIndentityTypeId(viewableRequest.getIndentityTypeId());
+            informationRequest.setStatus(CardStatus.ACCEPTED.toString());
             submitRequest(informationRequest);
         } else {
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -235,30 +237,26 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
         if (!hasId() && !status.equals(CardStatus.ACCEPTED.toString())) {
             sendToCreate();
         } else {
-            TextView requestTitle = findViewById(R.id.request_title);
             TextView identityTypeTitle = findViewById(R.id.identity_type_title);
-            String identityTypeText = identityType.getName() + " Fields:";
+            String message = "Request from " + viewableRequest.getSenderReceiverName();
+            getSupportActionBar().setTitle(message);
+            String identityTypeText = viewableRequest.getSenderReceiverName() + " requests these fields from your \n" +  identityType.getName()
+                    + "\nWhat fields would you like to send back?";
             identityTypeTitle.setText(identityTypeText);
-            String message = "Request ";
-            if (viewableRequest.getSender().equals(profile.getServerId()))
-                message += "to " + viewableRequest.getSenderReceiverName();
-            else
-                message += "from " + viewableRequest.getSenderReceiverName();
-            requestTitle.setText(message);
             ListView requestedInfo = findViewById(R.id.identity_type_values);
-            if (status.equals(CardStatus.PENDING.toString())) {
-                acceptButton.setVisibility(View.INVISIBLE);
-                rejectButton.setText("Delete");
-                String[] types = viewableRequest.getIdentityTypeFields().split(",");
-                String[] titles = getIdentityTitles(identityType, types);
-                List<CardField> cardFields = new ArrayList<>();
-                for (int i = 0; i < types.length; i++) {
-                    CardField cardField = new CardField("", types[i]);
-                    cardField.setFieldTitle(titles[i]);
-                    cardFields.add(cardField);
+            if (status.equals(CardStatus.PENDING.toString()) || status.equals(CardStatus.SUBMITTED.toString())) {
+                selectedFields = new ArrayList<>();
+                for (Field field : identityType.getFields()) {
+                    if (viewableRequest.getIdentityTypeFields().contains(field.getType())) {
+                        selectedFields.add(field);
+                    }
                 }
-                requestedInfo.setAdapter(new CardFieldListAdapter(getApplicationContext(), cardFields));
+
+                identityRequestAdapter = new IdentityRequestAdapter(getApplicationContext(), selectedFields);
+                requestedInfo.setAdapter(identityRequestAdapter);
             } else if (status.equals(CardStatus.ACCEPTED.toString())) {
+                identityTypeText = viewableRequest.getSenderReceiverName() + " requested these fields from your \n" +  identityType.getName();
+                identityTypeTitle.setText(identityTypeText);
                 acceptButton.setVisibility(View.INVISIBLE);
                 rejectButton.setText("Delete");
                 String[] answers = viewableRequest.getIdentityTypeValues().split(",");
@@ -287,18 +285,15 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
 
     private void setupSenderView() {
         String status = viewableRequest.getStatus();
-        TextView requestTitle = findViewById(R.id.request_title);
         TextView identityTypeTitle = findViewById(R.id.identity_type_title);
-        String identityTypeText = identityType.getName() + " Fields:";
+        String message = "Request to " + viewableRequest.getSenderReceiverName();
+        getSupportActionBar().setTitle(message);
+        String identityTypeText = "You requested these fields from their \n" +identityType.getName();
         identityTypeTitle.setText(identityTypeText);
-        String message = "Request ";
-        if (viewableRequest.getSender().equals(profile.getServerId()))
-            message += "to " + viewableRequest.getSenderReceiverName();
-        else
-            message += "from " + viewableRequest.getSenderReceiverName();
-        requestTitle.setText(message);
         ListView requestedInfo = findViewById(R.id.identity_type_values);
-        if (status.equals(CardStatus.PENDING.toString())) {
+        if (status.equals(CardStatus.PENDING.toString()) || status.equals(CardStatus.SUBMITTED.toString())) {
+            identityTypeText = "You are awaiting these fields from their " +identityType.getName();
+            identityTypeTitle.setText(identityTypeText);
             acceptButton.setVisibility(View.INVISIBLE);
             rejectButton.setText("Delete");
             String[] types = viewableRequest.getIdentityTypeFields().split(",");
@@ -380,9 +375,7 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
 
         } else {
             findViewById(R.id.request_progress).setVisibility(View.GONE);
-            findViewById(R.id.request_info).setVisibility(View.VISIBLE);
-            TextView info = findViewById(R.id.request_info);
-            info.setText("Error Submitting Request");
+            Toast.makeText(getApplicationContext(), "Error submitting request", Toast.LENGTH_SHORT).show();
         }
     }
 }

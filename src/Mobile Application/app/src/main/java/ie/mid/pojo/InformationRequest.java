@@ -12,6 +12,7 @@ public class InformationRequest {
     private String indentityTypeId;
     private String identityTypeFields;
     private String identityTypeValues;
+    private String status;
 
     public InformationRequest() {
     }
@@ -54,6 +55,14 @@ public class InformationRequest {
 
     public void setIdentityTypeValues(String identityTypeValues) {
         this.identityTypeValues = identityTypeValues;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String toJsonString() {

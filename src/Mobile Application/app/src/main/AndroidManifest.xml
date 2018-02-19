@@ -61,6 +61,7 @@
 
         <activity
             android:name=".SettingsActivity"
+            android:theme="@style/AppBaseTheme"
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".LoginActivity"
@@ -71,11 +72,15 @@
             android:label="Submit Identity"
             android:theme="@style/AppBaseTheme" />
         <activity android:name=".ProfileViewActivity" />
-        <activity android:name=".CreateRequestActivity" />
-        <activity android:name=".RequestListActivity" />
-        <activity android:name=".SubmissionListActivity" />
-        <activity android:name=".SubmissionViewActivity" />
-        <activity android:name=".RequestViewActivity"></activity>
+        <activity android:name=".RequestCreateActivity" />
+        <activity android:name=".RequestListActivity"
+            android:theme="@style/AppBaseTheme"/>
+        <activity android:name=".SubmissionListActivity"
+            android:theme="@style/AppBaseTheme"/>
+        <activity android:name=".SubmissionViewActivity"
+            android:theme="@style/AppBaseTheme"/>
+        <activity android:name=".RequestViewActivity"
+                android:theme="@style/AppBaseTheme"/>
     </application>
 
 </manifest>

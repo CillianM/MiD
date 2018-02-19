@@ -49,10 +49,10 @@ public class RequestGetter extends AsyncTask<Void, Void, ViewableRequest> {
             Request request = requestService.getRequest(id);
             if(request != null) {
                 identityType = identityTypeService.getIdentityType(request.getIndentityTypeId());
-                if (request.getSender().equals(profile.getServerId()))
-                    return new ViewableRequest(request,getPartyUsername(request.getRecipient()));
+                if (request.getSenderId().equals(profile.getServerId()))
+                    return new ViewableRequest(request,getPartyUsername(request.getRecipientId()));
                 else
-                    return new ViewableRequest(request,getPartyUsername(request.getSender()));
+                    return new ViewableRequest(request,getPartyUsername(request.getSenderId()));
             }
 
         }

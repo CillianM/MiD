@@ -7,5 +7,5 @@ import ie.mid.pojo.Request;
 import ie.mid.pojo.Submission;
 
 public interface RequestListTaskCompleted {
-    void onTaskComplete(List<ViewableRequest> requestList);
+    void onTaskComplete(List<Request> requestList);
 }

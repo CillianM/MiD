@@ -36,6 +36,7 @@ public class SubmissionViewActivity extends AppCompatActivity implements Submiss
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle("Submission");
         setContentView(R.layout.activity_submission_view);
         DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
         handler.open();
@@ -69,12 +70,11 @@ public class SubmissionViewActivity extends AppCompatActivity implements Submiss
     }
 
     @Override
-    public void onTaskComplete(ViewableSubmission submission) {
+    public void onTaskComplete(Submission submission) {
         if(submission != null){
             hideLoading();
-            TextView partyText = findViewById(R.id.party_text);
-            String party = "Submitted to: " + submission.getPartyName();
-            partyText.setText(party);
+            String party = "Submission to " + submission.getPartyName();
+            getSupportActionBar().setTitle(party);
             TextView dateText = findViewById(R.id.date_text);
             String date = "Date submitted: " + submission.getDate();
             dateText.setText(date);

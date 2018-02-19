@@ -11,8 +11,8 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     Request findById(String id);
 
-    List<Request> findByRecipient(String id);
+    List<Request> findByRecipientId(String id);
 
-    List<Request> findBySender(String id);
+    List<Request> findBySenderId(String id);
 
 }

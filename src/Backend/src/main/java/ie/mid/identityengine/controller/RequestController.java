@@ -53,7 +53,7 @@ public class RequestController {
     @GetMapping(value = "/recipient/{recipientId}")
     @ResponseBody
     public List<RequestDTO> getRecipientRequests(@PathVariable String recipientId) {
-        List<Request> requests = requestRepository.findByRecipient(recipientId);
+        List<Request> requests = requestRepository.findByRecipientId(recipientId);
         if (requests == null) throw new ResourceNotFoundException();
         return requestListToDTOList(requests);
     }
@@ -61,7 +61,7 @@ public class RequestController {
     @GetMapping(value = "/sender/{senderId}")
     @ResponseBody
     public List<RequestDTO> getSenderRequests(@PathVariable String senderId) {
-        List<Request> requests = requestRepository.findBySender(senderId);
+        List<Request> requests = requestRepository.findBySenderId(senderId);
         if (requests == null) throw new ResourceNotFoundException();
         return requestListToDTOList(requests);
     }
@@ -73,12 +73,15 @@ public class RequestController {
         if (request == null) throw new ResourceNotFoundException();
         RequestDTO requestDTO = new RequestDTO();
         requestDTO.setId(request.getId());
-        requestDTO.setRecipient(request.getRecipient());
-        requestDTO.setSender(request.getSender());
+        requestDTO.setRecipientName(getUserName(request.getRecipientId()));
+        requestDTO.setSenderName(getPartyName(request.getSenderId()));
+        requestDTO.setRecipientId(request.getRecipientId());
+        requestDTO.setSenderId(request.getSenderId());
         requestDTO.setStatus(request.getStatus());
         requestDTO.setIdentityTypeFields(request.getIdentityTypeFields());
         requestDTO.setIdentityTypeValues(request.getUserResponse());
         requestDTO.setIndentityTypeId(request.getIndentityTypeId());
+        requestDTO.setCreatedAt(request.getCreatedAt().toString());
         return requestDTO;
     }
 
@@ -94,15 +97,15 @@ public class RequestController {
         if (partySender == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
         //Create the request to be tracked
         Request request = new Request();
-        request.setRecipient(recipient.getId());
+        request.setRecipientId(recipient.getId());
         String message = " has requested information";
         if(sender == null) {
             message = partySender.getName() + message;
-            request.setSender(partySender.getId());
+            request.setSenderId(partySender.getId());
         }
         else {
             message = sender.getNickname() + message;
-            request.setSender(sender.getId());
+            request.setSenderId(sender.getId());
         }
         request.setIdentityTypeFields(informationRequestDTO.getIdentityTypeFields());
         request.setIndentityTypeId(informationRequestDTO.getIndentityTypeId());
@@ -136,14 +139,13 @@ public class RequestController {
         request.setIndentityTypeId(informationRequestDTO.getIndentityTypeId());
         request.setIdentityTypeFields(informationRequestDTO.getIdentityTypeFields());
         String message;
-        if(informationRequestDTO.getIdentityTypeValues().equals(RequestStatus.REJECTED.toString())) {
+        if (informationRequestDTO.getStatus().equals(RequestStatus.REJECTED.toString())) {
             request.setStatus(RequestStatus.REJECTED.toString());
             message = " has rejected your request";
-        }
-        else if(informationRequestDTO.getIdentityTypeValues().equals(RequestStatus.RESCINDED.toString())) {
+        } else if (informationRequestDTO.getStatus().equals(RequestStatus.RESCINDED.toString())) {
             request.setStatus(RequestStatus.RESCINDED.toString());
             message = " has rescinded their request";
-        } else if (informationRequestDTO.getIdentityTypeValues().equals(RequestStatus.ACCEPTED.toString())) {
+        } else if (informationRequestDTO.getStatus().equals(RequestStatus.ACCEPTED.toString())) {
             request.setUserResponse(informationRequestDTO.getIdentityTypeValues());
             request.setStatus(RequestStatus.ACCEPTED.toString());
             message = " has accepted your request";
@@ -193,12 +195,15 @@ public class RequestController {
         requestList.forEach((request -> {
             RequestDTO requestDTO = new RequestDTO();
             requestDTO.setId(request.getId());
-            requestDTO.setRecipient(request.getRecipient());
-            requestDTO.setSender(request.getSender());
+            requestDTO.setRecipientId(request.getRecipientId());
+            requestDTO.setSenderId(request.getSenderId());
+            requestDTO.setRecipientName(getUserName(request.getRecipientId()));
+            requestDTO.setSenderName(getUserName(request.getSenderId()));
             requestDTO.setStatus(request.getStatus());
             requestDTO.setIdentityTypeFields(request.getIdentityTypeFields());
             requestDTO.setIdentityTypeValues(request.getUserResponse());
             requestDTO.setIndentityTypeId(request.getIndentityTypeId());
+            requestDTO.setCreatedAt(request.getCreatedAt().toString());
             requestDTOList.add(requestDTO);
         }));
         return requestDTOList;
@@ -217,5 +222,23 @@ public class RequestController {
             }
         }
         return false;
+    }
+
+    private String getUserName(String id) {
+        User user = userRepository.findById(id);
+        if (user != null) {
+            return user.getNickname();
+        } else {
+            return getPartyName(id);
+        }
+    }
+
+    private String getPartyName(String id) {
+        Party party = partyRepository.findById(id);
+        if (party != null) {
+            return party.getName();
+        } else {
+            return null;
+        }
     }
 }

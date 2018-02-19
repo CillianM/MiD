@@ -16,9 +16,9 @@ public class Request {
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
     private String id;
     @Column(name = "sender", nullable = false)
-    private String sender;
+    private String senderId;
     @Column(name = "recipient", nullable = false)
-    private String recipient;
+    private String recipientId;
     @Column(name = "type_id")
     private String indentityTypeId;
     @Column(name = "type_fields", nullable = false)
@@ -46,20 +46,20 @@ public class Request {
         this.id = id;
     }
 
-    public String getSender() {
-        return sender;
+    public String getSenderId() {
+        return senderId;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 
-    public String getRecipient() {
-        return recipient;
+    public String getRecipientId() {
+        return recipientId;
     }
 
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
+    public void setRecipientId(String recipientId) {
+        this.recipientId = recipientId;
     }
 
     public String getStatus() {

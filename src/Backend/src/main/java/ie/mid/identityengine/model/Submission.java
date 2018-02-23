@@ -19,6 +19,8 @@ public class Submission {
     private String userId;
     @Column(name = "party_id", nullable = false)
     private String partyId;
+    @Column(name = "certificate_id")
+    private String certificateId;
     @Column(name = "data", nullable = false)
     private String data;
     @Column(name = "status", nullable = false)
@@ -88,5 +90,13 @@ public class Submission {
 
     public void setPartyId(String partyId) {
         this.partyId = partyId;
+    }
+
+    public String getCertificateId() {
+        return certificateId;
+    }
+
+    public void setCertificateId(String certificateId) {
+        this.certificateId = certificateId;
     }
 }

@@ -5,13 +5,16 @@ import ie.mid.identityengine.dto.SubmissionDTO;
 import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.exception.BadRequestException;
+import ie.mid.identityengine.exception.HyperledgerErrorException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
+import ie.mid.identityengine.model.Certificate;
 import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.model.Submission;
 import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.PartyRepository;
 import ie.mid.identityengine.repository.SubmissionRepository;
 import ie.mid.identityengine.repository.UserRepository;
+import ie.mid.identityengine.service.HyperledgerService;
 import ie.mid.identityengine.service.PushNotificationService;
 import ie.mid.identityengine.service.StorageService;
 import org.apache.log4j.Logger;
@@ -38,6 +41,9 @@ public class SubmissionController {
 
     @Autowired
     PushNotificationService pushNotificationService;
+
+    @Autowired
+    HyperledgerService hyperledgerService;
 
     @Autowired
     StorageService storageService;
@@ -102,12 +108,14 @@ public class SubmissionController {
     public SubmissionDTO updateSubmission(@PathVariable String id, @RequestBody SubmissionDTO submissionToUpdate) {
         Submission submission = submissionRepository.findById(id);
         if (submission == null) throw new ResourceNotFoundException("Submission does not exist");
-        submission.setStatus(submissionToUpdate.getStatus());
-        submissionRepository.save(submission);
 
         String message;
         if (submissionToUpdate.getStatus().equals(RequestStatus.ACCEPTED.toString())) {
-            //TODO implement ties into the hyperledger service here if the submission is successful
+            Certificate certificate = getCertificate(submission);
+            if(certificate == null) throw new HyperledgerErrorException("Error updating hyperledger");
+            submission.setCertificateId(certificate.getCertId());
+            submission.setStatus(submissionToUpdate.getStatus());
+            submissionRepository.save(submission);
             message = "Your submission has been accepted";
         }
         else{
@@ -139,11 +147,14 @@ public class SubmissionController {
         } catch (IOException e) {
             log.error("Error sending FCM message",e);
         }
-
-        if (submissionToUpdate.getStatus().equals(RequestStatus.ACCEPTED.toString())) {
-            //TODO implement ties into the hyperledger service here if the submission is successful
-        }
         return submissionToUpdate;
+    }
+
+    private Certificate getCertificate(Submission submission) {
+        User user = userRepository.findById(submission.getUserId());
+        Party party = partyRepository.findById(submission.getPartyId());
+        if(user == null || party == null) return null;
+        return hyperledgerService.createCertificate(party.getNetworkId(),user.getNetworkId());
     }
 
     private List<SubmissionDTO> submissionListToDTOList(List<Submission> submissionList) {

@@ -19,6 +19,8 @@ public class User {
     private String nickname;
     @Column(name = "fcm_token", nullable = false)
     private String fcmToken;
+    @Column(name = "network_id", nullable = false)
+    private String networkId;
     @Column(name = "status", nullable = false)
     private String status;
     @CreationTimestamp
@@ -77,5 +79,13 @@ public class User {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(String networkId) {
+        this.networkId = networkId;
     }
 }

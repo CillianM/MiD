@@ -4,9 +4,12 @@ import ie.mid.identityengine.dto.KeyDTO;
 import ie.mid.identityengine.dto.UserDTO;
 import ie.mid.identityengine.enums.EntityStatus;
 import ie.mid.identityengine.exception.BadRequestException;
+import ie.mid.identityengine.exception.HyperledgerErrorException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
+import ie.mid.identityengine.model.Individual;
 import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.UserRepository;
+import ie.mid.identityengine.service.HyperledgerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,9 @@ public class UserController {
 
     @Autowired
     KeyController keyController;
+
+    @Autowired
+    HyperledgerService hyperledgerService;
 
     @GetMapping(value = "/{id}")
     @ResponseBody
@@ -42,9 +48,14 @@ public class UserController {
     @ResponseBody
     public UserDTO createUser(@RequestBody UserDTO userToCreate) {
         if (isInvalidUser(userToCreate)) throw new BadRequestException();
+        //Create Party in blockchain
+        Individual individual = hyperledgerService.createIndividual();
+        if(individual == null) throw new HyperledgerErrorException("Error creating party");
+
         User user = new User();
         user.setNickname(userToCreate.getNickname());
         user.setFcmToken(userToCreate.getFcmToken());
+        user.setNetworkId(individual.getIndividualId());
         user.setStatus(EntityStatus.ACTIVE.toString());
         user = userRepository.save(user);
         userToCreate.setId(user.getId());

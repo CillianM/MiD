@@ -18,6 +18,8 @@ public class Party {
     private String id;
     @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "network_id", nullable = false)
+    private String networkId;
     @Column(name = "status", nullable = false)
     private String status;
     @CreationTimestamp
@@ -73,5 +75,13 @@ public class Party {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(String networkId) {
+        this.networkId = networkId;
     }
 }

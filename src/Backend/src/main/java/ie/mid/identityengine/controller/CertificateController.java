@@ -1,20 +1,38 @@
 package ie.mid.identityengine.controller;
 
 import ie.mid.identityengine.dto.CertificateDTO;
+import ie.mid.identityengine.enums.EntityStatus;
+import ie.mid.identityengine.model.Certificate;
+import ie.mid.identityengine.model.CertificateUpdate;
+import ie.mid.identityengine.service.HyperledgerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/certificate")
 public class CertificateController {
 
+    @Autowired
+    HyperledgerService hyperledgerService;
+
     @GetMapping(value = "/{id}")
     @ResponseBody
     public CertificateDTO getCertificate(@PathVariable String id) {
-        //TODO implement link into hyperledger service and get the certificate tied to this id
-        return new CertificateDTO();
+        Certificate certificate = hyperledgerService.getCertificate(id);
+        CertificateDTO certificateDTO = new CertificateDTO();
+        certificateDTO.setCreatedBy(certificate.getTrustee());
+        certificateDTO.setOwnedBy(certificate.getOwner());
+        certificateDTO.setId(certificate.getCertId());
+        certificateDTO.setStatus(certificate.getStatus());
+        certificateDTO.setCreatedAt(certificate.getDateCreated());
+        return certificateDTO;
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @ResponseBody
+    public CertificateDTO deleteCertificate(@PathVariable String id) {
+        hyperledgerService.updateCertificate(id, EntityStatus.DELETED.toString());
+        return getCertificate(id);
     }
 }

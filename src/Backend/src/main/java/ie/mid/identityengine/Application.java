@@ -34,7 +34,10 @@ public class Application extends SpringBootServletInitializer{
 
     @Bean
     CommandLineRunner init(StorageService storageService) {
-        return args -> storageService.init();
+        return (args) -> {
+            storageService.deleteAll();
+            storageService.init();
+        };
     }
 
     public static void main(String[] args) {

@@ -1,0 +1,24 @@
+/**
+ * Write your model definitions here
+ */
+
+namespace ie.mid
+
+asset Certificate identified by certId {
+    o String certId
+    o String dateCreated
+    o String status
+    --> IdentifyingParty trustee
+    --> Individual owner
+}
+participant Individual identified by individualId {
+    o String individualId
+}
+
+participant IdentifyingParty identified by partyId {
+    o String partyId
+}
+transaction UpdateStatus {
+    --> Certificate certificate
+    o String newStatus
+}

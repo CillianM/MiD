@@ -4,9 +4,12 @@ import ie.mid.identityengine.dto.KeyDTO;
 import ie.mid.identityengine.dto.PartyDTO;
 import ie.mid.identityengine.enums.EntityStatus;
 import ie.mid.identityengine.exception.BadRequestException;
+import ie.mid.identityengine.exception.HyperledgerErrorException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
+import ie.mid.identityengine.model.IdentifyingParty;
 import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.repository.PartyRepository;
+import ie.mid.identityengine.service.HyperledgerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,9 @@ public class PartyController {
 
     @Autowired
     KeyController keyController;
+
+    @Autowired
+    HyperledgerService hyperledgerService;
 
     @GetMapping
     @ResponseBody
@@ -56,9 +62,14 @@ public class PartyController {
     @ResponseBody
     public PartyDTO createParty(@RequestBody PartyDTO partyToCreate) {
         if (isInvalidParty(partyToCreate)) throw new BadRequestException();
+        //Create Party in blockchain
+        IdentifyingParty identifyingParty = hyperledgerService.createIdentifyingParty();
+        if(identifyingParty == null) throw new HyperledgerErrorException("Error creating party");
+
         Party party = new Party();
         party.setName(partyToCreate.getName());
         party.setStatus(EntityStatus.ACTIVE.toString());
+        party.setNetworkId(identifyingParty.getPartyId());
         party = partyRepository.save(party);
         partyToCreate.setId(party.getId());
         partyToCreate.setStatus(party.getStatus());

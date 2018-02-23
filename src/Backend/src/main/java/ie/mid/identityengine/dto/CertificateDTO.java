@@ -6,6 +6,7 @@ public class CertificateDTO {
     private String ownedBy;
     private String createdBy;
     private String createdAt;
+    private String status;
 
     public CertificateDTO() {
         //Implemented for mapping
@@ -41,5 +42,13 @@ public class CertificateDTO {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

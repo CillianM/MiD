@@ -1,109 +1,238 @@
-# Blog: Mid
+# MiD Blog: Cillian Mc Neill
 
-**Cillian Mc Neill**
+## Contents
+- [Intro](#intro)
+- [25th September 2017 - Research Phase](#25th-september-2017---research-phase)
+- [26th September 2017 - Finding a Project Supervisor](#26th-september-2017---finding-a-project-supervisor)
+- [2nd October 2017 - Securing a Project Supervisor](#2nd-october-2017---securing-a-project-supervisor)
+- [24th October 2017 - Project Proposal Meeting](#24th-october-2017---project-proposal-meeting)
+- [31st October 2017 - Functional Spec](#31st-october-2017---functional-spec)
+- [1st November 2017 - Initial Client Development](#1st-november-2017---initial-client-development)
+    + [Login Page](#login-page)
+    + [Card Select](#card-select)
+    + [New Card Select](#new-card-select)
+- [7 November 2017 - First Supervisor Meeting](#7-november-2017---first-supervisor-meeting)
+- [14th November 2017 - Web Application](#14th-november-2017---web-application)
+    + [Login Page](#login-page-1)
+    + [Submission Select](#submission-select)
+    + [Submission View](#submission-view)
+- [15th November 2017 - Backend Classes](#15th-november-2017---backend-classes)
+    + [Initial Backend Class Diagram](#initial-backend-class-diagram)
+    + [Firebase Console](#firebase-console)
+- [21st November 2017 - Backend Development](#21st-november-2017---backend-development)
+- [28th November 2017 - Functional Specification Submission](#28th-november-2017---functional-specification-submission)
+- [5th December 2017 - Backend Updates](#5th-december-2017---backend-updates)
+    + [Backend Swagger Definitions](#backend-swagger-definitions)
+- [29th January 2018 - Post Christmas Update](#29th-january-2018---post-christmas-update)
+- [30th January 2018 - Mobile Application Updates](#30th-january-2018---mobile-application-updates)
+    + [Sonar Dashboard - Initial Setup](#sonar-dashboard---initial-setup)
+- [15th February 2018 - Web Application Pivot & Mobile Functionality Update](#15th-february-2018---web-application-pivot---mobile-functionality-update)
+  * [Web Screens](#web-screens)
+  * [Mobile Screens](#mobile-screens)
+- [20th February 2018 - User testing](#20th-february-2018---user-testing)
+- [27th February 2018 - Blockchain Implementation](#27th-february-2018---blockchain-implementation)
 
-## Note
-Over the course of the project I will be working off a Trello board in place of an agile task tracker. This will allow me to compile each task and the work required for each. it can be found [here](https://trello.com/b/Lp2PAf1i/mid-identity-engine)
 
-## 25th September 2017
+## Intro
+This blog will cover the development of my project "MiD", a blockchain leveraging identity application with the goal to be the replacement for all forms of identity we currently posses. This idea came to me as a result of my time spent in Mastercard during my internship. I noticed a gap in the process of online verification. As we are (to a certain extent) anonymous online it's hard to prove who a bank of authroity is talking to. My application hopes to aid in this as well as allow users to regain control of their identity and who has access to it.
+While my blog will keep track of my thoughts and progress during development I will be working off a [Trello board](https://trello.com/b/Lp2PAf1i/mid-identity-engine) in place of an agile task tracker. This will allow me to compile each task and the work required for each.
 
-I decided to get started on work and research regarding my project this week. This would involve initial drafting of my project proposal and researching the various technologies I want to use in my solution. Primarily the research will focus on Hyperledger and the implementations of it currently available. As It's open-source, there will be a lot of varied documentation on it but I'm confident in what's currently there from what I have previously found. My main source of information will come from [their own documentation pages](https://hyperledger-fabric.readthedocs.io/en/latest/)
+## 25th September 2017 - Research Phase
 
-## 26th September 2017
+### What has been done
+I wanted to get an early start on the technology stack that I will be using for my project. To this end, I decided to get started on research this week. This has involved researching the various technologies I want to use in my solution. Since I came up with the idea I have been thinking of ways in which I could implement it so I have a base to build off. What I will look into first is the viability of using Spring as the backend framework for users to work off of. These users will be admins on a web interface and users on a mobile device. The certification will have to be stored on a blockchain infrastructure. I have looked into this previously and Hyperledger seems like the most optimal solution due to its speciality in the identity infrastructure.
 
+### What will be done
+Primarily the research will focus on Hyperledger and the implementations of it currently available. As It's open-source, there will be a lot of varied documentation on it but I'm confident in what's currently there from what I have previously found. My main source of information will come from [their own documentation pages](https://hyperledger-fabric.readthedocs.io/en/latest/)
+
+## 26th September 2017 - Finding a Project Supervisor
+
+### What has been done
 I took the opportunity to meet with two lecturers I thought would help me with my project. Brian Stone was my project supervisor for my third year project. He was extremely helpful last year so I wanted to get his input into my current idea. Geoff Hamilton was my other choice for the project supervisor. He has a background in the field I'm looking at so his experience would be very useful in avoiding some of the common pitfalls.
-Over the past few days I have been putting together my project proposal and I intend to send on drafts to both of them and get some feedback.
 
-## 2nd October 2017
+### What will be done
+As well as my research into Hyperledger and the surrounding technologies I want to use, I want to put together my project proposal and I send on drafts to both Brian and Geoff and get some feedback.
 
-After some discussion and emails with Geoff Hamilton he has agreed to be my project mentor. I think he'll be very helpful as he has a background in cryptography and security. As my project focuses on this, the help will be invaluable. I finalised everything I wanted in my [project proposal](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/Proposal/Project%20Proposal.pdf). I'll email on the final draft to Geoff and get his thoughts before pushing it to git.
+## 2nd October 2017 - Securing a Project Supervisor
 
-## 24th October 2017
+### What has been done
+After some discussion and emails with Geoff Hamilton he has agreed to be my project mentor. I think he'll be very helpful as he has a background in cryptography and security. As my project focuses on this, the help will be invaluable. 
+<br> The research into the technology is progressing smoothly. I think I will go forward with using Spring for the backend as it is a framework I have worked with in Mastercard and there are plenty of resources available if needed. I've come to the conclusion that Hyperledger is definitely the direction I want to go. The supporting documentation is extremely helpful and I should be able to set it up and link it to my application without too much difficulty. <br>There are two types of users interacting with the system, an everyday person and an employee of some identifying authority. They will interact with the system with a mobile device and web interface respectively. I will develop the mobile interface for Android as i'm more familiar with it over something like IOS. I'm still unsure about whether I'll need to develop something for the authorities. Ideally I would give them access to the endpoints and they can add them to their current infrastructure but the examiner will need some form of visual representation of their workflow so it may be necessary.
+<br>I finalised everything I wanted in my [project proposal](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/Proposal/Project%20Proposal.pdf). I'll email on the final draft to Geoff and get his thoughts before pushing it to git.
 
-Due to the weather my project proposal was pushed forward a week. Today the meeting went ahead and there were no issues. The meeting was with Charlie Daly and Donal Fitzpatrick. They liked my idea and didn't see anything wrong with the approach I'm taking. They reiterated the importance of security in the project and how I'm going to be handling the personal data being used. I've always kept this at the forefront of my planning so I don't see any issues stemming from this. My next steps will be to start on the preliminary version of the functional spec and see what Geoff thinks. If he gives the go ahead I will push it to the repo.
+### What will be done
+Assuming Geoff is happy with the proposal I can prepare to present it during the proposal meeting. In the meantime I can solidify how the surrounding components will work with each other. I want to make sure I have a good understanding going forward of how the mobile interface will interact with the interface and how any Identifying parties will.
 
-## 31st October 2017
+## 24th October 2017 - Project Proposal Meeting
+
+### What has been done
+Due to the weather my project proposal was pushed forward a week. Today the meeting went ahead and there were no issues. The meeting was with Charlie Daly and Donal Fitzpatrick. They liked my idea and didn't see anything wrong with the approach I'm taking. They reiterated the importance of security in the project and how I'm going to be handling the personal data being used. I've always kept this at the forefront of my planning so I don't see any issues stemming from this. 
+
+### What will be done
+My next steps will be to start on the preliminary version of the functional spec and see what Geoff thinks. If he gives the go ahead I will push it to the repo.
+
+## 31st October 2017 - Functional Spec
+
+### What has been done
 
 I've finished writing the [functional specification](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/functional-spec/Functional%20Specification.pdf) and have received back Geoff's thoughts on it. He didn't see any major issues and he thought it was very thorough. I'll run over it a few more times for semantic/grammar errors but I'm happy with the layout so far.
 
-## 1st November 2017
+### What will be done
+Following the gantt chart, I want to start working on the UI screens for the mobile application and admin interface. I'll also start developing the prototype for the Mobile interface.
 
-After completing the functional specification i've started to work on the client mobile application. This has come in the form of creating screens in android studio. The next job will be to put logic behind the screens.
+## 1st November 2017 - Initial Client Development
 
-### Login Page
+### What has been done
+After completing the functional specification i've started to work on the client mobile application. This has come in the form of creating screens in android studio. The initial screen will be a login page followed by a tabbed interface to view cards, current requests or any additonal settings. I have only developed the ones you see below. The other pages aren't as involved as these so I created these ones first to show the general flow of the app.
 
-<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_login.jpg" alt="Login page mockup"width="504" height="896">
+#### Login Page
 
-### Card Select
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_login.jpg" alt="Login page mockup"width="304" height="603"><br>
+This is the intial page that will allow a user to select a profile or create a new one. After this the user will be prompted for a pin and then they will be shown their currently saved cards.
 
-<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_card.jpg" alt="Card selection mockup"width="504" height="896">
+#### Card Select
 
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_card.jpg" alt="Card selection mockup"width="304" height="603"><br>
+Making use of [MaterialViewPager](https://github.com/florent37/MaterialViewPager) by Florent Champigny I was able to mock up a nice looking card selection page. The view pager is easy to implement and i've added my own adapters to the layout to allow me to display custom information.
+```
+<com.github.florent37.materialviewpager.MaterialViewPager
+    android:id="@+id/materialViewPager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:viewpager_color="@color/colorPrimary"
+    app:viewpager_headerHeight="200dp"
+    app:viewpager_headerAlpha="1.0"
+    />
+    
+//Then implemented through the FragmentStatePagerAdapter
+MaterialViewPager mViewPager = getView().findViewById(R.id.materialViewPager);
+        mViewPager.getViewPager().setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
 
-### New Card Select
+            @Override
+            public Fragment getItem(int position) {
+                ListFragment listFragment = ListFragment.newInstance();
+                listFragment.setCardType(cardTypes.get(position));
+                return listFragment;
+            }
+                            ........
+```
 
-<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_select.jpg" alt="New card selection"width="504" height="896">
+The user can swipe through the currently saved cards and see what their status is (if they've been validated or not) and view the information linked to them.
 
+#### New Card Select
 
-## 7 November 2017
-I had my first meeting with Geoff today. It was a group meeting where we discussed where we were in terms of progress and what our next moves were. Since last week I've stood up my web server and implemented functionality into the screens from the previous post. I'll need to mock up web screens and hopefully implement simple versions of them. After that I'll need to start on my backend and creating the links required for interacting with the blockchain.
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_select.jpg" alt="New card selection"width="304" height="603"><br>
 
-## 14th November 2017
-This weeks meeting was spent going over the web screens I mocked up over the week. It's a skeleton application that will need functionality written into it at a later point. This will serve as the example site for an Identifying party's portal and will be used in any demo when discussing the platform as a whole. For this week i'd like to work on building up object diagrams of the backend along with initial construction of these objects into a spring project. I will also need to go over the functional spec and ensure there are no inconsistencies with what's currently being developed. It will also being a chance to triple check my grammar.
+When creating a new card the user will be show the available cards they can select. Each card has unique information they require so they will be brought to a dynamically created form when the card selected is pulled down.
 
-### Login Page
+### What will be done
+With these screens created I will need to implement the logic behind them. As well as this I will neeed to work on the rest of the screens for the mobile application. After some planning I don't think i'll need to mockup pages for the admin interface. While i'll need a demo a UI for that portion of the application it can be simple lists and form entries so i'm not too concerned with the look.
 
-<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_web_login.png" alt="Web login page mockup"width="896" height="504">
+## 7 November 2017 - First Supervisor Meeting
 
-### Submission Select
+### What was done
+I had my first meeting with Geoff today. It was a group meeting where we discussed where we were in terms of progress and what our next moves were. Since last week I've stood up my web server and implemented functionality into the screens from the previous post. 
 
-<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_select.png" alt="Submission selection mockup"width="896" height="504">
+### What will be done
+I'll need to do up web screens and hopefully implement simple versions of them. After that I'll need to start on my backend and creating the links required for interacting with the blockchain.
 
-### Submission View
-<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_view.png" alt="Submission view"width="896" height="504">
+## 14th November 2017 - Web Application
 
-## 15th November 2017
-Over today i've looked into the structure of the main classes that will make up my backend. There will be smaller helper classes i'll need to look into further but i think i have the general structure of what i'd like. I've divided up each section of the backend into controllers which can be interacted with externally. These controllers will go on to access repositories of the objects that are being requested/updated. With this approach, I can separate out functionality and make it cleaner overall. Along with this i've added initial firebase functionality into the mobile application. This is Google's cloud messaging service and will allow me to send messages to any of the users if needs be. Primarily i'd use this for submission notifications but it can be used for other things. I'll continue to develop more diagrams over the week and i should hopefully have the classes up on git by the end of the week.
+### What was done
+This weeks meeting was spent going over the web screens I mocked up over the week. It's a skeleton application that will need functionality written into it at a later point. This will serve as the example site for an Identifying party's portal and will be used in any demo when discussing the platform as a whole.
 
-### Initial Backend Class Diagram
+#### Login Page
 
-<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/backend_class_diagram.jpg" alt="Web login page mockup"width="1013" height="757">
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_web_login.png" alt="Web login page mockup"width="502" height="295"><br>
+This is a simple mock of a login page. There will be no access control placed on the web application as this isn't something within the scope of the project. The application i'm creating is a set of endpoints for an authority to use. It's not my job to create a web application for them.
 
-## 21st November 2017
+#### Submission Select
+
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_select.png" alt="Submission selection mockup"width="502" height="295"><br>
+When someone selects their form of identity and submits it for verification it will show up here for the authority to view. Only pending submissions will be show through this for now.
+
+#### Submission View
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_view.png" alt="Submission view"width="502" height="295"><br>
+This is the information that is submitted when the user requests it to be verified. The fields of that authorities idnetity type will be filled out by the user and a current photo will be sent along with it. This will allow the authority to link this information & picture to what they have on their system and make the decision as to whether the information is valid or not.
+
+### What will be done
+For this week i'd like to work on building up object diagrams of the backend along with initial construction of these objects into a spring project. I will also need to go over the functional spec and ensure there are no inconsistencies with what's currently being developed. It will also being a chance to triple check my grammar.
+
+## 15th November 2017 - Backend Classes
+
+### What has been done
+Over today i've looked into the structure of the main classes that will make up my backend. There will be smaller helper classes i'll need to look into further but I think I have the general structure of what i'd like. I've divided up each section of the backend into controllers which can be interacted with externally. These controllers will go on to access repositories of the objects that are being requested/updated. With this approach, I can separate out functionality and make it cleaner overall.<br>
+Along with this i've added initial firebase functionality into the mobile application. This is Google's cloud messaging service and will allow me to send messages to any of the users. Primarily i'd use this for submission notifications but it can be used for other things such as application updates or other application status announcements.
+
+#### Initial Backend Class Diagram
+
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/backend_class_diagram.jpg" alt="Backend class diagram"width="604" height="583">
+
+#### Firebase Console
+
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/firebase_console.png" alt="Firebase console page"width="1144" height="327">
+
+### What will be done
+I'll continue to develop more diagrams over the week and I should hopefully have the classes up on git by the end of the week.
+
+## 21st November 2017 - Backend Development
+
+### What has been done
 After the meeting with Geoff today I decided to give one look back over the functional specification. After talking with him, I felt that there could be more diagrams in it as well as a slightly different structure to some points. These have been addressed and i've pushed it to git.<br>
-We also discussed the initial backend class diagram. He is happy with the progress with it. I've said that i'd like to further implement this diagram by next week. I have the initial structure coded but there is more to add to it before i want to show it to him.
+We also discussed the initial backend class diagram. He is happy with the progress with it.
 
-## 28th November 2017
+### What will be done
+I've said that I'd like to further implement this diagram by next week. I have the initial structure coded but there is more to add to it before I want to show it to him.
+
+## 28th November 2017 - Functional Specification Submission
+
+### What has been done
 Last Friday (the 24th) was the deadline for the functional spec. I added some last minute updates to it, primarily some user stories and additional features.
 The updated spec was run by Geoff and he was happy with the updates. Over the course of the week i've been putting together the classes that make up the backend diagram. <br>
-I want the initial structure of things along with unit tests before I push anything up which should hopefully be over the next few days. There won't be a lot of functionality in the classes but I want to build up the overall structure and start expanding from there.
 
-## 5th December 2017
+### What will be done
+I want the initial structure of things along with unit tests before I push anything up. This should hopefully be over the next few days. There won't be a lot of functionality in the classes but I want to build up the overall structure to make it easier to expand from there.
+
+## 5th December 2017 - Backend Updates
+
+### What has been done
 Over the past 2 weeks I have been busy with assignments and due to this the updates to the backend have been delayed. I've added the initial backend code to gitlab and attached a screenshot of the current swagger definitions. By having swagger integrated into my code I can easily document the API endpoints. I've also added initial unit tests for each class. Whenever I add a new class to the project a new unit test is created. This will make the building/testing flow of the project much easier. Over the course of the holidays I hope to have the backend in a semi-finished state, allowing me to fine tune it before I go back to working on the two UIs.<br>
 With the backend finished I can also start on the interface for the blockchain. There isn't as much of a rush to get this done as it can be emulated on the backend side but it is still a priority.
 
+### What will be done
+Further updates to the backend to then allow for interaction betweenthe mobile applciation and demo authority's interface
 
-## Backend Swagger Definitions
+#### Backend Swagger Definitions
 <img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/backend_swagger.png" alt="Web login page mockup"width="864" height="374">
 
-## 29th January 2018
-I was extremely busy over the course of the christmas break which lead to a decrease in the amount of free time i had to work on the project. With the start of the new semester I will hopefully be able to use the first few weeks to get the bulk
-of the work done. I primarily need to set the android app up to take in and send out requests to the backend. The UI isn't much of an issue right now and can be tweaked as time goes on. Right now I have simple communication with the backend and from here 
-I can use it as a base to expand into what I want. The next few days will be spent getting the android app up to speed on the communication I want it to have and then its down to fine tuning it while I work on the functionality behind those calls in the backend.
+## 29th January 2018 - Post Christmas Update
 
-## 30th January 2018
+### What has been done
+I was extremely busy over the course of the christmas break which lead to a decrease in the amount of free time I had to work on the project. Simple communication with the backend has been implemented but with little testing and verification. With the start of the new semester I will hopefully be able to use the first few weeks to get the bulk of the work done. 
+
+### What will be done
+I primarily need to set the android app up to take in and send out requests to the backend. The UI isn't much of an issue right now and can be tweaked as time goes on. Right now I have simple communication with the backend and from here I can use it as a base to expand into what I want. The next few days will be spent getting the android app up to speed on the communication I want it to have and then its down to fine tuning it while I work on the functionality behind those calls in the backend.
+
+## 30th January 2018 - Mobile Application Updates
+
+### What has been done
 I was able to meet with Geoff today and discuss where I am with the project. Work is progressing steadily and there is currently nothing blocking me. I have taken massive steps in wrapping up the Android side of things over the last few days and by the end of the week i should hopefully
-have everything I need to allow a user to user it as intended. The backend is slowly reflecting the updates to the app but the big changes will come later in the week (primarily the submission handling). With the app out of the way (functionality-wise) i'd like to get some
-more opinions on the UI. I've approached students within my year for tips on it and so far there is nothing glaring. I feel once the functionality is there the flaws will be more prominant.
+have everything I need to allow a user to use it as intended. The backend is slowly reflecting the updates to the app but the big changes will come later in the week (primarily the submission handling).
 I have also added [sonar](https://www.sonarqube.org/) to keep track of development and any bugs that arise. It will also keep track of all tests created and document code coverage. Ideally I want to keep above 80% so that will be the goal going forward.
 
-### Sonar Dashboard - Initial Setup
+#### Sonar Dashboard - Initial Setup
 
 <img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/sonar_dash.png" alt="Web login page mockup"width="1148" height="569">
 
-## 15th February 2018
-Since the last blog post I've had several meetings with Geoff and numerous updates to the application.<br>
-I've updated the admin portal to streamline party creation along with identity creation for each party and submission handling. This has allowed functional testing to proceed a lot smoother as I can use it to fine tune variables where I see fit.<br>
-The backend hasn't seen many updates beyond patches to smoothen out functionality on the mobile interface. The mobile side has be the area where a lot of the work has been done<br>
+### What will be done
+With the app out of the way (functionality-wise) i'd like to get some more opinions on the UI. I've approached students within my year for tips on it and so far there is nothing glaring. I feel once the functionality is there the flaws will be more prominant.
+
+## 15th February 2018 - Web Application Pivot & Mobile Functionality Update
+
+### What has been done
+Since the last blog post I've had several meetings with Geoff and numerous updates to the application to catch up on what I wasn't able to do during the christmas break. I want to get as much as I can done this month as assigments will start to come in at the start of March.<br>
+I've updated demo authority interface into an admin portal to streamline party/identity creation and submission handling. This has allowed functional testing to proceed a lot smoother as I can use it to fine tune variables where I see fit.<br>
+The backend hasn't seen many updates beyond patches to smoothen out functionality on the mobile interface. The mobile side has been the area where a lot of the work has been done<br>
 As It stands now the app has:
 * Profile Creation
 * Card selection and local saving
@@ -113,14 +242,33 @@ As It stands now the app has:
 
 ### Web Screens
 
-<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/web_screen.png" alt="Web login page mockup"width="1157" height="521">
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/web_screen.png" alt="Web login page mockup"width="1157" height="521"><br>
+If you compare this to what I had [previously](#login-page-1) you can see that the interface is a lot more generic. A user can create a party and add as many identity types as they need. Submissions are viewable for each party and are responded to in the same way as the original UI.
 
 ### Mobile Screens
 
-<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mobile_screens.png" alt="Web login page mockup"width="1083" height="768">
-
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mobile_screens.png" alt="Web login page mockup"width="1083" height="768"><br>
 These are the core functions of the app I outlined in the functional spec so I'm on track to getting the core done. With this done I can focus on user testing the UI and fine tuning it where needs be.<br>
-The next step will be to implement calls on the backend to the blockchain and have request/responses call back to the backend to view certificates from the blockchain. This is a key part of the identity verification process
-so the sooner this is up and running the more fune tuning I can perform.<br>
-I will need to start implementing more unit and integration tests. As it stands now I'm maintaining 80% code coverage of the backend but this must be the same for the mobile application. Integration tests will be in the form of cucumber BDDs
-that will be runnable  along with the unit tests. This suite will provide sufficient error checking on top of the functional testing I've been performing.<br>
+
+### What will be done
+The next step will be to implement calls on the backend to the blockchain and have request/responses call back to the backend to view certificates from the blockchain. This is a key part of the identity verification process so the sooner this is up and running the more fine tuning I can perform.<br>
+I will need to start implementing more unit and integration tests. As it stands now I'm maintaining 80% code coverage of the backend but this must be the same for the mobile application. Integration tests will be in the form of cucumber BDDs that will be runnable  along with the unit tests. This suite will provide sufficient error checking on top of the functional testing I've been performing.<br>
+In our recent meeting Geoff reminded me to get user feedback on the mobile application so i'm going to put together a simple questionaire and have friends/family of different computer literacy levels to step through the application and identity any flaws.
+
+## 20th February 2018 - User testing
+
+### What was done
+Over the past few days I have gotten people in and out of college to go through the workflows of my application and [provide feedback](https://goo.gl/forms/fek6WQsjfGs84SpG2) on what they thought was missing/confusing. Overall there wasn't anything glaring. The main issue that i found from the testing was that there was a lack of labeling so a user was unsure on how to progress or how they might go about accomplishing a certain task. It was an enlightening test and i'm going to work to implement the suggested changes over the next few weeks.
+
+### What will be done
+Along with updating the application with the suggested changes I need to start on adding blockchain functionality to the backend & mobile application. The mobile site won't need a lot of changes beyond the option to view the certificate tied to information in a submission or a received request.
+
+## 27th February 2018 - Blockchain Implementation
+
+### What has been done
+Since my initial look into Hyperledger there have been updates to streamline the over implementation process. This made using it even easier than I first thought. I created a seperated VM with the Hyperledger toolset. The developers toolset has commands to start up basic docker containers to deploy business logic to. `startFabric.sh` will accomplish all of this and allow me to deploy the network with `composer runtime install -n mid-network -c Admin@mid-network`<br>
+With the network deployed I can create a rest server to interact with it in the same way I would my own backend with `composer-rest-server` or deploy a UI to perform similar actions with `composer-playground`<br>
+With the above network and rest server in place I created a class to call and consume data from the rest servers's endpoints. This has allowed me to integrate it into user/party creation as well as the all important submission acceptance phase. Now, when a submission is marked as accepted a certificate is created in the users name which can then be called to by the user on the mobile application or by anyone the user has passed information to from that form of identity.
+
+### What will be done
+With the overal functionality of the project in place I need to go back and look at the security and access control of the backend. Currently anyone can make calls to anything and receive back data that may not belong to them. Access control will need to to be placed on all endpoints and some form of encryption will need to be put in place (either SSL for communication encryption or RSA for per packet encryption)

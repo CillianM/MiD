@@ -2,35 +2,35 @@
 
 ## Contents
 - [Intro](#intro)
-- [25th September 2017 - Research Phase](#25th-september-2017---research-phase)
-- [26th September 2017 - Finding a Project Supervisor](#26th-september-2017---finding-a-project-supervisor)
-- [2nd October 2017 - Securing a Project Supervisor](#2nd-october-2017---securing-a-project-supervisor)
-- [24th October 2017 - Project Proposal Meeting](#24th-october-2017---project-proposal-meeting)
-- [31st October 2017 - Functional Spec](#31st-october-2017---functional-spec)
-- [1st November 2017 - Initial Client Development](#1st-november-2017---initial-client-development)
+- [25th September 2017 - Research Phase](#25th-september-2017-research-phase)
+- [26th September 2017 - Finding a Project Supervisor](#26th-september-2017-finding-a-project-supervisor)
+- [2nd October 2017 - Securing a Project Supervisor](#2nd-october-2017-securing-a-project-supervisor)
+- [24th October 2017 - Project Proposal Meeting](#24th-october-2017-project-proposal-meeting)
+- [31st October 2017 - Functional Spec](#31st-october-2017-functional-spec)
+- [1st November 2017 - Initial Client Development](#1st-november-2017-initial-client-development)
     + [Login Page](#login-page)
     + [Card Select](#card-select)
     + [New Card Select](#new-card-select)
-- [7 November 2017 - First Supervisor Meeting](#7-november-2017---first-supervisor-meeting)
-- [14th November 2017 - Web Application](#14th-november-2017---web-application)
+- [7th November 2017 - First Supervisor Meeting](#7th-november-2017-first-supervisor-meeting)
+- [14th November 2017 - Web Application](#14th-november-2017-web-application)
     + [Login Page](#login-page-1)
     + [Submission Select](#submission-select)
     + [Submission View](#submission-view)
-- [15th November 2017 - Backend Classes](#15th-november-2017---backend-classes)
+- [15th November 2017 - Backend Classes](#15th-november-2017-backend-classes)
     + [Initial Backend Class Diagram](#initial-backend-class-diagram)
     + [Firebase Console](#firebase-console)
-- [21st November 2017 - Backend Development](#21st-november-2017---backend-development)
-- [28th November 2017 - Functional Specification Submission](#28th-november-2017---functional-specification-submission)
-- [5th December 2017 - Backend Updates](#5th-december-2017---backend-updates)
+- [21st November 2017 - Backend Development](#21st-november-2017-backend-development)
+- [28th November 2017 - Functional Specification Submission](#28th-november-2017-functional-specification-submission)
+- [5th December 2017 - Backend Updates](#5th-december-2017-backend-updates)
     + [Backend Swagger Definitions](#backend-swagger-definitions)
-- [29th January 2018 - Post Christmas Update](#29th-january-2018---post-christmas-update)
-- [30th January 2018 - Mobile Application Updates](#30th-january-2018---mobile-application-updates)
-    + [Sonar Dashboard - Initial Setup](#sonar-dashboard---initial-setup)
-- [15th February 2018 - Web Application Pivot & Mobile Functionality Update](#15th-february-2018---web-application-pivot---mobile-functionality-update)
+- [29th January 2018 - Post Christmas Update](#29th-january-2018-post-christmas-update)
+- [30th January 2018 - Mobile Application Updates](#30th-january-2018-mobile-application-updates)
+    + [Sonar Dashboard - Initial Setup](#sonar-dashboard-initial-setup)
+- [15th February 2018 - Web Application Pivot & Mobile Functionality Update](#15th-february-2018-web-application-pivot-mobile-functionality-update)
   * [Web Screens](#web-screens)
   * [Mobile Screens](#mobile-screens)
-- [20th February 2018 - User testing](#20th-february-2018---user-testing)
-- [27th February 2018 - Blockchain Implementation](#27th-february-2018---blockchain-implementation)
+- [20th February 2018 - User testing](#20th-february-2018-user-testing)
+- [27th February 2018 - Blockchain Implementation](#27th-february-2018-blockchain-implementation)
 - [5th March 2018 - Access Control](#5th-march-2018-access-control)
 
 
@@ -129,7 +129,7 @@ When creating a new card the user will be show the available cards they can sele
 ### What will be done
 With these screens created I will need to implement the logic behind them. As well as this I will neeed to work on the rest of the screens for the mobile application. After some planning I don't think i'll need to mockup pages for the admin interface. While i'll need a demo a UI for that portion of the application it can be simple lists and form entries so i'm not too concerned with the look.
 
-## 7 November 2017 - First Supervisor Meeting
+## 7th November 2017 - First Supervisor Meeting
 
 ### What was done
 I had my first meeting with Geoff today. It was a group meeting where we discussed where we were in terms of progress and what our next moves were. Since last week I've stood up my web server and implemented functionality into the screens from the previous post. 
@@ -233,13 +233,31 @@ With the app out of the way (functionality-wise) i'd like to get some more opini
 ### What has been done
 Since the last blog post I've had several meetings with Geoff and numerous updates to the application to catch up on what I wasn't able to do during the christmas break. I want to get as much as I can done this month as assigments will start to come in at the start of March.<br>
 I've updated demo authority interface into an admin portal to streamline party/identity creation and submission handling. This has allowed functional testing to proceed a lot smoother as I can use it to fine tune variables where I see fit.<br>
-The backend hasn't seen many updates beyond patches to smoothen out functionality on the mobile interface. The mobile side has been the area where a lot of the work has been done<br>
+The backend hasn't seen many updates beyond patches to smoothen out functionality on the mobile interface. <br>
+The mobile side has been the area where a lot of the work has been done. A lot of the projects funtionality has been added and the UI screens to enable this have been added too. Connections to the backend have been implemented and have allowed for the basic workflows to be tested functionality-wise. There is still tweaks that need to be performed (eg. cleaning up the UI and how the async calls are made to the backend) but otherwise the core of it is there<br>
 As It stands now the app has:
 * Profile Creation
+    - A profile is created locally along with a public/private keypair
+    - The name of the profile along with the public key is submitted to the backend and saved
 * Card selection and local saving
+    - Initially a user selects from a list of available cards (these are created by an identifying party)
+    - The fields of the identity card are requested from the user
+    - Once the user finishes, the card is created on the device. 
+        + Note that the card doesn't touch the backend here until the user wants to create a submission
 * Submission of created cards
+    - The user reviews the information they entered and sends it, along with a picture of themselves, to the backend
+    - The card is reviewed and accepted/rejected
+        + During this time a user can view the submission and see the data and its status
 * Responses on reviewed verifications
+    - Once a verdict has been reached it is updated on the backend and the user is notified
+    - The user now has a validated identity through which they can user to answer and information request (certificates to be implemented as of yet)
 * Request creation and response handling
+    - Users and parties (assuming they know the id of the user they want to ask) can request information from an identity card
+    - Users scan a QR code and select the fields they want from a form of identity (a parties implementation of this is up to them)
+    - The requested user is notified and shown the fields they are being asked for
+    - The requested user can accept or deny the request outright with the addtional option to send only some of the fields that are being requested
+    - Once the requested user updates the request the sender (if they are a mobile user) is notified and can view the data that was sent back in the request
+        + Note here that the requested user can still withdraw the request to stop further viewings of it
 
 ### Web Screens
 

@@ -31,6 +31,7 @@
   * [Mobile Screens](#mobile-screens)
 - [20th February 2018 - User testing](#20th-february-2018---user-testing)
 - [27th February 2018 - Blockchain Implementation](#27th-february-2018---blockchain-implementation)
+- [5th March 2018 - Access Control](#5th-march-2018---access-control)
 
 
 ## Intro
@@ -267,8 +268,20 @@ Along with updating the application with the suggested changes I need to start o
 
 ### What has been done
 Since my initial look into Hyperledger there have been updates to streamline the over implementation process. This made using it even easier than I first thought. I created a seperated VM with the Hyperledger toolset. The developers toolset has commands to start up basic docker containers to deploy business logic to. `startFabric.sh` will accomplish all of this and allow me to deploy the network with `composer runtime install -n mid-network -c Admin@mid-network`<br>
-With the network deployed I can create a rest server to interact with it in the same way I would my own backend with `composer-rest-server` or deploy a UI to perform similar actions with `composer-playground`<br>
-With the above network and rest server in place I created a class to call and consume data from the rest servers's endpoints. This has allowed me to integrate it into user/party creation as well as the all important submission acceptance phase. Now, when a submission is marked as accepted a certificate is created in the users name which can then be called to by the user on the mobile application or by anyone the user has passed information to from that form of identity.
+With the network deployed I can create a REST server to interact with it in the same way I would my own backend with `composer-rest-server` or deploy a UI to perform similar actions with `composer-playground`<br>
+With the above network and REST server in place I created a class to call and consume data from the REST servers's endpoints. This has allowed me to integrate it into user/party creation as well as the all important submission acceptance phase. Now, when a submission is marked as accepted a certificate is created in the users name which can then be called to by the user on the mobile application or by anyone the user has passed information to from that form of identity.
+
+#### Composer Playground
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/blockchain.png" alt="Web login page mockup"width="896" height="665"><br>
+Above is an example of the playground interface I can use in conjunction with the REST enpoints. I can view all of the participants in the network aswell as create test ones from the UI. I can also create assets and initiate transactions on these assets. Currently when a submission is accepted a certificate is created in their name. Users can view the certificates but a transaction will need to be create to edit one.
 
 ### What will be done
 With the overal functionality of the project in place I need to go back and look at the security and access control of the backend. Currently anyone can make calls to anything and receive back data that may not belong to them. Access control will need to to be placed on all endpoints and some form of encryption will need to be put in place (either SSL for communication encryption or RSA for per packet encryption)
+
+## 5th March 2018 - Access Control
+
+### What has been done
+With the core functionality in place I needed to ensure endpoints were only accessible by the correct user. For example, A party can update and delete identity types but a user can't while i user can update requests but a party can't. There are also some endpoints that are open to anyone. Examples of this are the creation of a user or party. By implementing basic authentication headers on these calls the user can send in their id and an encrypted token (for now this will be the id itself). This token is encrypted with the private key of that user so through this we are showing ownership of the key and therefore the profile. `Authorization: Basic id:token` is the basic form of these headers. With this I can ensure a user's role (are they a normal user,party,etc.) and then limit access to data they're asking for based on the user requesting it. I can also ensure that even if they're allowed to hit the specified endpoint they can't request data that doesn't belong to them. If I wasn't to implement this user A, authorized as user A, can request B's data from the endpoint. 
+
+### What will be done
+With the basic access control in place I need to look at encrypting the data for submissions/requests. This is to ensure that even if data is leaked the attacker cannot get access to private information. Aswell as this I will need to add a dummy backend for the admin interface. This is because key creation/encryption/decryption isn't something for a web front-end to do. I will take calls made from the front-end and send them to this new web back-end. I can then perform the steps necessary to implement encryption/decryption/key creation with the applications back-end.

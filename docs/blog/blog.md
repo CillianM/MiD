@@ -31,7 +31,7 @@
   * [Mobile Screens](#mobile-screens)
 - [20th February 2018 - User testing](#20th-february-2018---user-testing)
 - [27th February 2018 - Blockchain Implementation](#27th-february-2018---blockchain-implementation)
-- [5th March 2018 - Access Control](#5th-march-2018---access-control)
+- [5th March 2018 - Access Control](#5th-march-2018-access-control)
 
 
 ## Intro

@@ -153,7 +153,7 @@ This is a simple mock of a login page. There will be no access control placed on
 When someone selects their form of identity and submits it for verification it will show up here for the authority to view. Only pending submissions will be show through this for now.
 
 #### Submission View
-<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_view.png" alt="Submission view"width="502" height="295"><br>
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mock_submission_view.png" alt="Submission view"width="755" height="322"><br>
 This is the information that is submitted when the user requests it to be verified. The fields of that authorities idnetity type will be filled out by the user and a current photo will be sent along with it. This will allow the authority to link this information & picture to what they have on their system and make the decision as to whether the information is valid or not.
 
 ### What will be done

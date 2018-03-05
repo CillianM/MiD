@@ -37,7 +37,7 @@ public class SubmissionListActivity extends AppCompatActivity implements Submiss
         submissionList = findViewById(R.id.submissions_list);
         profile = getProfile();
         if(InternetUtil.isNetworkAvailable(getApplicationContext())) {
-            new SubmissionListGetter(getApplicationContext(),this, cards).execute();
+            new SubmissionListGetter(getApplicationContext(),this, profile,cards).execute();
         }
         else{
             noInternetError();

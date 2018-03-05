@@ -12,6 +12,7 @@ public class Submission {
     private String userId;
     private String partyName;
     private String partyId;
+    private String certId;
     private String data;
     private String status;
     private String date;
@@ -91,5 +92,13 @@ public class Submission {
             return null;
         }
 
+    }
+
+    public String getCertId() {
+        return certId;
+    }
+
+    public void setCertId(String certId) {
+        this.certId = certId;
     }
 }

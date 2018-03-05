@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 
+import ie.mid.model.HttpCall;
 import ie.mid.pojo.IdentityType;
 
 public class IdentityTypeService {
@@ -23,7 +24,7 @@ public class IdentityTypeService {
 
     public List<IdentityType> getIdentityTypes() {
         this.backendService.setEndpointExtention("/identitytype");
-        String identityTypeListing = backendService.sendGet();
+        String identityTypeListing = backendService.sendGet(new HttpCall());
         if (identityTypeListing != null) {
             try {
                 return mapper.readValue(
@@ -39,7 +40,7 @@ public class IdentityTypeService {
 
     public IdentityType getIdentityType(String indentityTypeId) {
         this.backendService.setEndpointExtention("/identitytype/" + indentityTypeId);
-        String identityType = backendService.sendGet();
+        String identityType = backendService.sendGet(new HttpCall());
         if (identityType != null) {
             try {
                 return mapper.readValue(identityType,IdentityType.class);

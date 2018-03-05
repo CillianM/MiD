@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 
+import ie.mid.model.HttpCall;
 import ie.mid.pojo.Party;
 
 /**
@@ -28,7 +29,7 @@ public class PartyService {
     public Party getParty(String partyId) {
         backendService.setEndpointExtention("/party/" + partyId);
 
-        String returnedParty = backendService.sendGet();
+        String returnedParty = backendService.sendGet(new HttpCall());
         if (returnedParty != null) {
             try {
                 return mapper.readValue(returnedParty, Party.class);

@@ -13,6 +13,7 @@ public class Request {
     private String recipientName;
     private String recipientId;
     private String status;
+    private String certificateId;
     private String indentityTypeId;
     private String identityTypeFields;
     private String identityTypeValues;
@@ -110,5 +111,13 @@ public class Request {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getCertificateId() {
+        return certificateId;
+    }
+
+    public void setCertificateId(String certificateId) {
+        this.certificateId = certificateId;
     }
 }

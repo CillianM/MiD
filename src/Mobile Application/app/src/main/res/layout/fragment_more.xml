@@ -9,11 +9,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Settings"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"
         android:textSize="20sp"/>
+
+    <ie.mid.view.RoundedImageView
+        android:id="@+id/profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/settings_title"
+        android:layout_centerHorizontal="true"/>
+    <Button
+        android:id="@+id/qr_button"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_image"
+        android:text="View MiD QR"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:layout_alignStart="@id/profile_image"
+        android:layout_alignEnd="@id/profile_image"/>
 
     <ListView
         android:id="@+id/settings_list"
-        android:layout_below="@id/settings_title"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/qr_button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"

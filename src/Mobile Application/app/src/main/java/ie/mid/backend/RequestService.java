@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 
+import ie.mid.model.HttpCall;
 import ie.mid.pojo.InformationRequest;
 import ie.mid.pojo.Request;
 
@@ -19,9 +20,9 @@ public class RequestService {
         this.backendService = new BackendService(context, "/request");
     }
 
-    public Request submitRequest(InformationRequest request) {
+    public Request submitRequest(HttpCall call) {
         backendService.setEndpointExtention("/request");
-        String returnedSubmission = backendService.sendPost(request.toJsonString());
+        String returnedSubmission = backendService.sendPost(call);
         if (returnedSubmission != null) {
             try {
                 return mapper.readValue(returnedSubmission, Request.class);
@@ -32,10 +33,10 @@ public class RequestService {
         return null;
     }
 
-    public List<Request> getRecipientRequests(String userID) {
+    public List<Request> getRecipientRequests(String userID,HttpCall httpCall) {
         backendService.setEndpointExtention("/request/recipient/" + userID);
 
-        String returnedRequests = backendService.sendGet();
+        String returnedRequests = backendService.sendGet(httpCall);
         if (returnedRequests != null) {
             try {
                 return mapper.readValue(
@@ -49,10 +50,10 @@ public class RequestService {
         return null;
     }
 
-    public List<Request> getSenderRequests(String userID) {
+    public List<Request> getSenderRequests(String userID,HttpCall httpCall) {
         backendService.setEndpointExtention("/request/sender/" + userID);
 
-        String returnedRequests = backendService.sendGet();
+        String returnedRequests = backendService.sendGet(httpCall);
         if (returnedRequests != null) {
             try {
                 return mapper.readValue(
@@ -66,10 +67,10 @@ public class RequestService {
         return null;
     }
 
-    public Request getRequest(String requestId) {
+    public Request getRequest(String requestId,HttpCall httpCall) {
         backendService.setEndpointExtention("/request/" + requestId);
 
-        String returnedRequest = backendService.sendGet();
+        String returnedRequest = backendService.sendGet(httpCall);
         if (returnedRequest != null) {
             try {
                 return mapper.readValue(returnedRequest, Request.class);
@@ -80,9 +81,9 @@ public class RequestService {
         return null;
     }
 
-    public Request updateRequest(String requestId, InformationRequest request) {
+    public Request updateRequest(String requestId, HttpCall httpCall) {
         backendService.setEndpointExtention("/request/" + requestId);
-        String returnedSubmission = backendService.sendPut(request.toJsonString());
+        String returnedSubmission = backendService.sendPut(httpCall);
         if (returnedSubmission != null) {
             try {
                 return mapper.readValue(returnedSubmission, Request.class);

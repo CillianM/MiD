@@ -82,6 +82,7 @@ public class SubmissionController {
         dto.setPartyId(submission.getPartyId());
         dto.setStatus(submission.getStatus());
         dto.setDate(submission.getCreatedAt().toString());
+        dto.setCertId(submission.getCertificateId());
         return dto;
     }
 
@@ -169,6 +170,7 @@ public class SubmissionController {
             dto.setPartyId(submission.getPartyId());
             dto.setStatus(submission.getStatus());
             dto.setDate(submission.getCreatedAt().toString());
+            dto.setCertId(submission.getCertificateId());
             submissionDTOList.add(dto);
         }));
         return submissionDTOList;

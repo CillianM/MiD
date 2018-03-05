@@ -11,6 +11,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 
 import ie.mid.handler.DatabaseHandler;
+import ie.mid.model.HttpCall;
 import ie.mid.model.Profile;
 import ie.mid.pojo.User;
 import ie.mid.util.HashUtil;
@@ -47,8 +48,8 @@ public class UserService {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             keyPairGenerator.initialize(2048);
             KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            profile.setPrivateKey(HashUtil.byteToBase64(keyPair.getPrivate().getEncoded()));
-            profile.setPublicKey(HashUtil.byteToBase64(keyPair.getPublic().getEncoded()));
+            profile.setPrivateKey(HashUtil.byteToBase64(keyPair.getPrivate().getEncoded()).replace("\n",""));
+            profile.setPublicKey(HashUtil.byteToBase64(keyPair.getPublic().getEncoded()).replace("\n",""));
 
 
             DatabaseHandler handler = new DatabaseHandler(context);
@@ -61,7 +62,9 @@ public class UserService {
             user.setPublicKey(profile.getPublicKey());
             user.setFcmToken(fcm);
             String json = mapper.writeValueAsString(user);
-            String createdUser = backendService.sendPost(json);
+            HttpCall httpCall = new HttpCall();
+            httpCall.setJsonBody(json);
+            String createdUser = backendService.sendPost(httpCall);
             if (createdUser != null) {
                 user = mapper.readValue(createdUser, User.class);
                 //save to local storage
@@ -76,10 +79,10 @@ public class UserService {
         return null;
     }
 
-    public User getUser(String userId) {
+    public User getUser(String userId,HttpCall httpCall) {
         backendService.setEndpointExtention("/user/" + userId);
 
-        String returnedParty = backendService.sendGet();
+        String returnedParty = backendService.sendGet(httpCall);
         if (returnedParty != null) {
             try {
                 return mapper.readValue(returnedParty, User.class);

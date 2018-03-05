@@ -13,12 +13,12 @@
 
         <TextView
             android:id="@+id/identity_type_title"
-            android:textSize="16dp"
-            android:text="Identity Type Title"
-            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp" />
+            android:layout_margin="20dp"
+            android:text="Identity Type Title"
+            android:textColor="@color/black"
+            android:textSize="16dp" />
 
         <ListView
             android:id="@+id/identity_type_values"
@@ -33,13 +33,22 @@
             android:id="@+id/accept_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@id/reject_button"
             android:layout_marginEnd="15dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="20dp"
             android:background="@color/colorPrimary"
             android:text="Accept"
-            android:layout_above="@id/reject_button"
             android:textColor="@color/white" />
+
+        <ProgressBar
+            android:id="@+id/cert_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_centerInParent="true"
+            android:layout_above="@id/reject_button"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/reject_button"
@@ -52,7 +61,8 @@
             android:layout_marginTop="20dp"
             android:background="@color/grey"
             android:text="Reject"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:visibility="visible" />
     </RelativeLayout>
 
     <ProgressBar

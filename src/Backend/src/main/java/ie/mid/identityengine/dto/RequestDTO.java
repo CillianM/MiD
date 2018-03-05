@@ -8,6 +8,7 @@ public class RequestDTO {
     private String recipientName;
     private String recipientId;
     private String status;
+    private String certificateId;
     private String indentityTypeId;
     private String identityTypeFields;
     private String identityTypeValues;
@@ -95,5 +96,13 @@ public class RequestDTO {
 
     public void setRecipientName(String recipientName) {
         this.recipientName = recipientName;
+    }
+
+    public String getCertificateId() {
+        return certificateId;
+    }
+
+    public void setCertificateId(String certificateId) {
+        this.certificateId = certificateId;
     }
 }

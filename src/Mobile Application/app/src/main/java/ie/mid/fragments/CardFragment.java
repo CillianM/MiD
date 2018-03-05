@@ -31,6 +31,7 @@ import ie.mid.backend.SubmissionService;
 import ie.mid.handler.DatabaseHandler;
 import ie.mid.interfaces.CardTaskCompleted;
 import ie.mid.model.CardType;
+import ie.mid.model.Profile;
 import ie.mid.util.InternetUtil;
 
 /**
@@ -43,6 +44,7 @@ public class CardFragment extends Fragment implements CardTaskCompleted {
     private List<CardType> localCardTypes;
     private CardType currentCardType;
     String userId;
+    Profile profile;
 
     public static CardFragment newInstance() {
         return new CardFragment();
@@ -58,6 +60,10 @@ public class CardFragment extends Fragment implements CardTaskCompleted {
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         userId = getArguments().getString("userId");
+        DatabaseHandler handler = new DatabaseHandler(getActivity().getApplicationContext());
+        handler.open();
+        profile = handler.getProfile(userId);
+        handler.close();
         return inflater.inflate(R.layout.fragment_card, container, false);
     }
 
@@ -101,6 +107,7 @@ public class CardFragment extends Fragment implements CardTaskCompleted {
                     this,
                     new IdentityTypeService(getActivity().getApplicationContext()),
                     new SubmissionService(getActivity().getApplicationContext()),
+                    profile,
                     listOfCards
             ).execute();
         }

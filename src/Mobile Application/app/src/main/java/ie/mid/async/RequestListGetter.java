@@ -12,11 +12,13 @@ import ie.mid.backend.PartyService;
 import ie.mid.backend.RequestService;
 import ie.mid.backend.UserService;
 import ie.mid.interfaces.RequestListTaskCompleted;
+import ie.mid.model.HttpCall;
 import ie.mid.model.Profile;
 import ie.mid.model.ViewableRequest;
 import ie.mid.pojo.Party;
 import ie.mid.pojo.Request;
 import ie.mid.pojo.User;
+import ie.mid.util.EncryptionUtil;
 import ie.mid.util.InternetUtil;
 
 public class RequestListGetter extends AsyncTask<Void, Void, List<Request>> {
@@ -38,12 +40,22 @@ public class RequestListGetter extends AsyncTask<Void, Void, List<Request>> {
     protected List<Request> doInBackground(Void... voids) {
         List<Request> totalList = new ArrayList<>();
         if(InternetUtil.isServerLive(context.get())) {
-            totalList.addAll(requestService.getRecipientRequests(profile.getServerId()));
-            totalList.addAll(requestService.getSenderRequests(profile.getServerId()));
-            return totalList;
+            HttpCall httpCall = new HttpCall();
+            String id = profile.getServerId();
+            String password = EncryptionUtil.encryptText(id,profile.getPrivateKey());
+            if(password != null) {
+                httpCall.setAuthHeader(id,password);
+                List<Request> recipientRequests = requestService.getRecipientRequests(profile.getServerId(),httpCall);
+                List<Request> senderRequests = requestService.getSenderRequests(profile.getServerId(),httpCall);
+                if(recipientRequests != null && senderRequests != null) {
+                    totalList.addAll(recipientRequests);
+                    totalList.addAll(senderRequests);
+                    return totalList;
+                }
+                return null;
+            }
         }
-        else
-            return null;
+        return null;
     }
 
     @Override

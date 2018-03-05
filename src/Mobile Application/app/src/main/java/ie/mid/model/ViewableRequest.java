@@ -21,6 +21,7 @@ public class ViewableRequest extends Request {
         this.setStatus(request.getStatus());
         this.setRecipientId(request.getRecipientId());
         this.setCreatedAt(request.getCreatedAt());
+        this.setCertificateId(request.getCertificateId());
         this.senderReceiverName = senderReceiverName;
     }
 

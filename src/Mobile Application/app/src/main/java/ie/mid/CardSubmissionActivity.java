@@ -272,7 +272,7 @@ public class CardSubmissionActivity extends AppCompatActivity implements SubmitT
         submission.setPartyId(cardType.getPartyId());
         showLoading();
         if(InternetUtil.isNetworkAvailable(getApplicationContext())) {
-            new SubmissionCreator(this, new SubmissionService(getApplicationContext())).execute(submission);
+            new SubmissionCreator(getApplicationContext(), this, new SubmissionService(getApplicationContext()),profile).execute(submission);
         }
         else{
             hideLoading();

@@ -128,7 +128,7 @@ public class RequestCreateActivity extends AppCompatActivity implements Identity
         request.setRecipientId(recipientId);
         showLoading();
         if(InternetUtil.isNetworkAvailable(getApplicationContext())){
-            new RequestCreator(getApplicationContext(),this).execute(request);
+            new RequestCreator(getApplicationContext(),this,profile).execute(request);
         } else{
             networkError();
         }
@@ -163,7 +163,9 @@ public class RequestCreateActivity extends AppCompatActivity implements Identity
             qrCodeView.setImageBitmap(qrCode);
             findViewById(R.id.qr_prompt).setVisibility(View.GONE);
         }
-        catch (WriterException e){}
+        catch (WriterException e){
+            Toast.makeText(getApplicationContext(),"Error writing QR to image",Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Get the results:

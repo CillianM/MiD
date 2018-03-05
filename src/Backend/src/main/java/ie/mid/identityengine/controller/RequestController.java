@@ -82,6 +82,7 @@ public class RequestController {
         requestDTO.setIdentityTypeValues(request.getUserResponse());
         requestDTO.setIndentityTypeId(request.getIndentityTypeId());
         requestDTO.setCreatedAt(request.getCreatedAt().toString());
+        requestDTO.setCertificateId(request.getCertificateId());
         return requestDTO;
     }
 
@@ -138,6 +139,7 @@ public class RequestController {
         if (isInvalidRequest(informationRequestDTO)) throw new BadRequestException();
         request.setIndentityTypeId(informationRequestDTO.getIndentityTypeId());
         request.setIdentityTypeFields(informationRequestDTO.getIdentityTypeFields());
+
         String message;
         if (informationRequestDTO.getStatus().equals(RequestStatus.REJECTED.toString())) {
             request.setStatus(RequestStatus.REJECTED.toString());
@@ -148,6 +150,7 @@ public class RequestController {
         } else if (informationRequestDTO.getStatus().equals(RequestStatus.ACCEPTED.toString())) {
             request.setUserResponse(informationRequestDTO.getIdentityTypeValues());
             request.setStatus(RequestStatus.ACCEPTED.toString());
+            request.setCertificateId(informationRequestDTO.getCertificateId());
             message = " has accepted your request";
         } else {
             throw new BadRequestException();

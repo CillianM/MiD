@@ -7,6 +7,7 @@ public class InformationRequestDTO {
     private String indentityTypeId;
     private String identityTypeFields;
     private String identityTypeValues;
+    private String certificateId;
     private String status;
 
     public InformationRequestDTO() {
@@ -59,5 +60,13 @@ public class InformationRequestDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getCertificateId() {
+        return certificateId;
+    }
+
+    public void setCertificateId(String certificateId) {
+        this.certificateId = certificateId;
     }
 }

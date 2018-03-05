@@ -9,4 +9,6 @@ public interface PartyRepository extends JpaRepository<Party, Long> {
 
     Party findById(String id);
 
+    Party findByNetworkId(String id);
+
 }

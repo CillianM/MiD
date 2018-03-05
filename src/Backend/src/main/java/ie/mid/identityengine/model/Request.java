@@ -25,6 +25,8 @@ public class Request {
     private String identityTypeFields;
     @Column(name = "user_response")
     private String userResponse;
+    @Column(name = "certificate_id")
+    private String certificateId;
     @Column(name = "status", nullable = false)
     private String status;
     @CreationTimestamp
@@ -108,5 +110,13 @@ public class Request {
 
     public void setUserResponse(String userResponse) {
         this.userResponse = userResponse;
+    }
+
+    public String getCertificateId() {
+        return certificateId;
+    }
+
+    public void setCertificateId(String certificateId) {
+        this.certificateId = certificateId;
     }
 }

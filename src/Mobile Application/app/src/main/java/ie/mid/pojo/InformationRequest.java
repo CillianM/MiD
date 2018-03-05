@@ -12,6 +12,7 @@ public class InformationRequest {
     private String indentityTypeId;
     private String identityTypeFields;
     private String identityTypeValues;
+    private String certificateId;
     private String status;
 
     public InformationRequest() {
@@ -73,5 +74,13 @@ public class InformationRequest {
             return null;
         }
 
+    }
+
+    public String getCertificateId() {
+        return certificateId;
+    }
+
+    public void setCertificateId(String certificateId) {
+        this.certificateId = certificateId;
     }
 }

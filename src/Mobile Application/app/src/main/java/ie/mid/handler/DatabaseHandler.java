@@ -281,7 +281,7 @@ public class DatabaseHandler {
     }
 
     public Profile getProfile(String id) {
-        String selectQuery = "SELECT ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,SERVER_ID,PRIVATE_KEY,PUBLIC_KEY FROM " + PROFILE_TABLE_NAME + " WHERE " + ID + "='" + id + "'";
+        String selectQuery = "SELECT ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,SERVER_ID,PUBLIC_KEY,PRIVATE_KEY FROM " + PROFILE_TABLE_NAME + " WHERE " + ID + "='" + id + "'";
         Cursor cursor = db.rawQuery(selectQuery, null);
         Profile profile = new Profile();
         if (cursor.getCount() != 0) {

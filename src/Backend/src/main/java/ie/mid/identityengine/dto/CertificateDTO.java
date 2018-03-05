@@ -3,7 +3,9 @@ package ie.mid.identityengine.dto;
 public class CertificateDTO {
 
     private String id;
+    private String ownerName;
     private String ownedBy;
+    private String creatorName;
     private String createdBy;
     private String createdAt;
     private String status;
@@ -50,5 +52,21 @@ public class CertificateDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 }

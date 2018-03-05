@@ -7,6 +7,7 @@ public class SubmissionDTO {
     private String userId;
     private String partyName;
     private String partyId;
+    private String certId;
     private String data;
     private String status;
     private String date;
@@ -77,5 +78,13 @@ public class SubmissionDTO {
 
     public void setPartyName(String partyName) {
         this.partyName = partyName;
+    }
+
+    public String getCertId() {
+        return certId;
+    }
+
+    public void setCertId(String certId) {
+        this.certId = certId;
     }
 }

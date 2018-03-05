@@ -116,6 +116,10 @@ public class HyperledgerService {
         Certificate certificate;
         try {
             certificate =  mapper.readValue(json, Certificate.class);
+            String owner = certificate.getOwner();
+            certificate.setOwner(owner.substring(owner.lastIndexOf("#") + 1));
+            String trustee = certificate.getTrustee();
+            certificate.setTrustee(trustee.substring(trustee.lastIndexOf("#") + 1));
             return certificate;
         } catch (IOException e) {
         }
@@ -127,6 +131,8 @@ public class HyperledgerService {
         Individual individual;
         try {
             individual =  mapper.readValue(json, Individual.class);
+            String id = individual.getIndividualId();
+            individual.setIndividualId(id.substring(id.lastIndexOf("#") + 1 ));
             return individual;
         } catch (IOException e) {
         }
@@ -138,6 +144,8 @@ public class HyperledgerService {
         IdentifyingParty identifyingParty;
         try {
             identifyingParty =  mapper.readValue(json, IdentifyingParty.class);
+            String id = identifyingParty.getPartyId();
+            identifyingParty.setPartyId(id.substring(id.lastIndexOf("#") + 1 ));
             return identifyingParty;
         } catch (IOException e) {
         }

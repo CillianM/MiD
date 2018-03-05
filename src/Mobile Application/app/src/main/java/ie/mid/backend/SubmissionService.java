@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 
+import ie.mid.model.HttpCall;
 import ie.mid.pojo.Submission;
 
 /**
@@ -25,9 +26,9 @@ public class SubmissionService {
         this.backendService = new BackendService(context, "/submission");
     }
 
-    public Submission submitIdentity(Submission submission) {
+    public Submission submitIdentity(HttpCall httpCall) {
         backendService.setEndpointExtention("/submission");
-        String returnedSubmission = backendService.sendPost(submission.toJsonString());
+        String returnedSubmission = backendService.sendPost(httpCall);
         if (returnedSubmission != null) {
             try {
                 return mapper.readValue(returnedSubmission, Submission.class);
@@ -38,10 +39,10 @@ public class SubmissionService {
         return null;
     }
 
-    public List<Submission> getSubmissions(String userID) {
+    public List<Submission> getSubmissions(String userID,HttpCall httpCall) {
         backendService.setEndpointExtention("/submission/user/" + userID);
 
-        String returnedSubmissions = backendService.sendGet();
+        String returnedSubmissions = backendService.sendGet(httpCall);
         if (returnedSubmissions != null) {
             try {
                 return mapper.readValue(
@@ -55,10 +56,10 @@ public class SubmissionService {
         return null;
     }
 
-    public Submission getSubmission(String submissionId) {
+    public Submission getSubmission(String submissionId,HttpCall httpCall) {
         backendService.setEndpointExtention("/submission/" + submissionId);
 
-        String returnedSubmissions = backendService.sendGet();
+        String returnedSubmissions = backendService.sendGet(httpCall);
         if (returnedSubmissions != null) {
             try {
                 return mapper.readValue(returnedSubmissions, Submission.class);

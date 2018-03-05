@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,23 +20,29 @@ import java.util.List;
 
 import ie.mid.adapter.CardFieldListAdapter;
 import ie.mid.adapter.IdentityRequestAdapter;
+import ie.mid.async.CertificateGetter;
 import ie.mid.async.RequestGetter;
 import ie.mid.async.RequestUpdater;
+import ie.mid.async.SubmissionGetter;
 import ie.mid.enums.CardStatus;
 import ie.mid.handler.DatabaseHandler;
+import ie.mid.interfaces.CertificateTaskCompleted;
 import ie.mid.interfaces.RequestCreateTaskCompleted;
 import ie.mid.interfaces.RequestTaskCompleted;
+import ie.mid.interfaces.SubmissionTaskCompleted;
 import ie.mid.model.CardField;
 import ie.mid.model.CardType;
 import ie.mid.model.Field;
 import ie.mid.model.Profile;
 import ie.mid.model.ViewableRequest;
+import ie.mid.pojo.Certificate;
 import ie.mid.pojo.IdentityType;
 import ie.mid.pojo.InformationRequest;
 import ie.mid.pojo.Request;
+import ie.mid.pojo.Submission;
 import ie.mid.util.InternetUtil;
 
-public class RequestViewActivity extends AppCompatActivity implements RequestTaskCompleted, RequestCreateTaskCompleted {
+public class RequestViewActivity extends AppCompatActivity implements RequestTaskCompleted, RequestCreateTaskCompleted,SubmissionTaskCompleted,CertificateTaskCompleted {
 
     Profile profile;
     String requestId;
@@ -46,6 +55,9 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
     RelativeLayout requestLayout;
     List<Field> selectedFields;
     String userId;
+    InformationRequest informationRequest;
+    private String submissionId;
+    private Certificate retrievedCertificate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,12 +106,12 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
     }
 
     private void submitRequest(InformationRequest request) {
+        informationRequest = request;
         showLoading();
-        if (InternetUtil.isNetworkAvailable(getApplicationContext())) {
-            new RequestUpdater(getApplicationContext(), this, viewableRequest.getId()).execute(request);
-        } else {
+        if(InternetUtil.isNetworkAvailable(getApplicationContext()))
+            new SubmissionGetter(getApplicationContext(),this,profile,submissionId).execute();
+        else
             networkError();
-        }
 
     }
 
@@ -167,6 +179,7 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
         DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
         handler.open();
         CardType cardType = handler.getUserCardByIdentityType(userId, viewableRequest.getIndentityTypeId());
+        submissionId = cardType.getSubmissionId();
         handler.close();
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < selectedFields.size(); i++) {
@@ -198,6 +211,17 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
     private void hideLoading() {
         requestLayout.setVisibility(View.VISIBLE);
         findViewById(R.id.request_progress).setVisibility(View.GONE);
+
+    }
+
+    private void showCertLoading() {
+        acceptButton.setVisibility(View.GONE);
+        findViewById(R.id.cert_progress).setVisibility(View.VISIBLE);
+    }
+
+    private void hideCertLoading() {
+        acceptButton.setVisibility(View.VISIBLE);
+        findViewById(R.id.cert_progress).setVisibility(View.GONE);
 
     }
 
@@ -318,6 +342,7 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
                 cardFields.add(cardField);
             }
             requestedInfo.setAdapter(new CardFieldListAdapter(getApplicationContext(), cardFields));
+            getCertificate(viewableRequest.getCertificateId());
         } else {
             selectedFields = new ArrayList<>();
             for (Field field : identityType.getFields()) {
@@ -377,5 +402,78 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
             findViewById(R.id.request_progress).setVisibility(View.GONE);
             Toast.makeText(getApplicationContext(), "Error submitting request", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onTaskComplete(Submission submission) {
+        if(submission != null) {
+            informationRequest.setCertificateId(submission.getCertId());
+            if (InternetUtil.isNetworkAvailable(getApplicationContext())) {
+                new RequestUpdater(getApplicationContext(), this, profile,viewableRequest.getId()).execute(informationRequest);
+            } else {
+                networkError();
+            }
+        } else{
+            findViewById(R.id.request_progress).setVisibility(View.GONE);
+            Toast.makeText(getApplicationContext(), "Error submitting request", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void getCertificate(String id){
+        showCertLoading();
+        if (InternetUtil.isNetworkAvailable(getApplicationContext())) {
+            new CertificateGetter(getApplicationContext(), this, profile,id).execute();
+        } else {
+            networkError();
+        }
+    }
+
+    @Override
+    public void onTaskComplete(final Certificate certificate) {
+        hideCertLoading();
+        if(certificate != null) {
+            retrievedCertificate = certificate;
+            acceptButton.setVisibility(View.VISIBLE);
+            acceptButton.setText("View Certificate");
+            acceptButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    openCertificate(retrievedCertificate);
+                }
+            });
+        } else {
+            Toast.makeText(getApplicationContext(),"Error retrieving certificate",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openCertificate(final Certificate certificate) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogLayout = inflater.inflate(R.layout.dialog_certificate, null);
+        dialog.setView(dialogLayout);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface d) {
+                TextView dateText = dialogLayout.findViewById(R.id.date_text);
+                TextView ownerText = dialogLayout.findViewById(R.id.owner_text);
+                TextView trusteeText = dialogLayout.findViewById(R.id.trustee_text);
+                String dateString = "Date Certified: " + certificate.getCreatedAt();
+                String ownerString = "Certificate Owner: " + certificate.getOwnerName();
+                String trusteeString = "Certified By: " + certificate.getCreatorName();
+                dateText.setText(dateString);
+                ownerText.setText(ownerString);
+                trusteeText.setText(trusteeString);
+            }
+        });
+
+        dialog.show();
     }
 }

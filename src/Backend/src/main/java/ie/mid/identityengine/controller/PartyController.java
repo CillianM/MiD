@@ -5,12 +5,15 @@ import ie.mid.identityengine.dto.PartyDTO;
 import ie.mid.identityengine.enums.EntityStatus;
 import ie.mid.identityengine.exception.BadRequestException;
 import ie.mid.identityengine.exception.HyperledgerErrorException;
+import ie.mid.identityengine.exception.ResourceForbiddenException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.IdentifyingParty;
 import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.repository.PartyRepository;
 import ie.mid.identityengine.service.HyperledgerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,6 +86,7 @@ public class PartyController {
         return partyToCreate;
     }
 
+    @PreAuthorize("#partyToUpdate.id == authentication.name")
     @PutMapping(value = "/{id}")
     @ResponseBody
     public PartyDTO updateParty(@PathVariable String id, @RequestBody PartyDTO partyToUpdate) {
@@ -96,9 +100,11 @@ public class PartyController {
 
     @DeleteMapping(value = "/{id}")
     @ResponseBody
-    public PartyDTO deleteParty(@PathVariable String id) {
+    public PartyDTO deleteParty(@PathVariable String id, Authentication authentication) {
         Party party = partyRepository.findById(id);
         if (party == null) throw new ResourceNotFoundException();
+        if (!party.getId().equals(authentication.getName()))
+            throw new ResourceForbiddenException(authentication.getName() + " is forbidden from resource " + id);
         party.setStatus(EntityStatus.DELETED.toString());
         partyRepository.save(party);
         PartyDTO partyDTO = new PartyDTO();

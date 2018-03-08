@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ public class IdentityTypeControllerTest {
     private static final String FIELDS = "1:" + FieldType.ADDRESS + ",2:" + FieldType.ADDRESS;
     private IdentityTypeDTO identityTypeDTO = new IdentityTypeDTO();
     private List<IdentityTypeDTO> identityTypeDTOList = new ArrayList<>();
+    private Authentication authentication;
 
 
     @Before
@@ -63,6 +66,8 @@ public class IdentityTypeControllerTest {
         when(identityTypeRepository.findLatest()).thenReturn(identityTypeList);
         when(identityTypeRepository.findLatestByPartyId(anyString())).thenReturn(identityTypeList);
         when(identityTypeRepository.save(any(IdentityType.class))).thenReturn(identityType);
+
+        authentication = new UsernamePasswordAuthenticationToken(ID, ID);
     }
 
     @Test
@@ -109,7 +114,7 @@ public class IdentityTypeControllerTest {
 
     @Test
     public void deleteIdentityType() throws Exception {
-        IdentityTypeDTO identityTypeDTO = identityTypeController.deleteIdentityType(ID);
+        IdentityTypeDTO identityTypeDTO = identityTypeController.deleteIdentityType(ID, authentication);
         assertNotNull(identityTypeDTO);
     }
 }

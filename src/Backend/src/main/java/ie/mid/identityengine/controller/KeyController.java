@@ -4,11 +4,15 @@ import ie.mid.identityengine.dto.KeyDTO;
 import ie.mid.identityengine.enums.EntityStatus;
 import ie.mid.identityengine.enums.KeyStatus;
 import ie.mid.identityengine.exception.BadRequestException;
+import ie.mid.identityengine.exception.ResourceForbiddenException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.Key;
 import ie.mid.identityengine.repository.KeyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +32,7 @@ public class KeyController {
 
     private static final String SERVER = "SERVER";
 
+    @PostAuthorize("returnObject.userId == authentication.name")
     @GetMapping(value = "/{ownerId}")
     @ResponseBody
     public KeyDTO getKey(@PathVariable String ownerId) {
@@ -39,6 +44,7 @@ public class KeyController {
         return new KeyDTO(key.getId(), key.getUserId(), key.getPublicKey(), key.getStatus());
     }
 
+    @PreAuthorize("#keyToCreate.userId == authentication.name")
     @PostMapping()
     @ResponseBody
     public KeyDTO createKey(@RequestBody KeyDTO keyToCreate) {
@@ -51,6 +57,7 @@ public class KeyController {
         return new KeyDTO(key.getId(), key.getUserId(), key.getPublicKey(), key.getStatus());
     }
 
+    @PreAuthorize("#keyDTO.userId == authentication.name")
     @PutMapping(value = "/{id}")
     @ResponseBody
     public KeyDTO updateKey(@PathVariable String id, @RequestBody KeyDTO keyDTO) {
@@ -66,9 +73,11 @@ public class KeyController {
 
     @DeleteMapping(value = "/{id}")
     @ResponseBody
-    public KeyDTO deleteKey(@PathVariable String id) {
+    public KeyDTO deleteKey(@PathVariable String id, Authentication authentication) {
         Key key = keyRepository.findById(id);
         if (key == null) throw new ResourceNotFoundException();
+        if (!key.getUserId().equals(authentication.getName()))
+            throw new ResourceForbiddenException(authentication.getName() + " cannot access resource resource " + id);
         key.setStatus(KeyStatus.DELETED.toString());
         return new KeyDTO(key.getId(), key.getUserId(), key.getPublicKey(), key.getStatus());
     }

@@ -6,6 +6,7 @@ import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.exception.BadRequestException;
 import ie.mid.identityengine.exception.HyperledgerErrorException;
+import ie.mid.identityengine.exception.ResourceForbiddenException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.Certificate;
 import ie.mid.identityengine.model.Party;
@@ -19,6 +20,9 @@ import ie.mid.identityengine.service.PushNotificationService;
 import ie.mid.identityengine.service.StorageService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,20 +58,31 @@ public class SubmissionController {
 
     @GetMapping(value = "/party/{partyId}")
     @ResponseBody
-    public List<SubmissionDTO> getPartySubmissions(@PathVariable String partyId) {
+    public List<SubmissionDTO> getPartySubmissions(@PathVariable String partyId, Authentication authentication) {
         List<Submission> submissions = submissionRepository.findByPartyId(partyId);
         if (submissions == null) throw new ResourceNotFoundException();
+        for (Submission submission : submissions) {
+            if (!submission.getPartyId().equals(authentication.getName()))
+                throw new ResourceForbiddenException(authentication.getName() + " is forbidden from requests");
+
+        }
         return submissionListToDTOList(submissions);
     }
 
     @GetMapping(value = "/user/{userId}")
     @ResponseBody
-    public List<SubmissionDTO> getUserSubmissions(@PathVariable String userId) {
+    public List<SubmissionDTO> getUserSubmissions(@PathVariable String userId, Authentication authentication) {
         List<Submission> submissions = submissionRepository.findByUserId(userId);
         if (submissions == null) throw new ResourceNotFoundException();
+        for (Submission submission : submissions) {
+            if (!submission.getUserId().equals(authentication.getName()))
+                throw new ResourceForbiddenException(authentication.getName() + " is forbidden from requests");
+
+        }
         return submissionListToDTOList(submissions);
     }
 
+    @PostAuthorize("returnObject.userId == authentication.name || returnObject.partyId == authentication.name")
     @GetMapping(value = "/{id}")
     @ResponseBody
     public SubmissionDTO getSubmission(@PathVariable String id) {
@@ -86,6 +101,7 @@ public class SubmissionController {
         return dto;
     }
 
+    @PreAuthorize("#submissionToCreate.userId == authentication.name")
     @PostMapping
     @ResponseBody
     public SubmissionDTO createSubmission(@RequestBody SubmissionDTO submissionToCreate) {
@@ -104,6 +120,7 @@ public class SubmissionController {
         return submissionToCreate;
     }
 
+    @PreAuthorize("#submissionToUpdate.partyId == authentication.name")
     @PutMapping(value = "/{id}")
     @ResponseBody
     public SubmissionDTO updateSubmission(@PathVariable String id, @RequestBody SubmissionDTO submissionToUpdate) {
@@ -118,15 +135,13 @@ public class SubmissionController {
             submission.setStatus(submissionToUpdate.getStatus());
             submissionRepository.save(submission);
             message = "Your submission has been accepted";
-        }
-        else{
+        } else{
             message = "Your submission has been rejected";
         }
 
         //Contact the user
         User user = userRepository.findById(submissionToUpdate.getUserId());
         if (user == null) throw new ResourceNotFoundException("User does not exist");
-
 
 
         JsonObject messageObject = pushNotificationService.createMessageObject(

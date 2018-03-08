@@ -4,11 +4,14 @@ import ie.mid.identityengine.dto.IdentityTypeDTO;
 import ie.mid.identityengine.enums.FieldType;
 import ie.mid.identityengine.enums.IdentityTypeStatus;
 import ie.mid.identityengine.exception.BadRequestException;
+import ie.mid.identityengine.exception.ResourceForbiddenException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.Field;
 import ie.mid.identityengine.model.IdentityType;
 import ie.mid.identityengine.repository.IdentityTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,6 +81,7 @@ public class IdentityTypeController {
         return dto;
     }
 
+    @PreAuthorize("#identityTypeDTO.partyId == authentication.name")
     @PutMapping(value = "/{id}")
     @ResponseBody
     public IdentityTypeDTO updateIdentityType(@PathVariable String id, @RequestBody IdentityTypeDTO identityTypeDTO) {
@@ -91,8 +95,7 @@ public class IdentityTypeController {
             identityType.setIconImg(identityTypeDTO.getIconImg());
             identityType.setCoverImg(identityTypeDTO.getCoverImg());
             identityTypeRepository.save(identityType);
-        }
-        else{
+        } else{
             IdentityType updatedIdentityType = new IdentityType();
             updatedIdentityType.setPartyId(identityTypeDTO.getPartyId());
             updatedIdentityType.setName(identityTypeDTO.getName());
@@ -117,9 +120,11 @@ public class IdentityTypeController {
 
     @DeleteMapping(value = "/{id}")
     @ResponseBody
-    public IdentityTypeDTO deleteIdentityType(@PathVariable String id) {
+    public IdentityTypeDTO deleteIdentityType(@PathVariable String id, Authentication authentication) {
         IdentityType identityType = identityTypeRepository.findById(id);
         if (identityType == null) throw new ResourceNotFoundException();
+        if (!identityType.getPartyId().equals(authentication.getName()))
+            throw new ResourceForbiddenException(authentication.getName() + " is forbidden from resource " + id);
         identityType.setStatus(IdentityTypeStatus.DELETED.toString());
         identityTypeRepository.save(identityType);
         IdentityTypeDTO dto = new IdentityTypeDTO();

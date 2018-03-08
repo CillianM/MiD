@@ -7,6 +7,7 @@ import ie.mid.identityengine.enums.FieldType;
 import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.exception.BadRequestException;
+import ie.mid.identityengine.exception.ResourceForbiddenException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.model.Request;
@@ -17,6 +18,9 @@ import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.PushNotificationService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,20 +56,31 @@ public class RequestController {
 
     @GetMapping(value = "/recipient/{recipientId}")
     @ResponseBody
-    public List<RequestDTO> getRecipientRequests(@PathVariable String recipientId) {
+    public List<RequestDTO> getRecipientRequests(@PathVariable String recipientId, Authentication authentication) {
         List<Request> requests = requestRepository.findByRecipientId(recipientId);
         if (requests == null) throw new ResourceNotFoundException();
+        for (Request request : requests) {
+            if (!request.getRecipientId().equals(authentication.getName()))
+                throw new ResourceForbiddenException(authentication.getName() + " is forbidden from requests");
+
+        }
         return requestListToDTOList(requests);
     }
 
     @GetMapping(value = "/sender/{senderId}")
     @ResponseBody
-    public List<RequestDTO> getSenderRequests(@PathVariable String senderId) {
+    public List<RequestDTO> getSenderRequests(@PathVariable String senderId, Authentication authentication) {
         List<Request> requests = requestRepository.findBySenderId(senderId);
         if (requests == null) throw new ResourceNotFoundException();
+        for (Request request : requests) {
+            if (!request.getSenderId().equals(authentication.getName()))
+                throw new ResourceForbiddenException(authentication.getName() + " is forbidden from requests");
+
+        }
         return requestListToDTOList(requests);
     }
 
+    @PostAuthorize("returnObject.recipientName == authentication.name || returnObject.senderName == authentication.name")
     @GetMapping(value = "{id}")
     @ResponseBody
     public RequestDTO getRequest(@PathVariable String id) {
@@ -86,6 +101,7 @@ public class RequestController {
         return requestDTO;
     }
 
+    @PreAuthorize("#informationRequestDTO.senderId == authentication.name")
     @PostMapping
     @ResponseBody
     public RequestDTO createRequest(@RequestBody InformationRequestDTO informationRequestDTO) {
@@ -103,8 +119,7 @@ public class RequestController {
         if(sender == null) {
             message = partySender.getName() + message;
             request.setSenderId(partySender.getId());
-        }
-        else {
+        } else {
             message = sender.getNickname() + message;
             request.setSenderId(sender.getId());
         }
@@ -131,6 +146,7 @@ public class RequestController {
         return getRequest(request.getId());
     }
 
+    @PreAuthorize("#informationRequestDTO.recipientId == authentication.name")
     @PutMapping(value = "/{id}")
     @ResponseBody
     public RequestDTO updateRequest(@PathVariable String id, @RequestBody InformationRequestDTO informationRequestDTO) {
@@ -184,9 +200,11 @@ public class RequestController {
 
     @DeleteMapping(value = "/{id}")
     @ResponseBody
-    public RequestDTO rescindRequest(@PathVariable String id) {
+    public RequestDTO rescindRequest(@PathVariable String id, Authentication authentication) {
         Request request = requestRepository.findById(id);
-        if (request == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
+        if (request == null) throw new ResourceNotFoundException();
+        if (!request.getRecipientId().equals(authentication.getName()))
+            throw new ResourceForbiddenException(authentication.getName() + " is forbidden from resource " + id);
         request.setUserResponse(RequestStatus.RESCINDED.toString());
         request.setStatus(RequestStatus.RESCINDED.toString());
         requestRepository.save(request);

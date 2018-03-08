@@ -20,9 +20,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -49,34 +52,38 @@ public class RequestControllerTest {
     private PushNotificationService pushNotificationService;
 
     private static final String ID = "id";
-    private static final String R_ID = "r_id";
-    private static final String S_ID = "s_id";
     private static final String NAME = "name";
     private static final String FCM = "fcm";
     private static final String FIELDS = "KEY,EXPIRY";
     private InformationRequestDTO requestDTO = new InformationRequestDTO();
+    private Authentication authentication;
 
 
     @Before
     public void setUp() throws Exception {
 
         User user = new User();
-        user.setId(S_ID);
+        user.setId(ID);
         user.setNickname(NAME);
         user.setFcmToken(FCM);
         Party party = new Party();
-        party.setId(R_ID);
+        party.setId(ID);
         party.setName(NAME);
         Request request = new Request();
         request.setId(ID);
+        request.setRecipientId(ID);
+        request.setSenderId(ID);
         request.setIdentityTypeFields(FIELDS);
+        request.setCreatedAt(new Date());
+        request.setUpdatedAt(new Date());
         List<Request> requests = new ArrayList<>();
         requests.add(request);
-        requestDTO.setRecipientId(R_ID);
-        requestDTO.setSenderId(S_ID);
+        requestDTO.setRecipientId(ID);
+        requestDTO.setSenderId(ID);
         requestDTO.setIndentityTypeId(ID);
         requestDTO.setIdentityTypeFields(FIELDS);
         requestDTO.setIdentityTypeValues(FIELDS);
+        requestDTO.setStatus(RequestStatus.ACCEPTED.toString());
         when(requestRepository.save(any(Request.class))).thenReturn(request);
         when(requestRepository.findById(anyString())).thenReturn(request);
         when(requestRepository.findByRecipientId(anyString())).thenReturn(requests);
@@ -88,7 +95,7 @@ public class RequestControllerTest {
         when(pushNotificationService.sendNotifictaionAndData(anyString(), any(JsonObject.class), any(JsonObject.class))).thenReturn(ID);
         when(pushNotificationService.createMessageObject(anyString(), anyString())).thenReturn(new JsonObject());
         when(pushNotificationService.createDataObject(any(NotificationType.class), any(), any())).thenReturn(new JsonObject());
-
+        authentication = new UsernamePasswordAuthenticationToken(ID, ID);
     }
 
     @Test
@@ -99,13 +106,13 @@ public class RequestControllerTest {
 
     @Test
     public void getSenderRequests() throws Exception {
-        List<RequestDTO> requestDTOs = requestController.getSenderRequests(ID);
+        List<RequestDTO> requestDTOs = requestController.getSenderRequests(ID, authentication);
         assertEquals(ID, requestDTOs.get(0).getId());
     }
 
     @Test
     public void getRecipientRequests() throws Exception {
-        List<RequestDTO> requestDTOs = requestController.getRecipientRequests(ID);
+        List<RequestDTO> requestDTOs = requestController.getRecipientRequests(ID, authentication);
         assertEquals(ID, requestDTOs.get(0).getId());
     }
 
@@ -142,7 +149,6 @@ public class RequestControllerTest {
 
     @Test
     public void createRequestFromParty() throws Exception {
-        when(userRepository.findById(S_ID)).thenReturn(null);
         RequestDTO requestDTO = requestController.createRequest(this.requestDTO);
         assertEquals(ID, requestDTO.getId());
     }
@@ -178,14 +184,16 @@ public class RequestControllerTest {
 
     @Test(expected = BadRequestException.class)
     public void updateBadRequest() {
+        this.requestDTO.setRecipientId(null);
         this.requestDTO.setIdentityTypeValues(RequestStatus.DROPPED.toString());
         requestController.updateRequest(ID, this.requestDTO);
-
+        this.requestDTO.setRecipientId(ID);
     }
 
     @Test
     public void rescindRequest() throws Exception {
-        RequestDTO requestDTO = requestController.rescindRequest(ID);
+        RequestDTO requestDTO = requestController.rescindRequest(ID, authentication);
+        requestDTO.setStatus(RequestStatus.RESCINDED.toString());
         assertEquals(ID, requestDTO.getId());
     }
 

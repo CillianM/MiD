@@ -3,10 +3,14 @@ package ie.mid.identityengine.controller;
 import com.google.gson.JsonObject;
 import ie.mid.identityengine.dto.SubmissionDTO;
 import ie.mid.identityengine.enums.NotificationType;
+import ie.mid.identityengine.model.Certificate;
+import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.model.Submission;
 import ie.mid.identityengine.model.User;
+import ie.mid.identityengine.repository.PartyRepository;
 import ie.mid.identityengine.repository.SubmissionRepository;
 import ie.mid.identityengine.repository.UserRepository;
+import ie.mid.identityengine.service.HyperledgerService;
 import ie.mid.identityengine.service.PushNotificationService;
 import ie.mid.identityengine.service.StorageService;
 import org.junit.Before;
@@ -15,6 +19,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +49,12 @@ public class SubmissionControllerTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private PartyRepository partyRepository;
+
+    @Mock
+    private HyperledgerService hyperledgerService;
+
     private static final String ID = "id";
     private static final String DATA = "data";
     private static final String ACCEPTED = "ACCEPTED";
@@ -50,12 +62,15 @@ public class SubmissionControllerTest {
     private static final String PATH = "path";
 
     private SubmissionDTO submissionDTO = new SubmissionDTO();
+    private Authentication authentication;
 
 
     @Before
     public void setUp() throws Exception {
         Submission submission = new Submission();
         submission.setId(ID);
+        submission.setUserId(ID);
+        submission.setPartyId(ID);
         submission.setData(PATH);
         submission.setCreatedAt(new Date());
         submission.setUpdatedAt(new Date());
@@ -68,7 +83,15 @@ public class SubmissionControllerTest {
         submissionList.add(submission);
         User user = new User();
         user.setId(ID);
+        user.setNickname(ID);
         user.setFcmToken(FCM);
+        Party party = new Party();
+        party.setId(ID);
+        party.setName(ID);
+        Certificate certificate = new Certificate();
+        certificate.setCertId(ID);
+        certificate.setOwner(ID);
+        certificate.setTrustee(ID);
         when(submissionRepository.save(any(Submission.class))).thenReturn(submission);
         when(submissionRepository.findById(anyString())).thenReturn(submission);
         when(submissionRepository.findByPartyId(anyString())).thenReturn(submissionList);
@@ -77,19 +100,23 @@ public class SubmissionControllerTest {
         when(pushNotificationService.createMessageObject(anyString(), anyString())).thenReturn(new JsonObject());
         when(pushNotificationService.createDataObject(any(NotificationType.class), any(), any())).thenReturn(new JsonObject());
         when(userRepository.findById(anyString())).thenReturn(user);
+        when(partyRepository.findById(anyString())).thenReturn(party);
         when(storageService.saveData(anyString())).thenReturn(PATH);
         when(storageService.loadData(PATH)).thenReturn(DATA);
+        when(hyperledgerService.createCertificate(anyString(), anyString())).thenReturn(certificate);
+
+        authentication = new UsernamePasswordAuthenticationToken(ID, ID);
     }
 
     @Test
     public void getPartySubmissions() throws Exception {
-        List<SubmissionDTO> submissionList = submissionController.getPartySubmissions(ID);
+        List<SubmissionDTO> submissionList = submissionController.getPartySubmissions(ID, authentication);
         assertFalse(submissionList.isEmpty());
     }
 
     @Test
     public void getUserSubmissions() throws Exception {
-        List<SubmissionDTO> submissionList = submissionController.getUserSubmissions(ID);
+        List<SubmissionDTO> submissionList = submissionController.getUserSubmissions(ID, authentication);
         assertFalse(submissionList.isEmpty());
     }
 

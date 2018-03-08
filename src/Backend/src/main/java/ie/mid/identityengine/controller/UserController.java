@@ -5,12 +5,14 @@ import ie.mid.identityengine.dto.UserDTO;
 import ie.mid.identityengine.enums.EntityStatus;
 import ie.mid.identityengine.exception.BadRequestException;
 import ie.mid.identityengine.exception.HyperledgerErrorException;
+import ie.mid.identityengine.exception.ResourceForbiddenException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.Individual;
 import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.HyperledgerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,9 +73,11 @@ public class UserController {
 
     @PutMapping(value = "/{id}/token")
     @ResponseBody
-    public UserDTO updateUserToken(@PathVariable String id, @RequestBody String token) {
+    public UserDTO updateUserToken(@PathVariable String id, @RequestBody String token, Authentication authentication) {
         User user = userRepository.findById(id);
         if (user == null) throw new ResourceNotFoundException();
+        if (!user.getId().equals(authentication.getName()))
+            throw new ResourceForbiddenException(authentication.getName() + " is forbidden from resource " + id);
         user.setFcmToken(token);
         userRepository.save(user);
         UserDTO userDTO = new UserDTO();
@@ -85,9 +89,11 @@ public class UserController {
 
     @DeleteMapping(value = "/{id}")
     @ResponseBody
-    public UserDTO deleteUser(@PathVariable String id) {
+    public UserDTO deleteUser(@PathVariable String id, Authentication authentication) {
         User user = userRepository.findById(id);
         if (user == null) throw new ResourceNotFoundException();
+        if (!user.getId().equals(authentication.getName()))
+            throw new ResourceForbiddenException(authentication.getName() + " is forbidden from resource " + id);
         user.setStatus(EntityStatus.DELETED.toString());
         userRepository.save(user);
         UserDTO userDTO = new UserDTO();

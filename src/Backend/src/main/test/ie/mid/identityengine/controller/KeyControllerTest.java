@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -28,6 +30,7 @@ public class KeyControllerTest {
     private static final String KEY = "key";
     private static final String SERVER = "SERVER";
     private KeyDTO keyDTO = new KeyDTO();
+    private Authentication authentication;
 
     @Before
     public void setUp() throws Exception {
@@ -41,6 +44,8 @@ public class KeyControllerTest {
         when(keyRepository.findById(anyString())).thenReturn(key);
         when(keyRepository.findByUserIdAndStatus(anyString(), anyString())).thenReturn(key);
         when(keyRepository.save(any(Key.class))).thenReturn(key);
+
+        authentication = new UsernamePasswordAuthenticationToken(ID, ID);
     }
 
     @Test
@@ -69,7 +74,7 @@ public class KeyControllerTest {
 
     @Test
     public void deleteKey() throws Exception {
-        KeyDTO key = keyController.deleteKey(ID);
+        KeyDTO key = keyController.deleteKey(ID, authentication);
         assertEquals(ID, key.getId());
     }
 

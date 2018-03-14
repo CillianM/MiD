@@ -32,6 +32,7 @@
 - [20th February 2018 - User testing](#20th-february-2018-user-testing)
 - [27th February 2018 - Blockchain Implementation](#27th-february-2018-blockchain-implementation)
 - [5th March 2018 - Access Control](#5th-march-2018-access-control)
+- [14th March 2018 - SSL Security](#14th-march-2018-ssl-security)
 
 
 ## Intro
@@ -303,3 +304,12 @@ With the core functionality in place I needed to ensure endpoints were only acce
 
 ### What will be done
 With the basic access control in place I need to look at encrypting the data for submissions/requests. This is to ensure that even if data is leaked the attacker cannot get access to private information. Aswell as this I will need to add a dummy backend for the admin interface. This is because key creation/encryption/decryption isn't something for a web front-end to do. I will take calls made from the front-end and send them to this new web back-end. I can then perform the steps necessary to implement encryption/decryption/key creation with the applications back-end.
+
+## 14th March 2018 - SSL Security
+
+### What has been done
+Security in the form of access control and SSL encryption on the backend endpoints have been implemented. This was done by creating a new domain [mid-secure.ie](mid-secure.ie) and implementing an SSL certificate from [sslforfree.com](sslforfree.com). This certificate allows me to have valid communication with a user without the need of a self signed certificate and the issues that come with that. I validated the ownership of that domain and was given certificate files through which I generated a keystore with `openssl pkcs12 -export -in certificate.crt -inkey private.key -out mycert.p12`. This p12 keystore file is in use with my tomcat instance I have on my server. The IP of the domain points to a personal server of mine that I can turn on and off easily and perform any maintence necessary for the platform to run.<br>
+As I couldn't decrypt files on a web UI or authenticate through token encryption I have also created the dummy admin backend that will allow me to properly secure party endpoints and allow for data to be transmitted securely for the intended party. All this backend really does is capture calls from the UI and wrap any necessary authentication. This is the private key that is required for token encryption. The dummy backend stores the private key so that it may easily wrap any parties request with the correct key.
+
+### What will be done
+The last step in terms of security will be the encryption of submission forms made to a party. As they're stored on the backend they need to be encrypted so that even if someone got a hold of a file they will not be able to view it. Now that I have the dummy admin backend in place I can decrypt requests from users. I couldn't do this before as it was just an lightweight angular UI so files remained unencrypted. Files will now be encrypted with the users private key and parties public key to provide non-repudiation and security as it is transferred. 

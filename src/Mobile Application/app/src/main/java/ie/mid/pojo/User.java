@@ -8,6 +8,7 @@ public class User {
     private String status;
     private String keyId;
     private String publicKey;
+    private String userToken;
 
     public User() {
     }
@@ -58,5 +59,13 @@ public class User {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 }

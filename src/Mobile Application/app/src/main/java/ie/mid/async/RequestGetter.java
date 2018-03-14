@@ -21,7 +21,7 @@ import ie.mid.util.EncryptionUtil;
 import ie.mid.util.InternetUtil;
 
 
-public class RequestGetter extends AsyncTask<Void, Void, ViewableRequest> {
+public class RequestGetter extends AsyncTask<Void, Void, Request> {
 
     private Profile profile;
     private RequestTaskCompleted callBack;
@@ -46,20 +46,17 @@ public class RequestGetter extends AsyncTask<Void, Void, ViewableRequest> {
     }
 
     @Override
-    protected ViewableRequest doInBackground(Void... voids) {
+    protected Request doInBackground(Void... voids) {
         if(InternetUtil.isServerLive(context.get())) {
             HttpCall httpCall = new HttpCall();
             String id = profile.getServerId();
-            String password = EncryptionUtil.encryptText(id,profile.getPrivateKey());
+            String password = EncryptionUtil.encryptText(profile.getServerToken(),profile.getPrivateKey());
             if(password != null) {
                 httpCall.setAuthHeader(id,password);
                 Request request = requestService.getRequest(requestId,httpCall);
                 if (request != null) {
                     identityType = identityTypeService.getIdentityType(request.getIndentityTypeId());
-                    if (request.getSenderId().equals(profile.getServerId()))
-                        return new ViewableRequest(request, getPartyUsername(request.getRecipientId(),httpCall));
-                    else
-                        return new ViewableRequest(request, getPartyUsername(request.getSenderId(),httpCall));
+                    return request;
                 }
             }
 
@@ -68,7 +65,7 @@ public class RequestGetter extends AsyncTask<Void, Void, ViewableRequest> {
     }
 
     @Override
-    protected void onPostExecute(ViewableRequest result) {
+    protected void onPostExecute(Request result) {
 
         callBack.onTaskComplete(identityType,result);
     }

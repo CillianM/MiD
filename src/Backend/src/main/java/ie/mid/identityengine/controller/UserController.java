@@ -1,6 +1,8 @@
 package ie.mid.identityengine.controller;
 
 import ie.mid.identityengine.dto.KeyDTO;
+import ie.mid.identityengine.dto.NewKeyDTO;
+import ie.mid.identityengine.dto.NewUserDTO;
 import ie.mid.identityengine.dto.UserDTO;
 import ie.mid.identityengine.enums.EntityStatus;
 import ie.mid.identityengine.exception.BadRequestException;
@@ -11,6 +13,7 @@ import ie.mid.identityengine.model.Individual;
 import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.HyperledgerService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -28,6 +31,8 @@ public class UserController {
 
     @Autowired
     HyperledgerService hyperledgerService;
+
+    Logger logger = Logger.getLogger(UserController.class);
 
     @GetMapping(value = "/{id}")
     @ResponseBody
@@ -48,27 +53,36 @@ public class UserController {
 
     @PostMapping()
     @ResponseBody
-    public UserDTO createUser(@RequestBody UserDTO userToCreate) {
+    public NewUserDTO createUser(@RequestBody UserDTO userToCreate) {
         if (isInvalidUser(userToCreate)) throw new BadRequestException();
         //Create Party in blockchain
         Individual individual = hyperledgerService.createIndividual();
         if(individual == null) throw new HyperledgerErrorException("Error creating party");
-
+        logger.info("Created user on hyperledger with id " + individual.getIndividualId());
         User user = new User();
         user.setNickname(userToCreate.getNickname());
         user.setFcmToken(userToCreate.getFcmToken());
         user.setNetworkId(individual.getIndividualId());
         user.setStatus(EntityStatus.ACTIVE.toString());
         user = userRepository.save(user);
-        userToCreate.setId(user.getId());
+
+        logger.info("Created user on server with id " + user.getId());
+
         //create key for user
         KeyDTO keyDTO = new KeyDTO();
         keyDTO.setPublicKey(userToCreate.getPublicKey());
         keyDTO.setUserId(user.getId());
-        keyDTO = keyController.createKey(keyDTO);
-        userToCreate.setKeyId(keyDTO.getId());
-        userToCreate.setStatus(user.getStatus());
-        return userToCreate;
+        NewKeyDTO createdKey = keyController.createKey(keyDTO);
+
+        NewUserDTO createdUser = new NewUserDTO();
+        createdUser.setId(user.getId());
+        createdUser.setPublicKey(createdKey.getPublicKey());
+        createdUser.setKeyId(createdKey.getId());
+        createdUser.setStatus(user.getStatus());
+        createdUser.setUserToken(createdKey.getToken());
+        createdUser.setNickname(user.getNickname());
+        createdUser.setFcmToken(user.getFcmToken());
+        return createdUser;
     }
 
     @PutMapping(value = "/{id}/token")

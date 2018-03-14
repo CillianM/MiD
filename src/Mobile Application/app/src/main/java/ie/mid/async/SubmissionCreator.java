@@ -37,7 +37,7 @@ public class SubmissionCreator extends AsyncTask<Submission, Void, Submission> {
             HttpCall httpCall = new HttpCall();
             httpCall.setJsonBody(submissions[0].toJsonString());
             String id = profile.getServerId();
-            String password = EncryptionUtil.encryptText(id,profile.getPrivateKey());
+            String password = EncryptionUtil.encryptText(profile.getServerToken(),profile.getPrivateKey());
             if(password != null) {
                 httpCall.setAuthHeader(id,password);
                 return submissionService.submitIdentity(httpCall);

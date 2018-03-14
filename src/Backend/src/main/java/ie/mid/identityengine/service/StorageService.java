@@ -15,7 +15,7 @@ import java.util.*;
 @Service
 public class StorageService {
 
-    private String uploadPathString = "uploads/";
+    private String uploadPathString = "/home/cillian/uploads/";
     private Path uploadPath;
 
     @Autowired

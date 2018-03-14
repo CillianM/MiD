@@ -36,7 +36,7 @@ public class CertificateGetter extends AsyncTask<Void, Void, Certificate> {
         if(InternetUtil.isServerLive(context.get())) {
             HttpCall httpCall = new HttpCall();
             String id = profile.getServerId();
-            String password = EncryptionUtil.encryptText(id,profile.getPrivateKey());
+            String password = EncryptionUtil.encryptText(profile.getServerToken(),profile.getPrivateKey());
             if(password != null) {
                 httpCall.setAuthHeader(id,password);
                 return certificateService.getCertificate(httpCall, certId);

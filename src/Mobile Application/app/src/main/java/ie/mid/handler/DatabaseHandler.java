@@ -40,6 +40,7 @@ public class DatabaseHandler {
     private static final String SALT = "salt";
     private static final String HASH = "hash";
     private static final String SERVER_ID = "server_id";
+    private static final String USER_TOKEN = "user_token";
     private static final String PRIVATE_KEY = "private_key";
     private static final String PUBLIC_KEY = "public_key";
     private static final String PROFILE_TABLE_NAME = "profiles";
@@ -50,6 +51,7 @@ public class DatabaseHandler {
             SALT + " text not null," +
             HASH + " text not null," +
             SERVER_ID + " text not null," +
+            USER_TOKEN + " text not null," +
             PRIVATE_KEY + " text not null," +
             PUBLIC_KEY + " text not null," +
             CREATION_DATE + " text not null," +
@@ -184,7 +186,7 @@ public class DatabaseHandler {
         return new Timestamp(new Date().getTime()).toString();
     }
 
-    public Profile createProfile(String name,String profileImg,String hash,String salt,String serverId, String publicKey,String privateKey){
+    public Profile createProfile(String name,String profileImg,String hash,String salt,String serverId,String userToken, String publicKey,String privateKey){
         String id = UUID.randomUUID().toString();
         String date = new Date().toString();
         ContentValues content = new ContentValues();
@@ -194,12 +196,13 @@ public class DatabaseHandler {
         content.put(SERVER_ID,serverId);
         content.put(HASH, hash);
         content.put(SALT, salt);
+        content.put(USER_TOKEN, userToken);
         content.put(PRIVATE_KEY,privateKey);
         content.put(PUBLIC_KEY,publicKey);
         content.put(CREATION_DATE, date);
         content.put(UPDATED_DATE, date);
         db.insert(PROFILE_TABLE_NAME,null,content);
-        return new Profile(id,name,profileImg,hash,salt,serverId,publicKey,privateKey);
+        return new Profile(id,name,profileImg,hash,salt,serverId,userToken,publicKey,privateKey);
     }
 
     public CreatedSubmission createSubmission(String submissionId, String cardId){
@@ -281,7 +284,7 @@ public class DatabaseHandler {
     }
 
     public Profile getProfile(String id) {
-        String selectQuery = "SELECT ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,SERVER_ID,PUBLIC_KEY,PRIVATE_KEY FROM " + PROFILE_TABLE_NAME + " WHERE " + ID + "='" + id + "'";
+        String selectQuery = "SELECT ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,SERVER_ID,USER_TOKEN,PUBLIC_KEY,PRIVATE_KEY FROM " + PROFILE_TABLE_NAME + " WHERE " + ID + "='" + id + "'";
         Cursor cursor = db.rawQuery(selectQuery, null);
         Profile profile = new Profile();
         if (cursor.getCount() != 0) {
@@ -294,7 +297,8 @@ public class DatabaseHandler {
                         cursor.getString(4),
                         cursor.getString(5),
                         cursor.getString(6),
-                        cursor.getString(7)
+                        cursor.getString(7),
+                        cursor.getString(8)
                 );
             }
             return profile;
@@ -445,7 +449,7 @@ public class DatabaseHandler {
     }
 
     public List<Profile> returnProfiles() {
-        Cursor cursor =  db.query(PROFILE_TABLE_NAME, new String[]{ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,SERVER_ID,PRIVATE_KEY,PUBLIC_KEY}, null, null, null, null, null);
+        Cursor cursor =  db.query(PROFILE_TABLE_NAME, new String[]{ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,SERVER_ID,USER_TOKEN,PRIVATE_KEY,PUBLIC_KEY}, null, null, null, null, null);
         List<Profile> profiles = new ArrayList<>();
         if(cursor.getCount() != 0){
             while(cursor.moveToNext()){
@@ -457,7 +461,8 @@ public class DatabaseHandler {
                         cursor.getString(4),
                         cursor.getString(5),
                         cursor.getString(6),
-                        cursor.getString(7)
+                        cursor.getString(7),
+                        cursor.getString(8)
                 ));
             }
         }

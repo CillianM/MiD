@@ -1,6 +1,7 @@
 package ie.mid.identityengine.controller;
 
 import ie.mid.identityengine.dto.KeyDTO;
+import ie.mid.identityengine.dto.NewKeyDTO;
 import ie.mid.identityengine.dto.PartyDTO;
 import ie.mid.identityengine.model.IdentifyingParty;
 import ie.mid.identityengine.model.Party;
@@ -56,7 +57,7 @@ public class PartyControllerTest {
         party.setName(NAME);
         List<Party> parties = new ArrayList<>();
         parties.add(party);
-        KeyDTO key = new KeyDTO();
+        NewKeyDTO key = new NewKeyDTO();
         key.setId(ID);
         key.setPublicKey(KEY);
         IdentifyingParty identifyingParty = new IdentifyingParty();

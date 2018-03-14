@@ -42,7 +42,7 @@ public class AuthProvider implements AuthenticationProvider {
         Party party = partyRepository.findById(id);
         if (user != null || party != null){
             Key key = keyRepository.findByUserIdAndStatus(id, EntityStatus.ACTIVE.toString());
-            if(key != null && id.equals(DataEncryption.decryptText(password, key.getPublicKey()))){
+            if(key != null && key.getToken().equals(DataEncryption.decryptText(password, key.getPublicKey()))){
                 if(user != null) authority.add(new Authority(AuthorityType.USER.toString()));
                 else authority.add(new Authority(AuthorityType.PARTY.toString()));
             }

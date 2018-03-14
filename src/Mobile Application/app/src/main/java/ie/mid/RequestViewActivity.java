@@ -47,7 +47,7 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
     Profile profile;
     String requestId;
     IdentityType identityType;
-    ViewableRequest viewableRequest;
+    Request viewableRequest;
     IdentityRequestAdapter identityRequestAdapter;
     boolean isRequest;
     Button acceptButton;
@@ -116,6 +116,11 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
     }
 
     private void rejectRequest() {
+        DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
+        handler.open();
+        CardType cardType = handler.getUserCardByIdentityType(userId, viewableRequest.getIndentityTypeId());
+        submissionId = cardType.getSubmissionId();
+        handler.close();
         InformationRequest informationRequest = new InformationRequest();
         informationRequest.setRecipientId(viewableRequest.getRecipientId());
         informationRequest.setSenderId(viewableRequest.getSenderId());
@@ -226,7 +231,7 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
     }
 
     @Override
-    public void onTaskComplete(IdentityType identityType, ViewableRequest viewableRequest) {
+    public void onTaskComplete(IdentityType identityType, Request viewableRequest) {
         if (viewableRequest != null && identityType != null) {
             String status = viewableRequest.getStatus();
             if (status.equals(CardStatus.ACCEPTED.toString()) || status.equals(CardStatus.PENDING.toString()) || status.equals(CardStatus.SUBMITTED.toString())) {
@@ -262,9 +267,9 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
             sendToCreate();
         } else {
             TextView identityTypeTitle = findViewById(R.id.identity_type_title);
-            String message = "Request from " + viewableRequest.getSenderReceiverName();
+            String message = "Request from " + viewableRequest.getSenderName();
             getSupportActionBar().setTitle(message);
-            String identityTypeText = viewableRequest.getSenderReceiverName() + " requests these fields from your \n" +  identityType.getName()
+            String identityTypeText = viewableRequest.getSenderName() + " requests these fields from your \n" +  identityType.getName()
                     + "\nWhat fields would you like to send back?";
             identityTypeTitle.setText(identityTypeText);
             ListView requestedInfo = findViewById(R.id.identity_type_values);
@@ -279,7 +284,7 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
                 identityRequestAdapter = new IdentityRequestAdapter(getApplicationContext(), selectedFields);
                 requestedInfo.setAdapter(identityRequestAdapter);
             } else if (status.equals(CardStatus.ACCEPTED.toString())) {
-                identityTypeText = viewableRequest.getSenderReceiverName() + " requested these fields from your \n" +  identityType.getName();
+                identityTypeText = viewableRequest.getSenderName() + " requested these fields from your \n" +  identityType.getName();
                 identityTypeTitle.setText(identityTypeText);
                 acceptButton.setVisibility(View.INVISIBLE);
                 rejectButton.setText("Delete");
@@ -310,7 +315,7 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
     private void setupSenderView() {
         String status = viewableRequest.getStatus();
         TextView identityTypeTitle = findViewById(R.id.identity_type_title);
-        String message = "Request to " + viewableRequest.getSenderReceiverName();
+        String message = "Request to " + viewableRequest.getRecipientName();
         getSupportActionBar().setTitle(message);
         String identityTypeText = "You requested these fields from their \n" +identityType.getName();
         identityTypeTitle.setText(identityTypeText);

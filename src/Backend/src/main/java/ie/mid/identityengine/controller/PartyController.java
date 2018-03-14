@@ -1,6 +1,8 @@
 package ie.mid.identityengine.controller;
 
 import ie.mid.identityengine.dto.KeyDTO;
+import ie.mid.identityengine.dto.NewKeyDTO;
+import ie.mid.identityengine.dto.NewPartyDTO;
 import ie.mid.identityengine.dto.PartyDTO;
 import ie.mid.identityengine.enums.EntityStatus;
 import ie.mid.identityengine.exception.BadRequestException;
@@ -63,7 +65,7 @@ public class PartyController {
 
     @PostMapping
     @ResponseBody
-    public PartyDTO createParty(@RequestBody PartyDTO partyToCreate) {
+    public NewPartyDTO createParty(@RequestBody PartyDTO partyToCreate) {
         if (isInvalidParty(partyToCreate)) throw new BadRequestException();
         //Create Party in blockchain
         IdentifyingParty identifyingParty = hyperledgerService.createIdentifyingParty();
@@ -81,9 +83,17 @@ public class PartyController {
         KeyDTO keyDTO = new KeyDTO();
         keyDTO.setPublicKey(partyToCreate.getPublicKey());
         keyDTO.setUserId(partyToCreate.getId());
-        keyDTO = keyController.createKey(keyDTO);
+        NewKeyDTO createdKey = keyController.createKey(keyDTO);
         partyToCreate.setKeyId(keyDTO.getId());
-        return partyToCreate;
+
+        NewPartyDTO createdParty = new NewPartyDTO();
+        createdParty.setId(party.getId());
+        createdParty.setPublicKey(createdKey.getPublicKey());
+        createdParty.setKeyId(createdKey.getId());
+        createdParty.setStatus(party.getStatus());
+        createdParty.setPartyToken(createdKey.getToken());
+        createdParty.setName(party.getName());
+        return createdParty;
     }
 
     @PreAuthorize("#partyToUpdate.id == authentication.name")

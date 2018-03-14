@@ -1,6 +1,7 @@
 package ie.mid.identityengine.controller;
 
 import ie.mid.identityengine.dto.KeyDTO;
+import ie.mid.identityengine.dto.TokenDTO;
 import ie.mid.identityengine.model.Key;
 import ie.mid.identityengine.repository.KeyRepository;
 import org.junit.Before;
@@ -30,6 +31,7 @@ public class KeyControllerTest {
     private static final String KEY = "key";
     private static final String SERVER = "SERVER";
     private KeyDTO keyDTO = new KeyDTO();
+    private TokenDTO tokenDTO = new TokenDTO();
     private Authentication authentication;
 
     @Before
@@ -41,6 +43,9 @@ public class KeyControllerTest {
         keyDTO.setId(ID);
         keyDTO.setPublicKey(KEY);
         keyDTO.setUserId(ID);
+        tokenDTO.setId(ID);
+        tokenDTO.setToken(ID);
+        tokenDTO.setUserId(ID);
         when(keyRepository.findById(anyString())).thenReturn(key);
         when(keyRepository.findByUserIdAndStatus(anyString(), anyString())).thenReturn(key);
         when(keyRepository.save(any(Key.class))).thenReturn(key);
@@ -70,6 +75,12 @@ public class KeyControllerTest {
     public void updateKey() throws Exception {
         KeyDTO key = keyController.updateKey(ID, this.keyDTO);
         assertEquals(ID, key.getId());
+    }
+
+    @Test
+    public void updateToken() throws Exception {
+        TokenDTO tokenDTO = keyController.updateToken(ID, this.tokenDTO);
+        assertEquals(ID, tokenDTO.getId());
     }
 
     @Test

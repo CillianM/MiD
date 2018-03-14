@@ -44,7 +44,7 @@ public class CardGetter extends AsyncTask<Void, Void, List<CardType>> {
 
             HttpCall httpCall = new HttpCall();
             String id = profile.getServerId();
-            String password = EncryptionUtil.encryptText(id,profile.getPrivateKey());
+            String password = EncryptionUtil.encryptText(profile.getServerToken(),profile.getPrivateKey());
             if(password != null) {
                 httpCall.setAuthHeader(id,password);
                 identityTypes = identityTypeService.getIdentityTypes();

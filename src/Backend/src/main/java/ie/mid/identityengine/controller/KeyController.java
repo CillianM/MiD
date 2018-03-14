@@ -1,6 +1,8 @@
 package ie.mid.identityengine.controller;
 
 import ie.mid.identityengine.dto.KeyDTO;
+import ie.mid.identityengine.dto.NewKeyDTO;
+import ie.mid.identityengine.dto.TokenDTO;
 import ie.mid.identityengine.enums.EntityStatus;
 import ie.mid.identityengine.enums.KeyStatus;
 import ie.mid.identityengine.exception.BadRequestException;
@@ -15,6 +17,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 
 @Controller
@@ -44,17 +48,23 @@ public class KeyController {
         return new KeyDTO(key.getId(), key.getUserId(), key.getPublicKey(), key.getStatus());
     }
 
-    @PreAuthorize("#keyToCreate.userId == authentication.name")
     @PostMapping()
     @ResponseBody
-    public KeyDTO createKey(@RequestBody KeyDTO keyToCreate) {
+    public NewKeyDTO createKey(@RequestBody KeyDTO keyToCreate) {
         if (isInvalidKey(keyToCreate)) throw new BadRequestException();
         Key key = new Key();
+        key.setToken(UUID.randomUUID().toString());
         key.setStatus(KeyStatus.ACTIVE.toString());
         key.setPublicKey(keyToCreate.getPublicKey());
         key.setUserId(keyToCreate.getUserId());
         key = keyRepository.save(key);
-        return new KeyDTO(key.getId(), key.getUserId(), key.getPublicKey(), key.getStatus());
+
+        NewKeyDTO createdKey = new NewKeyDTO();
+        createdKey.setId(key.getId());
+        createdKey.setUserId(key.getUserId());
+        createdKey.setPublicKey(key.getPublicKey());
+        createdKey.setToken(key.getToken());
+        return createdKey;
     }
 
     @PreAuthorize("#keyDTO.userId == authentication.name")
@@ -71,6 +81,21 @@ public class KeyController {
         return new KeyDTO(upgradedKey.getId(), upgradedKey.getUserId(), upgradedKey.getPublicKey(), upgradedKey.getStatus());
     }
 
+    @PreAuthorize("#tokenDTO.userId == authentication.name")
+    @PutMapping(value = "/token/{id}")
+    @ResponseBody
+    public TokenDTO updateToken(@PathVariable String id, @RequestBody TokenDTO tokenDTO) {
+        if (isInvalidToken(tokenDTO)) throw new BadRequestException();
+        Key key = keyRepository.findById(id);
+        if (key == null) throw new ResourceNotFoundException();
+        Key upgradedKey = new Key(key.getUserId(), key.getPublicKey());
+        upgradedKey.setToken(UUID.randomUUID().toString());
+        key.setStatus(KeyStatus.UPGRADED.toString());
+        keyRepository.save(key);
+        upgradedKey = keyRepository.save(upgradedKey);
+        return new TokenDTO(upgradedKey.getId(), upgradedKey.getUserId(), upgradedKey.getToken(), upgradedKey.getStatus());
+    }
+
     @DeleteMapping(value = "/{id}")
     @ResponseBody
     public KeyDTO deleteKey(@PathVariable String id, Authentication authentication) {
@@ -85,4 +110,9 @@ public class KeyController {
     private boolean isInvalidKey(KeyDTO keyDTO) {
         return keyDTO.getUserId() == null || keyDTO.getPublicKey() == null;
     }
+
+    private boolean isInvalidToken(TokenDTO tokenDTO) {
+        return tokenDTO.getUserId() == null || tokenDTO.getToken() == null;
+    }
+
 }

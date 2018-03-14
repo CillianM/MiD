@@ -1,6 +1,7 @@
 package ie.mid.identityengine.controller;
 
 import ie.mid.identityengine.dto.KeyDTO;
+import ie.mid.identityengine.dto.NewKeyDTO;
 import ie.mid.identityengine.dto.UserDTO;
 import ie.mid.identityengine.model.Individual;
 import ie.mid.identityengine.model.User;
@@ -49,7 +50,7 @@ public class UserControllerTest {
         userDTO.setNickname(NAME);
         userDTO.setPublicKey(KEY);
         userDTO.setFcmToken(FCM);
-        KeyDTO key = new KeyDTO();
+        NewKeyDTO key = new NewKeyDTO();
         key.setId(ID);
         Individual individual = new Individual();
         individual.setIndividualId(ID);

@@ -20,6 +20,8 @@ public class Key {
     private String userId;
     @Column(name = "public_key", nullable = false, length = 450)
     private String publicKey;
+    @Column(name = "token", nullable = false)
+    private String token;
     @Column(name = "status", nullable = false)
     private String status;
     @Temporal(TemporalType.TIMESTAMP)
@@ -95,4 +97,8 @@ public class Key {
     public void setValidUntil(Date validUntil) {
         this.validUntil = validUntil;
     }
+
+    public void setToken(String token){this.token = token;}
+
+    public String getToken(){return token;}
 }

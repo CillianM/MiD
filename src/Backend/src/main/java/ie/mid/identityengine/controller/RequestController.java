@@ -80,7 +80,7 @@ public class RequestController {
         return requestListToDTOList(requests);
     }
 
-    @PostAuthorize("returnObject.recipientName == authentication.name || returnObject.senderName == authentication.name")
+    @PostAuthorize("returnObject.recipientId == authentication.name || returnObject.senderId == authentication.name")
     @GetMapping(value = "{id}")
     @ResponseBody
     public RequestDTO getRequest(@PathVariable String id) {
@@ -89,7 +89,7 @@ public class RequestController {
         RequestDTO requestDTO = new RequestDTO();
         requestDTO.setId(request.getId());
         requestDTO.setRecipientName(getUserName(request.getRecipientId()));
-        requestDTO.setSenderName(getPartyName(request.getSenderId()));
+        requestDTO.setSenderName(getUserName(request.getSenderId()));
         requestDTO.setRecipientId(request.getRecipientId());
         requestDTO.setSenderId(request.getSenderId());
         requestDTO.setStatus(request.getStatus());

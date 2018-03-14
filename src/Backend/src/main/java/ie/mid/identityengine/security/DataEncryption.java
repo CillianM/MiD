@@ -3,14 +3,11 @@ package ie.mid.identityengine.security;
 import org.apache.log4j.Logger;
 import org.apache.tomcat.util.codec.binary.Base64;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
-import java.security.*;
-import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.Key;
+import java.security.KeyFactory;
+import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 
 public class DataEncryption {

@@ -10,6 +10,7 @@ public class Profile {
     private String hash;
     private String salt;
     private String serverId;
+    private String serverToken;
     private String publicKey;
     private String privateKey;
     private String imageUrl;
@@ -24,13 +25,14 @@ public class Profile {
         this.salt = salt;
     }
 
-    public Profile(String id, String name, String imageUrl, String hash, String salt,String serverId, String publicKey, String privateKey) {
+    public Profile(String id, String name, String imageUrl, String hash, String salt,String serverId,String serverToken, String publicKey, String privateKey) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.hash = hash;
         this.salt = salt;
         this.serverId = serverId;
+        this.serverToken = serverToken;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
     }
@@ -98,5 +100,13 @@ public class Profile {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getServerToken() {
+        return serverToken;
+    }
+
+    public void setServerToken(String serverToken) {
+        this.serverToken = serverToken;
     }
 }

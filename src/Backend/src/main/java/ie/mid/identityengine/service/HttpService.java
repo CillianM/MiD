@@ -1,6 +1,7 @@
 package ie.mid.identityengine.service;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -12,8 +13,8 @@ import java.net.URL;
 
 class HttpService {
 
+    private static String ENDPOINT = "http://localhost:3000/api";
     private static final Logger logger = Logger.getLogger(HttpService.class);
-    private static String ENDPOINT = "http://192.168.157.128:3000/api"; //LOCALHOST URL FOR VM
     private String endpointExtention;
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String JSON = "application/json";

@@ -9,7 +9,7 @@
     <string name="login">Login</string>
     <string name="title_activity_settings">Settings</string>
 
-    <string name="default_server_address">http://89.100.190.109:5001</string>
+    <string name="default_server_address">https://mid-secure.ie/mid</string>
     <string name="title_gallery_storage">Default Server Address</string>
     <string name="key_server_address">key_server_address</string>
 

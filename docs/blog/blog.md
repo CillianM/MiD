@@ -33,6 +33,7 @@
 - [27th February 2018 - Blockchain Implementation](#27th-february-2018-blockchain-implementation)
 - [5th March 2018 - Access Control](#5th-march-2018-access-control)
 - [14th March 2018 - SSL Security](#14th-march-2018-ssl-security)
+- [22nd March 2018 - Website Promo Page](#22nd-march-2018-website-promo-page)
 
 
 ## Intro
@@ -308,8 +309,25 @@ With the basic access control in place I need to look at encrypting the data for
 ## 14th March 2018 - SSL Security
 
 ### What has been done
-Security in the form of access control and SSL encryption on the backend endpoints have been implemented. This was done by creating a new domain [mid-secure.ie](mid-secure.ie) and implementing an SSL certificate from [sslforfree.com](sslforfree.com). This certificate allows me to have valid communication with a user without the need of a self signed certificate and the issues that come with that. I validated the ownership of that domain and was given certificate files through which I generated a keystore with `openssl pkcs12 -export -in certificate.crt -inkey private.key -out mycert.p12`. This p12 keystore file is in use with my tomcat instance I have on my server. The IP of the domain points to a personal server of mine that I can turn on and off easily and perform any maintence necessary for the platform to run.<br>
+Security in the form of access control and SSL encryption on the backend endpoints have been implemented. This was done by creating a new domain [mid-secure.ie](https://mid-secure.ie) and implementing an SSL certificate from [sslforfree.com](https://sslforfree.com). This certificate allows me to have valid communication with a user without the need of a self signed certificate and the issues that come with that. I validated the ownership of that domain and was given certificate files through which I generated a keystore with `openssl pkcs12 -export -in certificate.crt -inkey private.key -out mycert.p12`. This p12 keystore file is in use with my tomcat instance I have on my server. The IP of the domain points to a personal server of mine that I can turn on and off easily and perform any maintence necessary for the platform to run.<br>
 As I couldn't decrypt files on a web UI or authenticate through token encryption I have also created the dummy admin backend that will allow me to properly secure party endpoints and allow for data to be transmitted securely for the intended party. All this backend really does is capture calls from the UI and wrap any necessary authentication. This is the private key that is required for token encryption. The dummy backend stores the private key so that it may easily wrap any parties request with the correct key.
+
+#### SSL Test Certificate
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/ssl_cert.png" alt="ssl test cert"width="849" height="374"><br>
+Above is a test I have run against the SSL certificate. It ensures that it meets all current standards for SSL and is secure for use. The test was successful so i'm happy to deploy it to the server 
 
 ### What will be done
 The last step in terms of security will be the encryption of submission forms made to a party. As they're stored on the backend they need to be encrypted so that even if someone got a hold of a file they will not be able to view it. Now that I have the dummy admin backend in place I can decrypt requests from users. I couldn't do this before as it was just an lightweight angular UI so files remained unencrypted. Files will now be encrypted with the users private key and parties public key to provide non-repudiation and security as it is transferred. 
+
+## 22nd March 2018 - Website Promo Page
+
+### What has been done
+With the new domain created, I wanted to make a splash page to explain the application and provide download links. I felt this would come in handy when demo-ing the application to someone. A small homepage (at [mid-secure](https://mid-secure.ie)) has been created with a link to where to download it and where you can view the source. I have added the mobile application to [the google play store](https://play.google.com/store/apps/details?id=ie.mid) where users can download and update the app. This is useful to me as i can get user usage data and crash reports.<br> 
+I have implemented Log4J2 into the backend application. This will allow for easy debugging of runtime errors as they occur. The logging is levelled (INFO,DEBUG,ERROR) so it may be easily filtered.
+
+#### MiD Web Page
+<img src="https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/raw/master/docs/blog/images/mid_site.png" alt="mid site page"width="1152" height="641"><br>
+Above is a screenshot of the homepage. It has 3 links to download the application, view source code and the supporting documentation within gitlab.
+
+### What will be done
+I now need to look into creating BDDs (Behavior-driven development). This will be in the for of cucumber integration tests for the backend. It will allow for human readable tests and further testing of the applications backend. 

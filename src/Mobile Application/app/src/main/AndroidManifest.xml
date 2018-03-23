@@ -45,7 +45,9 @@
             android:name=".CardCreateActivity"
             android:theme="@style/AppBaseTheme" />
 
-        <service android:name=".FirebaseTokenController">
+        <service
+            android:name=".FirebaseTokenController"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -53,7 +55,7 @@
         <service
             android:name=".FirebaseMessagingService"
             android:enabled="true"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

@@ -1,8 +1,7 @@
 package ie.mid.identityengine.service;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,8 +12,8 @@ import java.net.URL;
 
 class HttpService {
 
-    private static String ENDPOINT = "http://localhost:3000/api";
-    private static final Logger logger = Logger.getLogger(HttpService.class);
+    private String ENDPOINT = "http://localhost:3000/api";
+    private static final Logger logger = LogManager.getLogger(HttpService.class);
     private String endpointExtention;
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String JSON = "application/json";
@@ -91,7 +90,7 @@ class HttpService {
     }
 
     private String sendGet(String url) throws  IOException{
-        logger.info("Sending 'GET' request to URL : " + url);
+        logger.debug("Sending 'GET' request to URL : " + url);
         URL obj = new URL(url);
         HttpURLConnection urlConnection = (HttpURLConnection) obj.openConnection();
         urlConnection.setRequestMethod(GET);
@@ -100,7 +99,7 @@ class HttpService {
     }
 
     private String sendPost(String url, String json) throws IOException {
-        logger.info("Sending 'POST' request to URL : " + url);
+        logger.debug("Sending 'POST' request to URL : " + url);
         HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
         urlConnection.setUseCaches(false);
         urlConnection.setDoInput(true);
@@ -116,7 +115,7 @@ class HttpService {
     }
 
     private String sendPut(String url, String json) throws IOException {
-        logger.info("Sending 'PUT' request to URL : " + url);
+        logger.debug("Sending 'PUT' request to URL : " + url);
         HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
         urlConnection.setDoOutput(true);
         urlConnection.setRequestMethod(PUT);
@@ -130,7 +129,7 @@ class HttpService {
     }
 
     private String sendDelete(String url) throws IOException {
-        logger.info("Sending 'DELETE' request to URL : " + url);
+        logger.debug("Sending 'DELETE' request to URL : " + url);
         HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
         urlConnection.setDoOutput(true);
         urlConnection.setRequestMethod(DELETE);

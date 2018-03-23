@@ -13,6 +13,8 @@ import ie.mid.identityengine.model.IdentifyingParty;
 import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.repository.PartyRepository;
 import ie.mid.identityengine.service.HyperledgerService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -35,11 +38,16 @@ public class PartyController {
     @Autowired
     HyperledgerService hyperledgerService;
 
+    private Logger logger = LogManager.getLogger(PartyController.class);
+
     @GetMapping
     @ResponseBody
     public List<PartyDTO> getParties() {
+        logger.debug("'GET' request to getParties()");
         List<Party> parties = partyRepository.findAll();
-        if (parties == null) throw new ResourceNotFoundException();
+        if (parties == null) {
+            return Collections.emptyList();
+        }
         List<PartyDTO> partyDTOList = new ArrayList<>();
         parties.forEach(party -> {
             PartyDTO partyDTO = new PartyDTO();
@@ -48,34 +56,53 @@ public class PartyController {
             partyDTO.setStatus(party.getStatus());
             partyDTOList.add(partyDTO);
         });
+        logger.debug("Got party list, returning...");
         return partyDTOList;
     }
 
     @GetMapping(value = "/{id}")
     @ResponseBody
     public PartyDTO getParty(@PathVariable String id) {
+        logger.debug("'GET' request to getParty() for id " + id);
         Party party = partyRepository.findById(id);
-        if (party == null) throw new ResourceNotFoundException();
+        if (party == null) {
+            logger.error("No party found for id " + id);
+            throw new ResourceNotFoundException();
+        }
         PartyDTO partyDTO = new PartyDTO();
         partyDTO.setId(party.getId());
         partyDTO.setName(party.getName());
         partyDTO.setStatus(party.getStatus());
+        logger.debug("Got party, returning...");
         return partyDTO;
     }
 
     @PostMapping
     @ResponseBody
     public NewPartyDTO createParty(@RequestBody PartyDTO partyToCreate) {
-        if (isInvalidParty(partyToCreate)) throw new BadRequestException();
+        logger.debug("'POST' request to createParty()");
+        if (isInvalidParty(partyToCreate)) {
+            logger.error("Invalid party: " + partyToCreate);
+            throw new BadRequestException();
+        }
         //Create Party in blockchain
+        logger.debug("Creating IdentifyingParty on blockchain");
         IdentifyingParty identifyingParty = hyperledgerService.createIdentifyingParty();
-        if(identifyingParty == null) throw new HyperledgerErrorException("Error creating party");
+        if (identifyingParty == null) {
+            logger.error("Error creating party in hyperledger");
+            throw new HyperledgerErrorException("Error creating party");
+        }
+        logger.info("Created party on hyperledger with id " + identifyingParty.getPartyId());
+
+        logger.debug("Creating Party on server");
 
         Party party = new Party();
         party.setName(partyToCreate.getName());
         party.setStatus(EntityStatus.ACTIVE.toString());
         party.setNetworkId(identifyingParty.getPartyId());
         party = partyRepository.save(party);
+        logger.info("Created user on server with id " + party.getId());
+
         partyToCreate.setId(party.getId());
         partyToCreate.setStatus(party.getStatus());
 
@@ -93,6 +120,7 @@ public class PartyController {
         createdParty.setStatus(party.getStatus());
         createdParty.setPartyToken(createdKey.getToken());
         createdParty.setName(party.getName());
+        logger.debug("Party created, returning...");
         return createdParty;
     }
 
@@ -100,27 +128,42 @@ public class PartyController {
     @PutMapping(value = "/{id}")
     @ResponseBody
     public PartyDTO updateParty(@PathVariable String id, @RequestBody PartyDTO partyToUpdate) {
+        logger.debug("'PUT' request to updateParty() for id " + id);
         Party party = partyRepository.findById(id);
-        if (party == null) throw new ResourceNotFoundException();
-        if (isInvalidParty(partyToUpdate)) throw new BadRequestException();
+        if (isInvalidParty(partyToUpdate)) {
+            logger.error("Invalid party: " + partyToUpdate);
+            throw new BadRequestException();
+        }
+        if (party == null) {
+            logger.error("Party not found for id " + id);
+            throw new ResourceNotFoundException();
+        }
         party.setName(partyToUpdate.getName());
         partyRepository.save(party);
+        logger.debug("Party udpated, returning...");
         return partyToUpdate;
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseBody
     public PartyDTO deleteParty(@PathVariable String id, Authentication authentication) {
+        logger.debug("'DELETE' request to deleteParty() for id " + id);
         Party party = partyRepository.findById(id);
-        if (party == null) throw new ResourceNotFoundException();
-        if (!party.getId().equals(authentication.getName()))
+        if (party == null) {
+            logger.error("Party not found for id " + id);
+            throw new ResourceNotFoundException();
+        }
+        if (!party.getId().equals(authentication.getName())) {
+            logger.error("Authentication failure: " + authentication.getName() + " != " + party.getId());
             throw new ResourceForbiddenException(authentication.getName() + " is forbidden from resource " + id);
+        }
         party.setStatus(EntityStatus.DELETED.toString());
         partyRepository.save(party);
         PartyDTO partyDTO = new PartyDTO();
         partyDTO.setId(party.getId());
         partyDTO.setName(party.getName());
         partyDTO.setStatus(party.getStatus());
+        logger.debug("Party deleted, returning...");
         return partyDTO;
     }
 

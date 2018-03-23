@@ -10,8 +10,9 @@ import ie.mid.identityengine.exception.ResourceForbiddenException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.Key;
 import ie.mid.identityengine.repository.KeyRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -28,30 +29,30 @@ public class KeyController {
     @Autowired
     KeyRepository keyRepository;
 
-    @Value("${mid.public}")
-    private String publicServerKey;
-
-    @Value("${mid.private}")
-    private String privateServerKey;
-
-    private static final String SERVER = "SERVER";
+    private Logger logger = LogManager.getLogger(KeyController.class);
 
     @PostAuthorize("returnObject.userId == authentication.name")
     @GetMapping(value = "/{ownerId}")
     @ResponseBody
     public KeyDTO getKey(@PathVariable String ownerId) {
-        if (ownerId.equals(SERVER)) {
-            return new KeyDTO(SERVER, SERVER, publicServerKey, KeyStatus.ACTIVE.toString());
-        }
+        logger.debug("'GET' request to getKey() for id " + ownerId);
         Key key = keyRepository.findByUserIdAndStatus(ownerId, EntityStatus.ACTIVE.toString());
-        if (key == null) throw new ResourceNotFoundException();
+        if (key == null) {
+            logger.error("No key found for owner id " + ownerId);
+            throw new ResourceNotFoundException();
+        }
+        logger.debug("Key found, returning...");
         return new KeyDTO(key.getId(), key.getUserId(), key.getPublicKey(), key.getStatus());
     }
 
     @PostMapping()
     @ResponseBody
     public NewKeyDTO createKey(@RequestBody KeyDTO keyToCreate) {
-        if (isInvalidKey(keyToCreate)) throw new BadRequestException();
+        logger.debug("'POST' request to createKey()");
+        if (isInvalidKey(keyToCreate)) {
+            logger.error("Invalid key: " + keyToCreate.toString());
+            throw new BadRequestException();
+        }
         Key key = new Key();
         key.setToken(UUID.randomUUID().toString());
         key.setStatus(KeyStatus.ACTIVE.toString());
@@ -64,6 +65,7 @@ public class KeyController {
         createdKey.setUserId(key.getUserId());
         createdKey.setPublicKey(key.getPublicKey());
         createdKey.setToken(key.getToken());
+        logger.debug("Key created, returning...");
         return createdKey;
     }
 
@@ -71,13 +73,21 @@ public class KeyController {
     @PutMapping(value = "/{id}")
     @ResponseBody
     public KeyDTO updateKey(@PathVariable String id, @RequestBody KeyDTO keyDTO) {
-        if (isInvalidKey(keyDTO)) throw new BadRequestException();
+        logger.debug("'PUT' request to updateKey() for id " + id);
+        if (isInvalidKey(keyDTO)) {
+            logger.error("Invalid key: " + keyDTO.toString());
+            throw new BadRequestException();
+        }
         Key key = keyRepository.findById(id);
-        if (key == null) throw new ResourceNotFoundException();
+        if (key == null) {
+            logger.error("No key found for id " + id);
+            throw new ResourceNotFoundException();
+        }
         Key upgradedKey = new Key(keyDTO.getUserId(), keyDTO.getPublicKey());
         key.setStatus(KeyStatus.UPGRADED.toString());
         keyRepository.save(key);
         upgradedKey = keyRepository.save(upgradedKey);
+        logger.debug("Key updated, returning");
         return new KeyDTO(upgradedKey.getId(), upgradedKey.getUserId(), upgradedKey.getPublicKey(), upgradedKey.getStatus());
     }
 
@@ -85,24 +95,38 @@ public class KeyController {
     @PutMapping(value = "/token/{id}")
     @ResponseBody
     public TokenDTO updateToken(@PathVariable String id, @RequestBody TokenDTO tokenDTO) {
-        if (isInvalidToken(tokenDTO)) throw new BadRequestException();
+        logger.debug("'PUT' request to updateToken() for id " + id);
+        if (isInvalidToken(tokenDTO)) {
+            logger.error("Invalid token: " + tokenDTO.toString());
+            throw new BadRequestException();
+        }
         Key key = keyRepository.findById(id);
-        if (key == null) throw new ResourceNotFoundException();
+        if (key == null) {
+            logger.error("No key found for id " + id);
+            throw new ResourceNotFoundException();
+        }
         Key upgradedKey = new Key(key.getUserId(), key.getPublicKey());
         upgradedKey.setToken(UUID.randomUUID().toString());
         key.setStatus(KeyStatus.UPGRADED.toString());
         keyRepository.save(key);
         upgradedKey = keyRepository.save(upgradedKey);
+        logger.debug("Token updated, returning...");
         return new TokenDTO(upgradedKey.getId(), upgradedKey.getUserId(), upgradedKey.getToken(), upgradedKey.getStatus());
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseBody
     public KeyDTO deleteKey(@PathVariable String id, Authentication authentication) {
+        logger.debug("'DELETE' request to deleteKey() for id " + id);
         Key key = keyRepository.findById(id);
-        if (key == null) throw new ResourceNotFoundException();
-        if (!key.getUserId().equals(authentication.getName()))
+        if (key == null) {
+            logger.error("No key found for id " + id);
+            throw new ResourceNotFoundException();
+        }
+        if (!key.getUserId().equals(authentication.getName())) {
+            logger.error("Authentication failure: " + authentication.getName() + " != " + key.getUserId());
             throw new ResourceForbiddenException(authentication.getName() + " cannot access resource resource " + id);
+        }
         key.setStatus(KeyStatus.DELETED.toString());
         return new KeyDTO(key.getId(), key.getUserId(), key.getPublicKey(), key.getStatus());
     }

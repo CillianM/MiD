@@ -16,7 +16,8 @@ import ie.mid.identityengine.repository.PartyRepository;
 import ie.mid.identityengine.repository.RequestRepository;
 import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.PushNotificationService;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,7 +44,7 @@ public class RequestController {
     @Autowired
     PushNotificationService pushNotificationService;
 
-    private Logger logger = Logger.getLogger(RequestController.class.getName());
+    private Logger logger = LogManager.getLogger(RequestController.class.getName());
 
     private static final String USER_NOT_EXIST = "User does not exits";
 
@@ -57,11 +58,17 @@ public class RequestController {
     @GetMapping(value = "/recipient/{recipientId}")
     @ResponseBody
     public List<RequestDTO> getRecipientRequests(@PathVariable String recipientId, Authentication authentication) {
+        logger.debug("'GET' request for getRecipientRequests() with recipientId " + recipientId);
         List<Request> requests = requestRepository.findByRecipientId(recipientId);
-        if (requests == null) throw new ResourceNotFoundException();
+        if (requests == null) {
+            logger.error("No request found for recipientId " + recipientId);
+            throw new ResourceNotFoundException();
+        }
         for (Request request : requests) {
-            if (!request.getRecipientId().equals(authentication.getName()))
+            if (!request.getRecipientId().equals(authentication.getName())) {
+                logger.error("Authentication failure: " + authentication.getName() + " != " + request.getRecipientId());
                 throw new ResourceForbiddenException(authentication.getName() + " is forbidden from requests");
+            }
 
         }
         return requestListToDTOList(requests);
@@ -70,11 +77,17 @@ public class RequestController {
     @GetMapping(value = "/sender/{senderId}")
     @ResponseBody
     public List<RequestDTO> getSenderRequests(@PathVariable String senderId, Authentication authentication) {
+        logger.debug("'GET' request for getSenderRequests() with senderId " + senderId);
         List<Request> requests = requestRepository.findBySenderId(senderId);
-        if (requests == null) throw new ResourceNotFoundException();
+        if (requests == null) {
+            logger.error("No request found for senderId " + senderId);
+            throw new ResourceNotFoundException();
+        }
         for (Request request : requests) {
-            if (!request.getSenderId().equals(authentication.getName()))
+            if (!request.getSenderId().equals(authentication.getName())) {
+                logger.error("Authentication failure: " + authentication.getName() + " != " + request.getSenderId());
                 throw new ResourceForbiddenException(authentication.getName() + " is forbidden from requests");
+            }
 
         }
         return requestListToDTOList(requests);
@@ -84,8 +97,13 @@ public class RequestController {
     @GetMapping(value = "{id}")
     @ResponseBody
     public RequestDTO getRequest(@PathVariable String id) {
+        logger.debug("'GET' request for getSenderRequests() with id " + id);
+
         Request request = requestRepository.findById(id);
-        if (request == null) throw new ResourceNotFoundException();
+        if (request == null) {
+            logger.debug("No request found for id " + id);
+            throw new ResourceNotFoundException();
+        }
         RequestDTO requestDTO = new RequestDTO();
         requestDTO.setId(request.getId());
         requestDTO.setRecipientName(getUserName(request.getRecipientId()));
@@ -98,6 +116,7 @@ public class RequestController {
         requestDTO.setIndentityTypeId(request.getIndentityTypeId());
         requestDTO.setCreatedAt(request.getCreatedAt().toString());
         requestDTO.setCertificateId(request.getCertificateId());
+        logger.debug("Request found, returning...");
         return requestDTO;
     }
 
@@ -105,13 +124,26 @@ public class RequestController {
     @PostMapping
     @ResponseBody
     public RequestDTO createRequest(@RequestBody InformationRequestDTO informationRequestDTO) {
-        if (isInvalidRequest(informationRequestDTO)) throw new BadRequestException();
+        logger.debug("'POST' request for createRequest()");
+        if (isInvalidRequest(informationRequestDTO)) {
+            logger.error("Invalid request: " + informationRequestDTO.toString());
+            throw new BadRequestException();
+        }
         User recipient = userRepository.findById(informationRequestDTO.getRecipientId());
-        if (recipient == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
+        if (recipient == null) {
+            logger.error("Recipient user with id: " + informationRequestDTO.getRecipientId() + " does not exist");
+            throw new ResourceNotFoundException(USER_NOT_EXIST);
+        }
         User sender = userRepository.findById(informationRequestDTO.getSenderId());
         Party partySender = new Party();
-        if (sender == null) partySender = partyRepository.findById(informationRequestDTO.getSenderId());
-        if (partySender == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
+        if (sender == null) {
+            logger.debug("No user found for senderId: " + informationRequestDTO.getSenderId() + ", will attempt to find party");
+            partySender = partyRepository.findById(informationRequestDTO.getSenderId());
+        }
+        if (partySender == null) {
+            logger.error("No party exists with id " + informationRequestDTO.getSenderId());
+            throw new ResourceNotFoundException(USER_NOT_EXIST);
+        }
         //Create the request to be tracked
         Request request = new Request();
         request.setRecipientId(recipient.getId());
@@ -127,6 +159,7 @@ public class RequestController {
         request.setIndentityTypeId(informationRequestDTO.getIndentityTypeId());
         request.setStatus(RequestStatus.PENDING.toString());
         request = requestRepository.save(request);
+        logger.debug("Request saved, sending notification to recipient...");
 
         //Contact the user with the id of the request
         JsonObject messageObject = pushNotificationService.createMessageObject(
@@ -141,7 +174,7 @@ public class RequestController {
         } catch (IOException e) {
             logger.error("Error occured sending notification",e);
         }
-
+        logger.debug("Notification attempted, returning...");
         //return the new request to the requestee
         return getRequest(request.getId());
     }
@@ -150,9 +183,17 @@ public class RequestController {
     @PutMapping(value = "/{id}")
     @ResponseBody
     public RequestDTO updateRequest(@PathVariable String id, @RequestBody InformationRequestDTO informationRequestDTO) {
+        logger.debug("'PUT' request for updateRequest() with id " + id);
+
         Request request = requestRepository.findById(id);
-        if (request == null) throw new ResourceNotFoundException(USER_NOT_EXIST);
-        if (isInvalidRequest(informationRequestDTO)) throw new BadRequestException();
+        if (request == null) {
+            logger.error("No requests exist for id " + id);
+            throw new ResourceNotFoundException("No requests exists for id " + id);
+        }
+        if (isInvalidRequest(informationRequestDTO)) {
+            logger.error("Invalid request: " + informationRequestDTO.toString());
+            throw new BadRequestException();
+        }
         request.setIndentityTypeId(informationRequestDTO.getIndentityTypeId());
         request.setIdentityTypeFields(informationRequestDTO.getIdentityTypeFields());
 
@@ -169,10 +210,11 @@ public class RequestController {
             request.setCertificateId(informationRequestDTO.getCertificateId());
             message = " has accepted your request";
         } else {
+            logger.error("Bad status for request: " + informationRequestDTO.toString());
             throw new BadRequestException();
         }
-
-
+        requestRepository.save(request);
+        logger.debug("Request updated, sending notification to sender...");
         //send notification
         User sender = userRepository.findById(informationRequestDTO.getSenderId());
 
@@ -190,24 +232,31 @@ public class RequestController {
             try {
                 pushNotificationService.sendNotifictaionAndData(sender.getFcmToken(), messageObject,dataObject);
             } catch (IOException e) {
-                logger.error("Error occured sending notification",e);
+                logger.error("Error occurred sending notification", e);
             }
         }
+        logger.debug("Notification attempted, returning...");
 
-        requestRepository.save(request);
         return getRequest(id);
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseBody
     public RequestDTO rescindRequest(@PathVariable String id, Authentication authentication) {
+        logger.debug("'DELETE' request to rescindRequest() with id " + id);
         Request request = requestRepository.findById(id);
-        if (request == null) throw new ResourceNotFoundException();
-        if (!request.getRecipientId().equals(authentication.getName()))
+        if (request == null) {
+            logger.error("No request found for id " + id);
+            throw new ResourceNotFoundException();
+        }
+        if (!request.getRecipientId().equals(authentication.getName())) {
+            logger.error("Authentication failure: " + authentication.getName() + " != " + request.getRecipientId());
             throw new ResourceForbiddenException(authentication.getName() + " is forbidden from resource " + id);
+        }
         request.setUserResponse(RequestStatus.RESCINDED.toString());
         request.setStatus(RequestStatus.RESCINDED.toString());
         requestRepository.save(request);
+        logger.debug("Request deleted, returning...");
         return getRequest(id);
     }
 
@@ -246,19 +295,23 @@ public class RequestController {
     }
 
     private String getUserName(String id) {
+        logger.debug("Finding user with id " + id);
         User user = userRepository.findById(id);
         if (user != null) {
             return user.getNickname();
         } else {
+            logger.debug("No user found for id " + id + ", trying party");
             return getPartyName(id);
         }
     }
 
     private String getPartyName(String id) {
+        logger.debug("Finding party with id " + id);
         Party party = partyRepository.findById(id);
         if (party != null) {
             return party.getName();
         } else {
+            logger.debug("No party found for id " + id + ", returning null");
             return null;
         }
     }

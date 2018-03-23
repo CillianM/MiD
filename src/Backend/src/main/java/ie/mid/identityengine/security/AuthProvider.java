@@ -9,11 +9,12 @@ import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.KeyRepository;
 import ie.mid.identityengine.repository.PartyRepository;
 import ie.mid.identityengine.repository.UserRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -31,23 +32,32 @@ public class AuthProvider implements AuthenticationProvider {
     @Autowired
     private KeyRepository keyRepository;
 
+    private Logger logger = LogManager.getLogger(AuthProvider.class);
+
     @Override
     public Authentication authenticate(Authentication authentication) {
 
         String id = authentication.getName();
         String password = authentication.getCredentials().toString();
         List<Authority> authority = new ArrayList<>();
+        logger.debug("Incoming authentication request for " + id);
 
         User user = userRepository.findById(id);
         Party party = partyRepository.findById(id);
         if (user != null || party != null){
             Key key = keyRepository.findByUserIdAndStatus(id, EntityStatus.ACTIVE.toString());
             if(key != null && key.getToken().equals(DataEncryption.decryptText(password, key.getPublicKey()))){
-                if(user != null) authority.add(new Authority(AuthorityType.USER.toString()));
-                else authority.add(new Authority(AuthorityType.PARTY.toString()));
+                if (user != null) {
+                    logger.debug(id + " granted USER authority");
+                    authority.add(new Authority(AuthorityType.USER.toString()));
+                } else {
+                    logger.debug(id + " granted PARTY authority");
+                    authority.add(new Authority(AuthorityType.PARTY.toString()));
+                }
             }
             return new UsernamePasswordAuthenticationToken(id, password, authority);
         } else {
+            logger.debug("No user or party found for id " + id);
             return null;
         }
     }

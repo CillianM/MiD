@@ -29,7 +29,6 @@ public class KeyControllerTest {
 
     private static final String ID = "id";
     private static final String KEY = "key";
-    private static final String SERVER = "SERVER";
     private KeyDTO keyDTO = new KeyDTO();
     private TokenDTO tokenDTO = new TokenDTO();
     private Authentication authentication;
@@ -57,12 +56,6 @@ public class KeyControllerTest {
     public void getKey() throws Exception {
         KeyDTO key = keyController.getKey(ID);
         assertEquals(ID, key.getId());
-    }
-
-    @Test
-    public void getKeyForServer() throws Exception {
-        KeyDTO key = keyController.getKey(SERVER);
-        assertEquals(SERVER, key.getId());
     }
 
     @Test

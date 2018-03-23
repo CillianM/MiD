@@ -18,11 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import ie.mid.async.ServerChecker;
 import ie.mid.handler.DatabaseHandler;
+import ie.mid.interfaces.IsServerLiveCheckCompleted;
 import ie.mid.model.Profile;
 import ie.mid.view.RoundedImageView;
 
-public class ProfileSelectionActivity extends AppCompatActivity {
+public class ProfileSelectionActivity extends AppCompatActivity implements IsServerLiveCheckCompleted{
 
     Spinner profileSpinner;
     RoundedImageView profileImage;
@@ -39,15 +41,18 @@ public class ProfileSelectionActivity extends AppCompatActivity {
         if (bundle != null) {
             //TODO implement handling of notification data here
         }
-
+        isServerLive();
         DatabaseHandler handler = new DatabaseHandler(this);
         handler.open();
         if(handler.returnAmountOfProfiles() == 0){
             handler.close();
             Intent intent = new Intent(getApplicationContext(),ProfileCreationActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
         }
         else {
+
             profiles = handler.returnProfiles();
             List<String> names = getProfileNames(profiles);
             handler.close();
@@ -67,6 +72,15 @@ public class ProfileSelectionActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), ProfileCreationActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            ImageButton settingsButton = (ImageButton) findViewById(R.id.settings_button);
+            settingsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                     startActivity(intent);
                 }
             });
@@ -102,5 +116,17 @@ public class ProfileSelectionActivity extends AppCompatActivity {
             names.add(profile.getName());
         }
         return names;
+    }
+
+
+    @Override
+    public void onTaskComplete(boolean isLive) {
+        if(!isLive){
+            Toast.makeText(getApplicationContext(),"Server Is Not Currently Live",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void isServerLive() {
+        new ServerChecker(getApplicationContext(),this).execute();
     }
 }

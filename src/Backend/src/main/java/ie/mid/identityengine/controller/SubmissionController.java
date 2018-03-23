@@ -4,10 +4,7 @@ import com.google.gson.JsonObject;
 import ie.mid.identityengine.dto.SubmissionDTO;
 import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
-import ie.mid.identityengine.exception.BadRequestException;
-import ie.mid.identityengine.exception.HyperledgerErrorException;
-import ie.mid.identityengine.exception.ResourceForbiddenException;
-import ie.mid.identityengine.exception.ResourceNotFoundException;
+import ie.mid.identityengine.exception.*;
 import ie.mid.identityengine.model.Certificate;
 import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.model.Submission;
@@ -18,7 +15,8 @@ import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.HyperledgerService;
 import ie.mid.identityengine.service.PushNotificationService;
 import ie.mid.identityengine.service.StorageService;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -53,32 +52,48 @@ public class SubmissionController {
     StorageService storageService;
 
     private static final String SUBMISSION_HEADER = "MiD Submission Update";
-    private static final Logger log = Logger.getLogger(SubmissionController.class.getName());
+    private static final Logger logger = LogManager.getLogger(SubmissionController.class.getName());
 
 
     @GetMapping(value = "/party/{partyId}")
     @ResponseBody
     public List<SubmissionDTO> getPartySubmissions(@PathVariable String partyId, Authentication authentication) {
+        logger.debug("'GET' request to getPartySubmissions() for partyId " + partyId);
         List<Submission> submissions = submissionRepository.findByPartyId(partyId);
-        if (submissions == null) throw new ResourceNotFoundException();
+        if (submissions == null) {
+            logger.debug("No submissions found for partyId " + partyId);
+            return Collections.emptyList();
+        }
         for (Submission submission : submissions) {
-            if (!submission.getPartyId().equals(authentication.getName()))
+            if (!submission.getPartyId().equals(authentication.getName())) {
+                logger.error("Authentication failure: " + authentication.getName() + " != " + submission.getPartyId());
                 throw new ResourceForbiddenException(authentication.getName() + " is forbidden from requests");
+            }
 
         }
+        logger.debug("Submissions found, returning...");
         return submissionListToDTOList(submissions);
     }
 
     @GetMapping(value = "/user/{userId}")
     @ResponseBody
     public List<SubmissionDTO> getUserSubmissions(@PathVariable String userId, Authentication authentication) {
+        logger.debug("'GET' request to getPartySubmissions() for userId " + userId);
+
         List<Submission> submissions = submissionRepository.findByUserId(userId);
-        if (submissions == null) throw new ResourceNotFoundException();
+        if (submissions == null) {
+            logger.debug("No submissions found for userId " + userId);
+            return Collections.emptyList();
+        }
         for (Submission submission : submissions) {
-            if (!submission.getUserId().equals(authentication.getName()))
+            if (!submission.getUserId().equals(authentication.getName())) {
+                logger.error("Authentication failure: " + authentication.getName() + " != " + submission.getUserId());
                 throw new ResourceForbiddenException(authentication.getName() + " is forbidden from requests");
+            }
 
         }
+        logger.debug("Submissions found, returning...");
+
         return submissionListToDTOList(submissions);
     }
 
@@ -86,8 +101,13 @@ public class SubmissionController {
     @GetMapping(value = "/{id}")
     @ResponseBody
     public SubmissionDTO getSubmission(@PathVariable String id) {
+        logger.debug("'GET' request to getSubmission() for id " + id);
+
         Submission submission = submissionRepository.findById(id);
-        if (submission == null) throw new ResourceNotFoundException();
+        if (submission == null) {
+            logger.error("No submission found for id " + id);
+            throw new ResourceNotFoundException();
+        }
         SubmissionDTO dto = new SubmissionDTO();
         dto.setData(storageService.loadData(submission.getData()));
         dto.setId(submission.getId());
@@ -98,6 +118,7 @@ public class SubmissionController {
         dto.setStatus(submission.getStatus());
         dto.setDate(submission.getCreatedAt().toString());
         dto.setCertId(submission.getCertificateId());
+        logger.debug("Got submission, returning...");
         return dto;
     }
 
@@ -105,7 +126,11 @@ public class SubmissionController {
     @PostMapping
     @ResponseBody
     public SubmissionDTO createSubmission(@RequestBody SubmissionDTO submissionToCreate) {
-        if (isInvalidSubmission(submissionToCreate)) throw new BadRequestException();
+        logger.debug("'POST' request to createSubmission()");
+        if (isInvalidSubmission(submissionToCreate)) {
+            logger.error("Invalid submission: " + submissionToCreate.toString());
+            throw new BadRequestException();
+        }
         Submission submission = new Submission();
 
         submission.setStatus(RequestStatus.PENDING.toString());
@@ -113,10 +138,16 @@ public class SubmissionController {
         submission.setPartyId(submissionToCreate.getPartyId());
         //Save data to file
         submission.setData(storageService.saveData(submissionToCreate.getData()));
+        if (submission.getData() == null) {
+            throw new ServerErrorException("Error saving data to server");
+        }
+
         submission = submissionRepository.save(submission);
         submissionToCreate.setId(submission.getId());
         submissionToCreate.setStatus(submission.getStatus());
         submissionToCreate.setDate(submission.getCreatedAt().toString());
+        logger.debug("Submission created, returning...");
+
         return submissionToCreate;
     }
 
@@ -124,13 +155,27 @@ public class SubmissionController {
     @PutMapping(value = "/{id}")
     @ResponseBody
     public SubmissionDTO updateSubmission(@PathVariable String id, @RequestBody SubmissionDTO submissionToUpdate) {
+        logger.debug("'PUT' request to updateSubmission() for id " + id);
+
         Submission submission = submissionRepository.findById(id);
-        if (submission == null) throw new ResourceNotFoundException("Submission does not exist");
+        if (submission == null) {
+            logger.error("No submission exists for id " + id);
+            throw new ResourceNotFoundException("Submission does not exist");
+        }
+        User user = userRepository.findById(submissionToUpdate.getUserId());
+        if (user == null) {
+            logger.debug("No user exists for submission with id " + submissionToUpdate.getId());
+            throw new ResourceNotFoundException("User does not exist");
+        }
 
         String message;
         if (submissionToUpdate.getStatus().equals(RequestStatus.ACCEPTED.toString())) {
+            logger.debug("Submission accepted, creating certificate...");
             Certificate certificate = getCertificate(submission);
-            if(certificate == null) throw new HyperledgerErrorException("Error updating hyperledger");
+            if (certificate == null) {
+                logger.error("Error creating certificate in hyperledger");
+                throw new HyperledgerErrorException("Error updating hyperledger");
+            }
             submission.setCertificateId(certificate.getCertId());
             submission.setStatus(submissionToUpdate.getStatus());
             submissionRepository.save(submission);
@@ -139,11 +184,8 @@ public class SubmissionController {
             message = "Your submission has been rejected";
         }
 
+        logger.debug("Submission updated, notifying user...");
         //Contact the user
-        User user = userRepository.findById(submissionToUpdate.getUserId());
-        if (user == null) throw new ResourceNotFoundException("User does not exist");
-
-
         JsonObject messageObject = pushNotificationService.createMessageObject(
                 SUBMISSION_HEADER,
                 message);
@@ -161,15 +203,23 @@ public class SubmissionController {
         try {
             pushNotificationService.sendNotifictaionAndData(user.getFcmToken(),messageObject,dataObject);
         } catch (IOException e) {
-            log.error("Error sending FCM message",e);
+            logger.error("Error sending FCM message", e);
         }
+        logger.debug("Attempted notification, returning...");
         return submissionToUpdate;
     }
 
     private Certificate getCertificate(Submission submission) {
         User user = userRepository.findById(submission.getUserId());
         Party party = partyRepository.findById(submission.getPartyId());
-        if(user == null || party == null) return null;
+        if (user == null) {
+            logger.error("No user exists with id " + submission.getUserId());
+            return null;
+        }
+        if (party == null) {
+            logger.error("No party exists with id " + submission.getPartyId());
+            return null;
+        }
         return hyperledgerService.createCertificate(party.getNetworkId(),user.getNetworkId());
     }
 
@@ -200,6 +250,7 @@ public class SubmissionController {
         if (user != null) {
             return user.getNickname();
         } else {
+            logger.error("No user exists with id " + id);
             return null;
         }
     }
@@ -209,6 +260,7 @@ public class SubmissionController {
         if (party != null) {
             return party.getName();
         } else {
+            logger.error("No party exists with id " + id);
             return null;
         }
     }

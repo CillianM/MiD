@@ -15,7 +15,7 @@
 
     <string name="pref_header_about">About</string>
     <string name="summary_about">A developer with a goal to give the power of a user\'s identity back to them</string>
-    <string name="app_version">0.1</string>
+    <string name="app_version">1.1</string>
     <string name="title_version">Version</string>
     <string name="title_git">Gitlab Repository</string>
     <string name="summary_git">View the code behind the magic</string>
@@ -24,6 +24,9 @@
     <string name="title_send_feedback">Send Feedback</string>
     <string name="key_send_feedback">key_send_feedback</string>
     <string name="summary_feedback">Got any queries? Get in touch!</string>
+    <string name="title_delete_all">Delete All Users</string>
+    <string name="key_delete_all">key_delete_all</string>
+    <string name="summary_delete_all">Delete All User Content!</string>
 
 
 </resources>

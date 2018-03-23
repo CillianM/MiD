@@ -13,7 +13,8 @@ import ie.mid.identityengine.model.Individual;
 import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.HyperledgerService;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -32,32 +33,47 @@ public class UserController {
     @Autowired
     HyperledgerService hyperledgerService;
 
-    Logger logger = Logger.getLogger(UserController.class);
+    private Logger logger = LogManager.getLogger(UserController.class);
 
     @GetMapping(value = "/{id}")
     @ResponseBody
     public UserDTO getUser(@PathVariable String id) {
+        logger.debug("'GET' request to getUser() for id " + id);
         User user = userRepository.findById(id);
-        if (user == null) throw new ResourceNotFoundException("No user exists");
+        if (user == null) {
+            logger.error("No user exists with id " + id);
+            throw new ResourceNotFoundException("No user exists");
+        }
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setNickname(user.getNickname());
         userDTO.setFcmToken(user.getFcmToken());
         userDTO.setStatus(user.getStatus());
         KeyDTO latestKey = keyController.getKey(id);
-        if (latestKey == null) throw new ResourceNotFoundException("No key exists for user");
+        if (latestKey == null) {
+            logger.error("No key exists with owner id " + id);
+            throw new ResourceNotFoundException("No key exists for user");
+        }
         userDTO.setKeyId(latestKey.getId());
         userDTO.setPublicKey(latestKey.getPublicKey());
+        logger.debug("User found, returning...");
         return userDTO;
     }
 
     @PostMapping()
     @ResponseBody
     public NewUserDTO createUser(@RequestBody UserDTO userToCreate) {
-        if (isInvalidUser(userToCreate)) throw new BadRequestException();
+        logger.debug("'POST' request to createUser()");
+        if (isInvalidUser(userToCreate)) {
+            logger.error("Invalid user: " + userToCreate);
+            throw new BadRequestException();
+        }
         //Create Party in blockchain
         Individual individual = hyperledgerService.createIndividual();
-        if(individual == null) throw new HyperledgerErrorException("Error creating party");
+        if (individual == null) {
+            logger.error("Error creating individual on hyperledger");
+            throw new HyperledgerErrorException("Error creating individual on hyperledger");
+        }
         logger.info("Created user on hyperledger with id " + individual.getIndividualId());
         User user = new User();
         user.setNickname(userToCreate.getNickname());
@@ -82,38 +98,55 @@ public class UserController {
         createdUser.setUserToken(createdKey.getToken());
         createdUser.setNickname(user.getNickname());
         createdUser.setFcmToken(user.getFcmToken());
+        logger.debug("User created, returning...");
         return createdUser;
     }
 
     @PutMapping(value = "/{id}/token")
     @ResponseBody
     public UserDTO updateUserToken(@PathVariable String id, @RequestBody String token, Authentication authentication) {
+        logger.debug("'PUT' request to updateUserToken with id " + id);
         User user = userRepository.findById(id);
-        if (user == null) throw new ResourceNotFoundException();
-        if (!user.getId().equals(authentication.getName()))
+        if (user == null) {
+            logger.error("No user found with id " + id);
+            throw new ResourceNotFoundException();
+        }
+        if (!user.getId().equals(authentication.getName())) {
+            logger.error("Authentication failure: " + authentication.getName() + " != " + user.getId());
             throw new ResourceForbiddenException(authentication.getName() + " is forbidden from resource " + id);
+        }
         user.setFcmToken(token);
         userRepository.save(user);
         UserDTO userDTO = new UserDTO();
         userDTO.setStatus(user.getStatus());
         userDTO.setFcmToken(user.getFcmToken());
         userDTO.setId(user.getId());
+        logger.debug("User token updated, returning...");
         return userDTO;
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseBody
     public UserDTO deleteUser(@PathVariable String id, Authentication authentication) {
+        logger.debug("'DELETE' request to deleteUser with id " + id);
+
         User user = userRepository.findById(id);
-        if (user == null) throw new ResourceNotFoundException();
-        if (!user.getId().equals(authentication.getName()))
+        if (user == null) {
+            logger.error("No user found with id " + id);
+
+            throw new ResourceNotFoundException();
+        }
+        if (!user.getId().equals(authentication.getName())) {
+            logger.error("Authentication failure: " + authentication.getName() + " != " + user.getId());
             throw new ResourceForbiddenException(authentication.getName() + " is forbidden from resource " + id);
+        }
         user.setStatus(EntityStatus.DELETED.toString());
         userRepository.save(user);
         UserDTO userDTO = new UserDTO();
         userDTO.setStatus(user.getStatus());
         userDTO.setFcmToken(user.getFcmToken());
         userDTO.setId(user.getId());
+        logger.debug("User deleted, returning...");
         return userDTO;
     }
 

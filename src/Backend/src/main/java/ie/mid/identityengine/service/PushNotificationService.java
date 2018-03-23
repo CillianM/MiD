@@ -7,6 +7,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ public class PushNotificationService {
     private static final String FIREBASE_URL = "https://fcm.googleapis.com/fcm/send";
     private static final String TOPIC_URL = "/topics/";
     HttpClient httpClient;
+    private Logger logger = LogManager.getLogger(PushNotificationService.class);
 
     public PushNotificationService() {
         this.httpClient = HttpClientBuilder.create().build();
@@ -61,12 +64,19 @@ public class PushNotificationService {
     }
 
     private String sendNotification(JsonObject sendObject, JsonObject notificationObject, JsonObject dataObject) throws IOException {
+        logger.debug("Sending notification to " + FIREBASE_URL);
         HttpPost httpPost = new HttpPost(FIREBASE_URL);
         httpPost.setHeader("Content-Type", "application/json");
         httpPost.setHeader("Authorization", "key=" + fcmServerKey);
 
-        if (notificationObject != null) sendObject.add("notification", notificationObject);
-        if (dataObject != null) sendObject.add("data", dataObject);
+        if (notificationObject != null) {
+            logger.debug("Adding notification" + notificationObject.toString());
+            sendObject.add("notification", notificationObject);
+        }
+        if (dataObject != null) {
+            logger.debug("Adding data: " + dataObject.toString());
+            sendObject.add("data", dataObject);
+        }
 
         String data = sendObject.toString();
         StringEntity entity = new StringEntity(data);

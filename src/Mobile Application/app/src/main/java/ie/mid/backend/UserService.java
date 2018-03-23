@@ -72,6 +72,7 @@ public class UserService {
                 handler.close();
                 return profile;
             }
+            handler.close();
             return null;
         } catch (Exception e) {
             Log.e(TAG, "Error: " + e.toString());

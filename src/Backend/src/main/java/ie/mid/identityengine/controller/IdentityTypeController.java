@@ -9,6 +9,8 @@ import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.Field;
 import ie.mid.identityengine.model.IdentityType;
 import ie.mid.identityengine.repository.IdentityTypeRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -25,18 +28,28 @@ public class IdentityTypeController {
     @Autowired
     IdentityTypeRepository identityTypeRepository;
 
+    private Logger logger = LogManager.getLogger(IdentityTypeController.class);
+
     @GetMapping()
     @ResponseBody
     public List<IdentityTypeDTO> getIdentityTypes() {
+        logger.debug("'GET' request to getIdentityTypes()");
         List<IdentityType> identityTypes = identityTypeRepository.findLatest();
-        if (identityTypes == null) throw new ResourceNotFoundException();
+        if (identityTypes == null) {
+            logger.error("No identity types found, returning empty list");
+            return Collections.emptyList();
+        }
         return getDtoList(identityTypes);
     }
 
     @PostMapping()
     @ResponseBody
     public IdentityTypeDTO createIdentityType(@RequestBody IdentityTypeDTO identityTypeToCreate) {
-        if (isInvalidIdentityType(identityTypeToCreate)) throw new BadRequestException();
+        logger.debug("'POST' request to createIdentityType()");
+        if (isInvalidIdentityType(identityTypeToCreate)) {
+            logger.error("Invalid identity type: " + identityTypeToCreate.toString());
+            throw new BadRequestException();
+        }
 
         IdentityType identityType = new IdentityType();
         identityType.setFields(getFieldString(identityTypeToCreate.getFields()));
@@ -50,6 +63,7 @@ public class IdentityTypeController {
         identityTypeToCreate.setId(identityType.getId());
         identityTypeToCreate.setVersionNumber(identityType.getVersionNumber());
         identityTypeToCreate.setStatus(identityType.getStatus());
+        logger.debug("Identity type created, returning...");
         return identityTypeToCreate;
 
     }
@@ -57,17 +71,25 @@ public class IdentityTypeController {
     @GetMapping(value = "/party/{partyId}")
     @ResponseBody
     public List<IdentityTypeDTO> getPartyIdentityTypes(@PathVariable String partyId) {
+        logger.debug("'GET' request to getPartyIdentityTypes() for partyId " + partyId);
         List<IdentityType> identityTypes = identityTypeRepository.findLatestByPartyId(partyId);
-        if (identityTypes == null) throw new ResourceNotFoundException();
+        if (identityTypes == null) {
+            logger.error("No identity types found, returning empty list");
+            return Collections.emptyList();
+        }
         return getDtoList(identityTypes);
     }
 
     @GetMapping(value = "/{id}")
     @ResponseBody
     public IdentityTypeDTO getIdentityType(@PathVariable String id) {
+        logger.debug("'GET' request to getIdentityType() for id " + id);
 
         IdentityType identityType = identityTypeRepository.findById(id);
-        if (identityType == null) throw new ResourceNotFoundException();
+        if (identityType == null) {
+            logger.error("No identity type found for id " + id);
+            throw new ResourceNotFoundException();
+        }
 
         IdentityTypeDTO dto = new IdentityTypeDTO();
         dto.setFields(getFieldList(identityType.getFields()));
@@ -78,6 +100,7 @@ public class IdentityTypeController {
         dto.setIconImg(identityType.getIconImg());
         dto.setCoverImg(identityType.getCoverImg());
         dto.setName(identityType.getName());
+        logger.debug("Identity type found, returning...");
         return dto;
     }
 
@@ -85,17 +108,28 @@ public class IdentityTypeController {
     @PutMapping(value = "/{id}")
     @ResponseBody
     public IdentityTypeDTO updateIdentityType(@PathVariable String id, @RequestBody IdentityTypeDTO identityTypeDTO) {
-        if (isInvalidIdentityType(identityTypeDTO)) throw new BadRequestException();
+        logger.debug("'PUT' request to updateIdentityType() for id " + id);
+
+        if (isInvalidIdentityType(identityTypeDTO)) {
+            logger.error("Invalid identity type: " + identityTypeDTO.toString());
+            throw new BadRequestException();
+        }
         IdentityType identityType = identityTypeRepository.findById(id);
-        if (identityType == null) throw new ResourceNotFoundException();
+        if (identityType == null) {
+            logger.error("No identity type found for id " + id);
+            throw new ResourceNotFoundException();
+        }
 
         //Check if we're doing a non-cosmetic update
         if(identityType.getFields().equals(getFieldString(identityTypeDTO.getFields())) && identityType.getName().equals(identityTypeDTO.getName())){
+            logger.debug("Identity type update cosmetic");
             //no need to update version number as its cosmetic
             identityType.setIconImg(identityTypeDTO.getIconImg());
             identityType.setCoverImg(identityTypeDTO.getCoverImg());
             identityTypeRepository.save(identityType);
         } else{
+            logger.debug("Non-cosmetic update, Identity type version updated");
+
             IdentityType updatedIdentityType = new IdentityType();
             updatedIdentityType.setPartyId(identityTypeDTO.getPartyId());
             updatedIdentityType.setName(identityTypeDTO.getName());
@@ -115,16 +149,23 @@ public class IdentityTypeController {
             identityTypeDTO.setIconImg(updatedIdentityType.getIconImg());
             identityTypeDTO.setCoverImg(updatedIdentityType.getCoverImg());
         }
+        logger.debug("Identity type updated, returning...");
         return identityTypeDTO;
     }
 
     @DeleteMapping(value = "/{id}")
     @ResponseBody
     public IdentityTypeDTO deleteIdentityType(@PathVariable String id, Authentication authentication) {
+        logger.debug("'DELETE' request to deleteIdentityType() for id " + id);
         IdentityType identityType = identityTypeRepository.findById(id);
-        if (identityType == null) throw new ResourceNotFoundException();
-        if (!identityType.getPartyId().equals(authentication.getName()))
+        if (identityType == null) {
+            logger.error("No identity type found for id " + id);
+            throw new ResourceNotFoundException();
+        }
+        if (!identityType.getPartyId().equals(authentication.getName())) {
+            logger.error("Authentication failure: " + authentication.getName() + " != " + identityType.getPartyId());
             throw new ResourceForbiddenException(authentication.getName() + " is forbidden from resource " + id);
+        }
         identityType.setStatus(IdentityTypeStatus.DELETED.toString());
         identityTypeRepository.save(identityType);
         IdentityTypeDTO dto = new IdentityTypeDTO();
@@ -133,6 +174,7 @@ public class IdentityTypeController {
         dto.setPartyId(identityType.getPartyId());
         dto.setStatus(identityType.getStatus());
         dto.setVersionNumber(identityType.getVersionNumber());
+        logger.debug("Identity type deleted, returning...");
         return dto;
     }
 

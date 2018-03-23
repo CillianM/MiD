@@ -551,4 +551,11 @@ public class DatabaseHandler {
     public void removeAvailableCard(String id) {
         db.delete(AVAILABLE_CARD_TABLE_NAME, ID + " = ?", new String[]{id});
     }
+
+    public void purgeDatabase(){
+        for(String table: TABLE_NAMES){
+            if(!table.equals(FCM_TABLE_NAME)) //keep track of fcm for future use
+                db.delete(table, null, null);
+        }
+    }
 }

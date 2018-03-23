@@ -35,18 +35,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             //User controller mappings
             .antMatchers(HttpMethod.POST, "/user/**").permitAll()
             .antMatchers(HttpMethod.DELETE,"/user/**").hasAnyAuthority(USER,ADMIN)
-            .antMatchers(HttpMethod.GET,"/user/**").hasAnyAuthority(USER,ADMIN)
+                .antMatchers(HttpMethod.GET, "/user/**").permitAll()
             .antMatchers(HttpMethod.PUT,"/user/**").hasAnyAuthority(USER,ADMIN)
             //Party controller mappings
             .antMatchers(HttpMethod.POST, "/party/**").permitAll()
             .antMatchers(HttpMethod.GET,"/party/**").permitAll()
-            .antMatchers(HttpMethod.PUT,"/party/**").permitAll()
-            .antMatchers(HttpMethod.DELETE,"/party/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/party/**").hasAnyAuthority(PARTY, ADMIN)
+                .antMatchers(HttpMethod.DELETE, "/party/**").hasAnyAuthority(PARTY, ADMIN)
             //Certificate controller mappings
-            .antMatchers(HttpMethod.GET, "/certificate").permitAll()
-            .antMatchers(HttpMethod.POST, "/certificate/**").permitAll()
-            .antMatchers(HttpMethod.PUT, "/certificate/**").permitAll()
-            .antMatchers(HttpMethod.DELETE, "/certificate/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/certificate").hasAnyAuthority(USER, PARTY, ADMIN)
+                .antMatchers(HttpMethod.POST, "/certificate/**").hasAnyAuthority(PARTY, ADMIN)
+                .antMatchers(HttpMethod.PUT, "/certificate/**").hasAnyAuthority(PARTY, ADMIN)
+                .antMatchers(HttpMethod.DELETE, "/certificate/**").hasAnyAuthority(PARTY, ADMIN)
             //Key controller mappings
             .antMatchers(HttpMethod.GET, "/key").permitAll()
             .antMatchers(HttpMethod.POST, "/key/**").hasAnyAuthority(ADMIN,USER,PARTY)
@@ -54,18 +54,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.DELETE, "/key/**").hasAnyAuthority(ADMIN,USER,PARTY)
             //IdentityType controller mappings
             .antMatchers(HttpMethod.GET, "/identitytype/**").permitAll()
-            .antMatchers(HttpMethod.POST, "/identitytype").permitAll()
-            .antMatchers(HttpMethod.PUT, "/identitytype/**").permitAll()
-            .antMatchers(HttpMethod.DELETE, "/identitytype/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/identitytype").hasAnyAuthority(PARTY, ADMIN)
+                .antMatchers(HttpMethod.PUT, "/identitytype/**").hasAnyAuthority(PARTY, ADMIN)
+                .antMatchers(HttpMethod.DELETE, "/identitytype/**").hasAnyAuthority(PARTY, ADMIN)
             //Request controller mappings
             .antMatchers("/request/**").hasAnyAuthority(ADMIN,USER,PARTY)
             //Submission controller mappings
-            .antMatchers(HttpMethod.GET, "/submission").permitAll()
-            .antMatchers(HttpMethod.GET, "/submission/user/**").permitAll()
-            .antMatchers(HttpMethod.GET, "/submission/party/**").permitAll()
-            .antMatchers(HttpMethod.POST, "/submission").permitAll()
-            .antMatchers(HttpMethod.PUT, "/submission/**").permitAll()
-            .antMatchers(HttpMethod.DELETE, "/submission/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/submission").hasAnyAuthority(USER, PARTY, ADMIN)
+                .antMatchers(HttpMethod.GET, "/submission/user/**").hasAnyAuthority(USER, ADMIN)
+                .antMatchers(HttpMethod.GET, "/submission/party/**").hasAnyAuthority(PARTY, ADMIN)
+                .antMatchers(HttpMethod.POST, "/submission").hasAnyAuthority(USER, ADMIN)
+                .antMatchers(HttpMethod.PUT, "/submission/**").hasAnyAuthority(PARTY, ADMIN)
+                .antMatchers(HttpMethod.DELETE, "/submission/**").hasAnyAuthority(PARTY, ADMIN)
             .and().httpBasic();
 
 

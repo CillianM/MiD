@@ -105,4 +105,22 @@ public class RequestDTO {
     public void setCertificateId(String certificateId) {
         this.certificateId = certificateId;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("RequestDTO{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", senderName='").append(senderName).append('\'');
+        sb.append(", senderId='").append(senderId).append('\'');
+        sb.append(", recipientName='").append(recipientName).append('\'');
+        sb.append(", recipientId='").append(recipientId).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", certificateId='").append(certificateId).append('\'');
+        sb.append(", indentityTypeId='").append(indentityTypeId).append('\'');
+        sb.append(", identityTypeFields='").append(identityTypeFields).append('\'');
+        sb.append(", identityTypeValues='").append(identityTypeValues).append('\'');
+        sb.append(", createdAt='").append(createdAt).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

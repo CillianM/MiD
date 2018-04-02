@@ -48,4 +48,15 @@ public class KeyDTO {
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("KeyDTO{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", userId='").append(userId).append('\'');
+        sb.append(", publicKey='").append(publicKey).append('\'');
+        sb.append(", keyStatus='").append(keyStatus).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

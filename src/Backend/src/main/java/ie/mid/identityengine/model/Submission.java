@@ -99,4 +99,19 @@ public class Submission {
     public void setCertificateId(String certificateId) {
         this.certificateId = certificateId;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Submission{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", userId='").append(userId).append('\'');
+        sb.append(", partyId='").append(partyId).append('\'');
+        sb.append(", certificateId='").append(certificateId).append('\'');
+        sb.append(", data='").append(data).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", createdAt=").append(createdAt);
+        sb.append(", updatedAt=").append(updatedAt);
+        sb.append('}');
+        return sb.toString();
+    }
 }

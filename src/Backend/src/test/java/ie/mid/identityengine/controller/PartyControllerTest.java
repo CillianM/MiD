@@ -92,7 +92,7 @@ public class PartyControllerTest {
 
     @Test
     public void updateParty() throws Exception {
-        PartyDTO partyDTO = partyController.updateParty(ID, this.partyDTO);
+        PartyDTO partyDTO = partyController.updateParty(ID, NAME, authentication);
         assertNotNull(partyDTO);
     }
 

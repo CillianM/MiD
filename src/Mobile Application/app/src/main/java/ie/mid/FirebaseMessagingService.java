@@ -44,13 +44,10 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         }
 
         // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
+        if (remoteMessage.getNotification() != null && remoteMessage.getData().size() > 0 ) {
             Log.i(LOG_TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             processNotification(remoteMessage.getNotification().getBody(),remoteMessage.getData());
         }
-
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See processNotification method below.
 
     }
 
@@ -82,6 +79,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                         .setVibrate(pattern);
 
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, notificationBuilder.build());
+        if (notificationManager != null) {
+            notificationManager.notify(1, notificationBuilder.build());
+        }
     }
 }

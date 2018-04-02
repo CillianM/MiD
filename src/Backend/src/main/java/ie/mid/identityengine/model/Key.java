@@ -101,4 +101,19 @@ public class Key {
     public void setToken(String token){this.token = token;}
 
     public String getToken(){return token;}
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Key{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", userId='").append(userId).append('\'');
+        sb.append(", publicKey='").append(publicKey).append('\'');
+        sb.append(", token='").append(token).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", validUntil=").append(validUntil);
+        sb.append(", createdAt=").append(createdAt);
+        sb.append(", updatedAt=").append(updatedAt);
+        sb.append('}');
+        return sb.toString();
+    }
 }

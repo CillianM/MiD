@@ -3,7 +3,6 @@ package ie.mid.identityengine.controller;
 import com.google.gson.JsonObject;
 import ie.mid.identityengine.dto.InformationRequestDTO;
 import ie.mid.identityengine.dto.RequestDTO;
-import ie.mid.identityengine.enums.FieldType;
 import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.exception.BadRequestException;
@@ -96,12 +95,6 @@ public class RequestControllerTest {
         when(pushNotificationService.createMessageObject(anyString(), anyString())).thenReturn(new JsonObject());
         when(pushNotificationService.createDataObject(any(NotificationType.class), any(), any())).thenReturn(new JsonObject());
         authentication = new UsernamePasswordAuthenticationToken(ID, ID);
-    }
-
-    @Test
-    public void getRequestTypes() throws Exception {
-        List<String> requestTypes = requestController.getRequestTypes();
-        assertEquals(FieldType.KEY.toString(), requestTypes.get(0));
     }
 
     @Test

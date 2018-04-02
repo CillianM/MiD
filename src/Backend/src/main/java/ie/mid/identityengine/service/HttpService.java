@@ -12,7 +12,7 @@ import java.net.URL;
 
 class HttpService {
 
-    private String ENDPOINT = "http://localhost:3000/api";
+    private String ENDPOINT = "http://192.168.0.152:3000/api";
     private static final Logger logger = LogManager.getLogger(HttpService.class);
     private String endpointExtention;
     private static final String CONTENT_TYPE = "Content-Type";

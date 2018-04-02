@@ -31,13 +31,11 @@ public enum FieldType {
         return type;
     }
 
-    public static List<String> getRequestFields(){
-        List<String> requestFields = new ArrayList<>();
+    public static List<String> getFieldTypeList() {
+        List<String> fieldTypes = new ArrayList<>();
         for(FieldType fieldType : values()){
-            if (!fieldType.equals(KEY) || !fieldType.equals(EXPIRY)) {
-                requestFields.add(fieldType.type);
-            }
+            fieldTypes.add(fieldType.type);
         }
-        return requestFields;
+        return fieldTypes;
     }
 }

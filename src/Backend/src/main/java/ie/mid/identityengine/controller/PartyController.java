@@ -12,11 +12,11 @@ import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.IdentifyingParty;
 import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.repository.PartyRepository;
+import ie.mid.identityengine.security.DataEncryption;
 import ie.mid.identityengine.service.HyperledgerService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -124,24 +124,31 @@ public class PartyController {
         return createdParty;
     }
 
-    @PreAuthorize("#partyToUpdate.id == authentication.name")
     @PutMapping(value = "/{id}")
     @ResponseBody
-    public PartyDTO updateParty(@PathVariable String id, @RequestBody PartyDTO partyToUpdate) {
+    public PartyDTO updateParty(@PathVariable String id, @RequestBody String newPartyName, Authentication authentication) {
         logger.debug("'PUT' request to updateParty() for id " + id);
         Party party = partyRepository.findById(id);
-        if (isInvalidParty(partyToUpdate)) {
-            logger.error("Invalid party: " + partyToUpdate);
-            throw new BadRequestException();
-        }
         if (party == null) {
             logger.error("Party not found for id " + id);
             throw new ResourceNotFoundException();
         }
-        party.setName(partyToUpdate.getName());
-        partyRepository.save(party);
+        if (!party.getId().equals(authentication.getName())) {
+            logger.error("Authentication failure: " + authentication.getName() + " != " + party.getId());
+            throw new ResourceForbiddenException(authentication.getName() + " is forbidden from resource " + id);
+        }
+        if (newPartyName == null) {
+            logger.error("Null party name");
+            throw new BadRequestException("Null party name");
+        }
+        party.setName(newPartyName);
+        party = partyRepository.save(party);
         logger.debug("Party udpated, returning...");
-        return partyToUpdate;
+        PartyDTO partyDTO = new PartyDTO();
+        partyDTO.setName(party.getName());
+        partyDTO.setStatus(party.getStatus());
+        partyDTO.setId(party.getId());
+        return partyDTO;
     }
 
     @DeleteMapping(value = "/{id}")
@@ -168,7 +175,7 @@ public class PartyController {
     }
 
     private boolean isInvalidParty(PartyDTO partyDTO) {
-        return partyDTO.getName() == null || partyDTO.getPublicKey() == null;
+        return partyDTO.getName() == null || partyDTO.getPublicKey() == null || DataEncryption.isInvalidKey(partyDTO.getPublicKey());
     }
 
 }

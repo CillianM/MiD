@@ -42,6 +42,12 @@ public class IdentityTypeController {
         return getDtoList(identityTypes);
     }
 
+    @GetMapping(value = "/fields")
+    @ResponseBody
+    public List<String> getIdentityTypeFields() {
+        return FieldType.getFieldTypeList();
+    }
+
     @PostMapping()
     @ResponseBody
     public IdentityTypeDTO createIdentityType(@RequestBody IdentityTypeDTO identityTypeToCreate) {
@@ -222,6 +228,15 @@ public class IdentityTypeController {
 
 
     private boolean isInvalidIdentityType(IdentityTypeDTO identityTypeDTO) {
-        return identityTypeDTO.getCoverImg() == null || identityTypeDTO.getFields() == null || identityTypeDTO.getIconImg() == null || identityTypeDTO.getPartyId() == null || identityTypeDTO.getName() == null;
+        if (identityTypeDTO.getCoverImg() == null || identityTypeDTO.getFields() == null || identityTypeDTO.getIconImg() == null || identityTypeDTO.getPartyId() == null || identityTypeDTO.getName() == null)
+            return true;
+        List<String> fieldsAvailable = FieldType.getFieldTypeList();
+        for (Field field : identityTypeDTO.getFields()) {
+            if (!fieldsAvailable.contains(field.getType())) {
+                return true; // asking for illegal field
+            }
+        }
+        return false;
     }
+
 }

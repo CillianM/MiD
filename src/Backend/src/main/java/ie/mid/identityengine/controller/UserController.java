@@ -12,6 +12,7 @@ import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.Individual;
 import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.UserRepository;
+import ie.mid.identityengine.security.DataEncryption;
 import ie.mid.identityengine.service.HyperledgerService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -151,6 +152,6 @@ public class UserController {
     }
 
     private boolean isInvalidUser(UserDTO userDTO) {
-        return userDTO.getNickname() == null || userDTO.getFcmToken() == null || userDTO.getPublicKey() == null;
+        return userDTO.getNickname() == null || userDTO.getFcmToken() == null || userDTO.getPublicKey() == null || DataEncryption.isInvalidKey(userDTO.getPublicKey());
     }
 }

@@ -69,4 +69,18 @@ public class CertificateDTO {
     public void setCreatorName(String creatorName) {
         this.creatorName = creatorName;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("CertificateDTO{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", ownerName='").append(ownerName).append('\'');
+        sb.append(", ownedBy='").append(ownedBy).append('\'');
+        sb.append(", creatorName='").append(creatorName).append('\'');
+        sb.append(", createdBy='").append(createdBy).append('\'');
+        sb.append(", createdAt='").append(createdAt).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -83,7 +83,9 @@ public class PushNotificationService {
         httpPost.setEntity(entity);
 
         BasicResponseHandler responseHandler = new BasicResponseHandler();
-        return httpClient.execute(httpPost, responseHandler);
+        String response = httpClient.execute(httpPost, responseHandler);
+        logger.debug("Firebase Reponse: " + response);
+        return response;
     }
 
 }

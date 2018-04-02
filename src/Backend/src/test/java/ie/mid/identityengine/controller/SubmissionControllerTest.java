@@ -134,7 +134,7 @@ public class SubmissionControllerTest {
 
     @Test
     public void updateSubmission() throws Exception {
-        SubmissionDTO submissionDTO = submissionController.updateSubmission(ID, this.submissionDTO);
+        SubmissionDTO submissionDTO = submissionController.updateSubmission(ID, this.submissionDTO, authentication);
         assertNotNull(submissionDTO);
     }
 

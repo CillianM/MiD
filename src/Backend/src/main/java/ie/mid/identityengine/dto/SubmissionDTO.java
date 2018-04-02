@@ -87,4 +87,20 @@ public class SubmissionDTO {
     public void setCertId(String certId) {
         this.certId = certId;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("SubmissionDTO{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", userName='").append(userName).append('\'');
+        sb.append(", userId='").append(userId).append('\'');
+        sb.append(", partyName='").append(partyName).append('\'');
+        sb.append(", partyId='").append(partyId).append('\'');
+        sb.append(", certId='").append(certId).append('\'');
+        sb.append(", data='").append(data).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", date='").append(date).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

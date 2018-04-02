@@ -51,4 +51,16 @@ public class PartyDTO {
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("PartyDTO{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", keyId='").append(keyId).append('\'');
+        sb.append(", publicKey='").append(publicKey).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

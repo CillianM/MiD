@@ -131,8 +131,14 @@ public class SubmissionController {
             logger.error("Invalid submission: " + submissionToCreate.toString());
             throw new BadRequestException();
         }
-        Submission submission = new Submission();
+        User user = userRepository.findById(submissionToCreate.getUserId());
+        Party party = partyRepository.findById(submissionToCreate.getPartyId());
+        if (user == null || party == null) {
+            logger.error("User or Party not found for submission: " + submissionToCreate.toString());
+            throw new ResourceNotFoundException();
+        }
 
+        Submission submission = new Submission();
         submission.setStatus(RequestStatus.PENDING.toString());
         submission.setUserId(submissionToCreate.getUserId());
         submission.setPartyId(submissionToCreate.getPartyId());
@@ -151,16 +157,19 @@ public class SubmissionController {
         return submissionToCreate;
     }
 
-    @PreAuthorize("#submissionToUpdate.partyId == authentication.name")
     @PutMapping(value = "/{id}")
     @ResponseBody
-    public SubmissionDTO updateSubmission(@PathVariable String id, @RequestBody SubmissionDTO submissionToUpdate) {
+    public SubmissionDTO updateSubmission(@PathVariable String id, @RequestBody SubmissionDTO submissionToUpdate, Authentication authentication) {
         logger.debug("'PUT' request to updateSubmission() for id " + id);
 
         Submission submission = submissionRepository.findById(id);
         if (submission == null) {
             logger.error("No submission exists for id " + id);
             throw new ResourceNotFoundException("Submission does not exist");
+        }
+        if (!submission.getPartyId().equals(authentication.getName())) {
+            logger.error("Authentication failure: " + authentication.getName() + " != " + submission.getPartyId());
+            throw new ResourceForbiddenException(authentication.getName() + " is forbidden from resource " + id);
         }
         User user = userRepository.findById(submissionToUpdate.getUserId());
         if (user == null) {
@@ -196,7 +205,7 @@ public class SubmissionController {
                         "status"
                 },
                 new String[]{
-                        submissionToUpdate.getId(),
+                        id,
                         submissionToUpdate.getStatus()
                 }
         );
@@ -206,7 +215,7 @@ public class SubmissionController {
             logger.error("Error sending FCM message", e);
         }
         logger.debug("Attempted notification, returning...");
-        return submissionToUpdate;
+        return getSubmission(id);
     }
 
     private Certificate getCertificate(Submission submission) {

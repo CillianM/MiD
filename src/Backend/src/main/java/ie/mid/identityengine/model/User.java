@@ -88,4 +88,18 @@ public class User {
     public void setNetworkId(String networkId) {
         this.networkId = networkId;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("User{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", nickname='").append(nickname).append('\'');
+        sb.append(", fcmToken='").append(fcmToken).append('\'');
+        sb.append(", networkId='").append(networkId).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", createdAt=").append(createdAt);
+        sb.append(", updatedAt=").append(updatedAt);
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -119,4 +119,21 @@ public class Request {
     public void setCertificateId(String certificateId) {
         this.certificateId = certificateId;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Request{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", senderId='").append(senderId).append('\'');
+        sb.append(", recipientId='").append(recipientId).append('\'');
+        sb.append(", indentityTypeId='").append(indentityTypeId).append('\'');
+        sb.append(", identityTypeFields='").append(identityTypeFields).append('\'');
+        sb.append(", userResponse='").append(userResponse).append('\'');
+        sb.append(", certificateId='").append(certificateId).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", createdAt=").append(createdAt);
+        sb.append(", updatedAt=").append(updatedAt);
+        sb.append('}');
+        return sb.toString();
+    }
 }

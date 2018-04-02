@@ -1,6 +1,7 @@
 package ie.mid.identityengine.controller;
 
 import com.google.gson.JsonObject;
+import ie.mid.identityengine.dto.CertificateDTO;
 import ie.mid.identityengine.dto.InformationRequestDTO;
 import ie.mid.identityengine.dto.RequestDTO;
 import ie.mid.identityengine.enums.FieldType;
@@ -9,9 +10,11 @@ import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.exception.BadRequestException;
 import ie.mid.identityengine.exception.ResourceForbiddenException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
+import ie.mid.identityengine.model.IdentityType;
 import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.model.Request;
 import ie.mid.identityengine.model.User;
+import ie.mid.identityengine.repository.IdentityTypeRepository;
 import ie.mid.identityengine.repository.PartyRepository;
 import ie.mid.identityengine.repository.RequestRepository;
 import ie.mid.identityengine.repository.UserRepository;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -42,18 +46,15 @@ public class RequestController {
     @Autowired
     PartyRepository partyRepository;
     @Autowired
+    IdentityTypeRepository identityTypeRepository;
+    @Autowired
+    CertificateController certificateController;
+    @Autowired
     PushNotificationService pushNotificationService;
 
     private Logger logger = LogManager.getLogger(RequestController.class.getName());
 
     private static final String USER_NOT_EXIST = "User does not exits";
-
-    //Allow requester to see what can be asked
-    @GetMapping(value = "/types")
-    @ResponseBody
-    public List<String> getRequestTypes() {
-        return FieldType.getRequestFields();
-    }
 
     @GetMapping(value = "/recipient/{recipientId}")
     @ResponseBody
@@ -144,6 +145,15 @@ public class RequestController {
             logger.error("No party exists with id " + informationRequestDTO.getSenderId());
             throw new ResourceNotFoundException(USER_NOT_EXIST);
         }
+        IdentityType identityType = identityTypeRepository.findById(informationRequestDTO.getIndentityTypeId());
+        if (identityType == null) {
+            logger.error("No identitytype exists with id " + informationRequestDTO.getIndentityTypeId());
+            throw new ResourceNotFoundException("No identitytype exists with id " + informationRequestDTO.getIndentityTypeId());
+        }
+        if (containsInvalidFields(informationRequestDTO.getIdentityTypeFields(), identityType)) {
+            logger.error("Invalid fields for identity type: " + informationRequestDTO.getIdentityTypeFields());
+            throw new BadRequestException();
+        }
         //Create the request to be tracked
         Request request = new Request();
         request.setRecipientId(recipient.getId());
@@ -190,11 +200,19 @@ public class RequestController {
             logger.error("No requests exist for id " + id);
             throw new ResourceNotFoundException("No requests exists for id " + id);
         }
+        IdentityType identityType = identityTypeRepository.findById(informationRequestDTO.getIndentityTypeId());
+        if (identityType == null) {
+            logger.error("No identity type exists with id " + informationRequestDTO.getIndentityTypeId());
+            throw new ResourceNotFoundException("No identity type exists with id " + informationRequestDTO.getIndentityTypeId());
+        }
         if (isInvalidRequest(informationRequestDTO)) {
             logger.error("Invalid request: " + informationRequestDTO.toString());
             throw new BadRequestException();
         }
-        request.setIndentityTypeId(informationRequestDTO.getIndentityTypeId());
+        if (containsInvalidFields(informationRequestDTO.getIdentityTypeFields(), identityType)) {
+            logger.error("Invalid fields for identity type: " + informationRequestDTO.getIdentityTypeFields());
+            throw new BadRequestException();
+        }
         request.setIdentityTypeFields(informationRequestDTO.getIdentityTypeFields());
 
         String message;
@@ -205,6 +223,11 @@ public class RequestController {
             request.setStatus(RequestStatus.RESCINDED.toString());
             message = " has rescinded their request";
         } else if (informationRequestDTO.getStatus().equals(RequestStatus.ACCEPTED.toString())) {
+            CertificateDTO certificate = certificateController.getCertificate(informationRequestDTO.getCertificateId());
+            if (certificate == null) {
+                logger.error("No certificate exists with id " + informationRequestDTO.getCertificateId());
+                throw new ResourceNotFoundException("No certificate exists with id " + informationRequestDTO.getCertificateId());
+            }
             request.setUserResponse(informationRequestDTO.getIdentityTypeValues());
             request.setStatus(RequestStatus.ACCEPTED.toString());
             request.setCertificateId(informationRequestDTO.getCertificateId());
@@ -285,13 +308,22 @@ public class RequestController {
         }
         //Check for invalid request fields
         String[] fieldsRequested = requestDTO.getIdentityTypeFields().split(",");
-        List<String> fieldsAvailable = FieldType.getRequestFields();
+        List<String> fieldsAvailable = FieldType.getFieldTypeList();
         for(String field: fieldsRequested){
             if(!fieldsAvailable.contains(field)){
                 return true; // asking for illegal field
             }
         }
         return false;
+    }
+
+    private boolean containsInvalidFields(String identityTypeFields, IdentityType identityType) {
+        String[] fields = identityType.getFieldsArray();
+        for (int i = 0; i < fields.length; i++) {
+            fields[i] = fields[i].substring(fields[i].indexOf(":") + 1, fields[i].length());
+        }
+        String[] potentialFields = identityTypeFields.split(",");
+        return !(Arrays.asList(fields).containsAll(Arrays.asList(potentialFields)));
     }
 
     private String getUserName(String id) {

@@ -82,4 +82,19 @@ public class IdentityTypeDTO {
     public void setCoverImg(String coverImg) {
         this.coverImg = coverImg;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("IdentityTypeDTO{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", partyId='").append(partyId).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", iconImg='").append(iconImg).append('\'');
+        sb.append(", coverImg='").append(coverImg).append('\'');
+        sb.append(", fields=").append(fields);
+        sb.append(", versionNumber=").append(versionNumber);
+        sb.append(", status='").append(status).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

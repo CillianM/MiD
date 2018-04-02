@@ -84,4 +84,17 @@ public class Party {
     public void setNetworkId(String networkId) {
         this.networkId = networkId;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Party{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", networkId='").append(networkId).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", createdAt=").append(createdAt);
+        sb.append(", updatedAt=").append(updatedAt);
+        sb.append('}');
+        return sb.toString();
+    }
 }

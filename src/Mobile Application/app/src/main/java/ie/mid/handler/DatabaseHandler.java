@@ -318,7 +318,7 @@ public class DatabaseHandler {
                 cardType.setTitle(cursor.getString(1));
                 cardType.setCardId(cursor.getString(2));
                 cardType.setOwnerId(cursor.getString(3));
-                cardType.setDefaultColor(R.color.blue);
+                cardType.setDefaultColor(R.color.colorPrimary);
                 cardType.setStatus(cursor.getString(7));
                 cardType.setImageUrl(cursor.getString(6));
                 cardType.setPartyId(cursor.getString(8));
@@ -343,7 +343,7 @@ public class DatabaseHandler {
                 cardType.setTitle(cursor.getString(1));
                 cardType.setCardId(cursor.getString(2));
                 cardType.setOwnerId(cursor.getString(3));
-                cardType.setDefaultColor(R.color.blue);
+                cardType.setDefaultColor(R.color.colorPrimary);
                 cardType.setStatus(cursor.getString(7));
                 cardType.setImageUrl(cursor.getString(6));
                 cardType.setPartyId(cursor.getString(8));
@@ -367,7 +367,7 @@ public class DatabaseHandler {
                 cardType.setTitle(cursor.getString(1));
                 cardType.setCardId(cursor.getString(2));
                 cardType.setOwnerId(cursor.getString(3));
-                cardType.setDefaultColor(R.color.blue);
+                cardType.setDefaultColor(R.color.colorPrimary);
                 cardType.setStatus(cursor.getString(7));
                 cardType.setImageUrl(cursor.getString(6));
                 cardType.setPartyId(cursor.getString(8));
@@ -391,7 +391,7 @@ public class DatabaseHandler {
                 cardType.setTitle(cursor.getString(1));
                 cardType.setCardId(cursor.getString(2));
                 cardType.setOwnerId(cursor.getString(3));
-                cardType.setDefaultColor(R.color.blue);
+                cardType.setDefaultColor(R.color.colorPrimary);
                 cardType.setStatus(cursor.getString(7));
                 cardType.setImageUrl(cursor.getString(6));
                 cardType.setPartyId(cursor.getString(8));

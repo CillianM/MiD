@@ -60,4 +60,17 @@ public class UserDTO {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("UserDTO{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", nickname='").append(nickname).append('\'');
+        sb.append(", fcmToken='").append(fcmToken).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", keyId='").append(keyId).append('\'');
+        sb.append(", publicKey='").append(publicKey).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

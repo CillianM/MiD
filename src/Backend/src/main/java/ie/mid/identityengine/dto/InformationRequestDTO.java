@@ -69,4 +69,18 @@ public class InformationRequestDTO {
     public void setCertificateId(String certificateId) {
         this.certificateId = certificateId;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("InformationRequestDTO{");
+        sb.append("senderId='").append(senderId).append('\'');
+        sb.append(", recipientId='").append(recipientId).append('\'');
+        sb.append(", indentityTypeId='").append(indentityTypeId).append('\'');
+        sb.append(", identityTypeFields='").append(identityTypeFields).append('\'');
+        sb.append(", identityTypeValues='").append(identityTypeValues).append('\'');
+        sb.append(", certificateId='").append(certificateId).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

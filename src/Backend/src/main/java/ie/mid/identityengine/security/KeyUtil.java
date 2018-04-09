@@ -1,4 +1,4 @@
-package integration.util;
+package ie.mid.identityengine.security;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 

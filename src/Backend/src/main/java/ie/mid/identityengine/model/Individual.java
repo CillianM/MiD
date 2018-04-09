@@ -23,4 +23,13 @@ public class Individual {
     public void setIndividualId(String individualId) {
         this.individualId = individualId;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Individual{");
+        sb.append("$class='").append($class).append('\'');
+        sb.append(", individualId='").append(individualId).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -152,6 +152,14 @@ public class UserController {
     }
 
     private boolean isInvalidUser(UserDTO userDTO) {
-        return userDTO.getNickname() == null || userDTO.getFcmToken() == null || userDTO.getPublicKey() == null || DataEncryption.isInvalidKey(userDTO.getPublicKey());
+        if (userDTO.getNickname() == null || userDTO.getFcmToken() == null || userDTO.getPublicKey() == null || DataEncryption.isInvalidPublicKey(userDTO.getPublicKey())) {
+            logger.error("UserDTO contains null parameters: " + userDTO.toString());
+            return true;
+        }
+        if (userDTO.getNickname().isEmpty() || userDTO.getFcmToken().isEmpty() || userDTO.getPublicKey().isEmpty() || DataEncryption.isInvalidPublicKey(userDTO.getPublicKey())) {
+            logger.error("UserDTO contains empty parameters: " + userDTO.toString());
+            return true;
+        }
+        return false;
     }
 }

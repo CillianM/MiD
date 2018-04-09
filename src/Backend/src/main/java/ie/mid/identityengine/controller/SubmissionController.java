@@ -251,7 +251,15 @@ public class SubmissionController {
     }
 
     private boolean isInvalidSubmission(SubmissionDTO submissionDTO) {
-        return submissionDTO.getPartyId() == null || submissionDTO.getUserId() == null || submissionDTO.getData() == null;
+        if (submissionDTO.getPartyId() == null || submissionDTO.getUserId() == null || submissionDTO.getData() == null) {
+            logger.error("SubmissionDTO contains null parameters: " + submissionDTO.toString());
+            return true;
+        }
+        if (submissionDTO.getPartyId().isEmpty() || submissionDTO.getUserId().isEmpty() || submissionDTO.getData().isEmpty()) {
+            logger.error("SubmissionDTO contains empty parameters: " + submissionDTO.toString());
+            return true;
+        }
+        return false;
     }
 
     private String getUserName(String id) {

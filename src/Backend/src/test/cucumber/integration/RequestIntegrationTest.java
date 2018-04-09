@@ -12,11 +12,11 @@ import ie.mid.identityengine.dto.RequestDTO;
 import ie.mid.identityengine.dto.UserDTO;
 import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.security.DataEncryption;
+import ie.mid.identityengine.security.KeyUtil;
 import integration.model.HttpCall;
 import integration.model.StoredRequest;
 import integration.model.StoredUser;
 import integration.util.HttpUtil;
-import integration.util.KeyUtil;
 import integration.util.StorageUtil;
 import org.junit.runner.RunWith;
 

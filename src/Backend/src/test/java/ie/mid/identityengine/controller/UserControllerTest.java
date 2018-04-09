@@ -6,6 +6,7 @@ import ie.mid.identityengine.dto.UserDTO;
 import ie.mid.identityengine.model.Individual;
 import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.UserRepository;
+import ie.mid.identityengine.security.KeyUtil;
 import ie.mid.identityengine.service.HyperledgerService;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +16,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+
+import java.security.KeyPair;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -45,10 +48,11 @@ public class UserControllerTest {
 
     @Before
     public void setUp() throws Exception {
+        KeyPair keyPair = KeyUtil.generateKeyPair();
+        userDTO.setPublicKey(KeyUtil.byteToBase64(keyPair.getPublic().getEncoded()).replace("\n", ""));
         User user = new User();
         user.setId(ID);
         userDTO.setNickname(NAME);
-        userDTO.setPublicKey(KEY);
         userDTO.setFcmToken(FCM);
         NewKeyDTO key = new NewKeyDTO();
         key.setId(ID);

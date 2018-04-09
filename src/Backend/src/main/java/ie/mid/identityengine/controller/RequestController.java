@@ -304,6 +304,11 @@ public class RequestController {
 
     private boolean isInvalidRequest(InformationRequestDTO requestDTO) {
         if( requestDTO.getRecipientId() == null || requestDTO.getSenderId() == null || requestDTO.getIndentityTypeId() == null || requestDTO.getIdentityTypeFields() == null){
+            logger.error("InformationRequestDTO contains null parameters: " + requestDTO.toString());
+            return true;
+        }
+        if (requestDTO.getRecipientId().isEmpty() || requestDTO.getSenderId().isEmpty() || requestDTO.getIndentityTypeId().isEmpty() || requestDTO.getIdentityTypeFields().isEmpty()) {
+            logger.error("InformationRequestDTO contains empty parameters: " + requestDTO.toString());
             return true;
         }
         //Check for invalid request fields
@@ -311,6 +316,7 @@ public class RequestController {
         List<String> fieldsAvailable = FieldType.getFieldTypeList();
         for(String field: fieldsRequested){
             if(!fieldsAvailable.contains(field)){
+                logger.error("InformationRequestDTO contains illegal field: " + field.toString());
                 return true; // asking for illegal field
             }
         }

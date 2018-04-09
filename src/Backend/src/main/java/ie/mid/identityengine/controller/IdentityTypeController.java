@@ -228,11 +228,19 @@ public class IdentityTypeController {
 
 
     private boolean isInvalidIdentityType(IdentityTypeDTO identityTypeDTO) {
-        if (identityTypeDTO.getCoverImg() == null || identityTypeDTO.getFields() == null || identityTypeDTO.getIconImg() == null || identityTypeDTO.getPartyId() == null || identityTypeDTO.getName() == null)
+        if (identityTypeDTO.getCoverImg() == null || identityTypeDTO.getFields() == null || identityTypeDTO.getIconImg() == null || identityTypeDTO.getPartyId() == null || identityTypeDTO.getName() == null) {
+            logger.error("Some parameters of identity type are null: " + identityTypeDTO.toString());
             return true;
+        }
+        if (identityTypeDTO.getCoverImg().isEmpty() || identityTypeDTO.getFields().isEmpty() || identityTypeDTO.getIconImg().isEmpty() || identityTypeDTO.getPartyId().isEmpty() || identityTypeDTO.getName().isEmpty()) {
+            logger.error("Some parameters of identity type are empty: " + identityTypeDTO.toString());
+            return true;
+        }
+
         List<String> fieldsAvailable = FieldType.getFieldTypeList();
         for (Field field : identityTypeDTO.getFields()) {
             if (!fieldsAvailable.contains(field.getType())) {
+                logger.error("Fields of identity type is not an approved type: " + field.toString());
                 return true; // asking for illegal field
             }
         }

@@ -32,4 +32,14 @@ public class CertificateUpdate {
     public void setNewStatus(String newStatus) {
         this.newStatus = newStatus;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("CertificateUpdate{");
+        sb.append("$class='").append($class).append('\'');
+        sb.append(", certificate='").append(certificate).append('\'');
+        sb.append(", newStatus='").append(newStatus).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

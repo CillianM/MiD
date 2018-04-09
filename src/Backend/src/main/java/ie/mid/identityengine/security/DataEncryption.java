@@ -36,6 +36,7 @@ public class DataEncryption {
 
     public static String encryptText(String text, String keyString) {
         try {
+            keyString = keyString.replace("\n", "");
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             PrivateKey privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(Base64.decodeBase64(keyString)));
@@ -46,7 +47,7 @@ public class DataEncryption {
         }
     }
 
-    public static boolean isInvalidKey(String key) {
+    public static boolean isInvalidPublicKey(String key) {
         try {
             String testKey = key.replace("\n", "");
             byte[] keyArray = Base64.decodeBase64(testKey);

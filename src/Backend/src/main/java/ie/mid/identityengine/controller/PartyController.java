@@ -175,7 +175,15 @@ public class PartyController {
     }
 
     private boolean isInvalidParty(PartyDTO partyDTO) {
-        return partyDTO.getName() == null || partyDTO.getPublicKey() == null || DataEncryption.isInvalidKey(partyDTO.getPublicKey());
+        if (partyDTO.getName() == null || partyDTO.getPublicKey() == null || DataEncryption.isInvalidPublicKey(partyDTO.getPublicKey())) {
+            logger.error("PartyDTO contains null parameters: " + partyDTO.toString());
+            return true;
+        }
+        if (partyDTO.getName().isEmpty() || partyDTO.getPublicKey().isEmpty()) {
+            logger.error("PartyDTO contains empty parameters: " + partyDTO.toString());
+            return true;
+        }
+        return false;
     }
 
 }

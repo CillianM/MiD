@@ -1,14 +1,18 @@
 package ie.mid.identityengine.controller;
 
 import com.google.gson.JsonObject;
+import ie.mid.identityengine.dto.CertificateDTO;
 import ie.mid.identityengine.dto.InformationRequestDTO;
 import ie.mid.identityengine.dto.RequestDTO;
+import ie.mid.identityengine.enums.FieldType;
 import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.exception.BadRequestException;
+import ie.mid.identityengine.model.IdentityType;
 import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.model.Request;
 import ie.mid.identityengine.model.User;
+import ie.mid.identityengine.repository.IdentityTypeRepository;
 import ie.mid.identityengine.repository.PartyRepository;
 import ie.mid.identityengine.repository.RequestRepository;
 import ie.mid.identityengine.repository.UserRepository;
@@ -48,6 +52,12 @@ public class RequestControllerTest {
     private PartyRepository partyRepository;
 
     @Mock
+    private IdentityTypeRepository identityTypeRepository;
+
+    @Mock
+    private CertificateController certificateController;
+
+    @Mock
     private PushNotificationService pushNotificationService;
 
     private static final String ID = "id";
@@ -56,6 +66,8 @@ public class RequestControllerTest {
     private static final String FIELDS = "KEY,EXPIRY";
     private InformationRequestDTO requestDTO = new InformationRequestDTO();
     private Authentication authentication;
+    private static final String URL = "url";
+    private static final String ID_FIELDS = "1:" + FieldType.KEY + ",2:" + FieldType.EXPIRY;
 
 
     @Before
@@ -77,12 +89,26 @@ public class RequestControllerTest {
         request.setUpdatedAt(new Date());
         List<Request> requests = new ArrayList<>();
         requests.add(request);
+        IdentityType identityType = new IdentityType();
+        identityType.setId(ID);
+        identityType.setFields(ID_FIELDS);
+        identityType.setCoverImg(URL);
+        identityType.setIconImg(URL);
+        identityType.setName(NAME);
+        identityType.setPartyId(ID);
+        CertificateDTO certificate = new CertificateDTO();
+        certificate.setId(ID);
+        certificate.setOwnedBy(ID);
+        certificate.setCreatedBy(ID);
         requestDTO.setRecipientId(ID);
         requestDTO.setSenderId(ID);
         requestDTO.setIndentityTypeId(ID);
         requestDTO.setIdentityTypeFields(FIELDS);
         requestDTO.setIdentityTypeValues(FIELDS);
         requestDTO.setStatus(RequestStatus.ACCEPTED.toString());
+        when(certificateController.getCertificate(anyString())).thenReturn(certificate);
+        when(identityTypeRepository.save(any(IdentityType.class))).thenReturn(identityType);
+        when(identityTypeRepository.findById(anyString())).thenReturn(identityType);
         when(requestRepository.save(any(Request.class))).thenReturn(request);
         when(requestRepository.findById(anyString())).thenReturn(request);
         when(requestRepository.findByRecipientId(anyString())).thenReturn(requests);

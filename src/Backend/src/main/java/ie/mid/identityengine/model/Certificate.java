@@ -58,4 +58,17 @@ public class Certificate {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Certificate{");
+        sb.append("$class='").append($class).append('\'');
+        sb.append(", certId='").append(certId).append('\'');
+        sb.append(", dateCreated='").append(dateCreated).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", trustee='").append(trustee).append('\'');
+        sb.append(", owner='").append(owner).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

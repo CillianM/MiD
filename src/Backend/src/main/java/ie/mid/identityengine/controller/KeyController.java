@@ -130,11 +130,28 @@ public class KeyController {
     }
 
     private boolean isInvalidKey(KeyDTO keyDTO) {
-        return keyDTO.getUserId() == null || keyDTO.getPublicKey() == null;
+
+        if (keyDTO.getUserId() == null || keyDTO.getPublicKey() == null) {
+            logger.error("KeyDTO contains null parameters: " + keyDTO.toString());
+            return true;
+        }
+        if (keyDTO.getUserId().isEmpty() || keyDTO.getPublicKey().isEmpty()) {
+            logger.error("KeyDTO contains empty parameters: " + keyDTO.toString());
+            return true;
+        }
+        return false;
     }
 
     private boolean isInvalidToken(TokenDTO tokenDTO) {
-        return tokenDTO.getUserId() == null || tokenDTO.getToken() == null;
+        if (tokenDTO.getUserId() == null || tokenDTO.getToken() == null) {
+            logger.error("TokenDTO contains null parameters: " + tokenDTO.toString());
+            return true;
+        }
+        if (tokenDTO.getUserId().isEmpty() || tokenDTO.getToken().isEmpty()) {
+            logger.error("TokenDTO contains empty parameters: " + tokenDTO.toString());
+            return true;
+        }
+        return false;
     }
 
 }

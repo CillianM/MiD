@@ -6,6 +6,7 @@ import ie.mid.identityengine.dto.PartyDTO;
 import ie.mid.identityengine.model.IdentifyingParty;
 import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.repository.PartyRepository;
+import ie.mid.identityengine.security.KeyUtil;
 import ie.mid.identityengine.service.HyperledgerService;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +43,6 @@ public class PartyControllerTest {
 
     private static final String ID = "id";
     private static final String NAME = "name";
-    private static final String KEY = "key";
     private PartyDTO partyDTO = new PartyDTO();
     private Authentication authentication;
 
@@ -49,9 +50,10 @@ public class PartyControllerTest {
 
     @Before
     public void setUp() throws Exception {
+        KeyPair keyPair = KeyUtil.generateKeyPair();
+        partyDTO.setPublicKey(KeyUtil.byteToBase64(keyPair.getPublic().getEncoded()).replace("\n", ""));
         partyDTO.setId(ID);
         partyDTO.setName(NAME);
-        partyDTO.setPublicKey(KEY);
         Party party = new Party();
         party.setId(ID);
         party.setName(NAME);
@@ -59,7 +61,7 @@ public class PartyControllerTest {
         parties.add(party);
         NewKeyDTO key = new NewKeyDTO();
         key.setId(ID);
-        key.setPublicKey(KEY);
+        key.setPublicKey(KeyUtil.byteToBase64(keyPair.getPublic().getEncoded()).replace("\n", ""));
         IdentifyingParty identifyingParty = new IdentifyingParty();
         identifyingParty.setPartyId(ID);
         when(partyRepository.save(any(Party.class))).thenReturn(party);

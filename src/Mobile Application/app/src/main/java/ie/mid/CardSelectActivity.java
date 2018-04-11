@@ -1,9 +1,7 @@
 package ie.mid;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,17 +11,14 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import ie.mid.adapter.CardSelectAdapter;
 import ie.mid.async.IdentityTypeGetter;
-import ie.mid.backend.IdentityTypeService;
 import ie.mid.handler.DatabaseHandler;
 import ie.mid.interfaces.IdentityTaskCompleted;
 import ie.mid.model.AvailableCard;
-import ie.mid.model.CardType;
 import ie.mid.pojo.IdentityType;
 import ie.mid.util.InternetUtil;
 
@@ -38,8 +33,6 @@ public class CardSelectActivity extends AppCompatActivity implements IdentityTas
         super.onCreate(savedInstanceState);
         userId = getIntent().getStringExtra("userId");
         setContentView(R.layout.activity_card_select);
-        getSupportActionBar().setTitle("Identity Selection");
-
         CardView cardView = (CardView) findViewById(R.id.card_view);
         CardView.LayoutParams layoutParams = (CardView.LayoutParams)
                 cardView.getLayoutParams();

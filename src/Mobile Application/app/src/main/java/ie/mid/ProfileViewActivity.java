@@ -10,15 +10,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -38,7 +39,6 @@ import ie.mid.view.RoundedImageView;
 public class ProfileViewActivity extends AppCompatActivity implements ProfileTaskCompleted{
 
     private RoundedImageView profileImage;
-    private TextView usernameTextview;
     private Profile profile;
     private static final int RESULT_LOAD_IMAGE = 100;
     private EditText username;
@@ -54,8 +54,6 @@ public class ProfileViewActivity extends AppCompatActivity implements ProfileTas
         profile = handler.getProfile(getIntent().getStringExtra("userId"));
         handler.close();
         profileImage = findViewById(R.id.profile_image);
-        usernameTextview = findViewById(R.id.usernameText);
-        usernameTextview.setText(profile.getName());
         String imagePath = profile.getImageUrl();
         if (!imagePath.equals("PUG")) {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
@@ -73,9 +71,28 @@ public class ProfileViewActivity extends AppCompatActivity implements ProfileTas
         });
         username = findViewById(R.id.username);
         username.setText(profile.getName());
+        username.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().equals(profile.getName())) {
+                    findViewById(R.id.update_profile).setVisibility(View.GONE);
+                } else {
+                    findViewById(R.id.update_profile).setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
 
         final Context context = getApplicationContext();
         Button update = findViewById(R.id.update_profile);
+        update.setVisibility(View.GONE);
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -248,7 +265,7 @@ public class ProfileViewActivity extends AppCompatActivity implements ProfileTas
             handler.updateProfileName(profile.getId(),updatedProfile.getName());
             handler.close();
             username.setText(updatedProfile.getName());
-            usernameTextview.setText(updatedProfile.getName());
+            profile.setName(updatedProfile.getName());
             Toast.makeText(this, "Update Complete", Toast.LENGTH_SHORT).show();
         } else if(isDeletion){
             DatabaseHandler handler = new DatabaseHandler(getApplicationContext());

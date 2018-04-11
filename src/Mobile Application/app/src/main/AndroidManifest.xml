@@ -31,7 +31,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".CardSelectActivity"
-            android:label="@string/app_name"
+            android:label="Identity Selection"
             android:theme="@style/AppBaseTheme" />
         <activity android:name=".ProfileSelectionActivity">
             <intent-filter>
@@ -79,8 +79,14 @@
             android:name=".CardSubmissionActivity"
             android:label="Submit Identity"
             android:theme="@style/AppBaseTheme" />
-        <activity android:name=".ProfileViewActivity" />
-        <activity android:name=".RequestCreateActivity" />
+        <activity
+            android:name=".ProfileViewActivity"
+            android:theme="@style/AppBaseTheme"
+            android:label="User Profile Settings" />
+        <activity
+            android:name=".RequestCreateActivity"
+            android:theme="@style/AppBaseTheme"
+            android:label="Create Request" />
         <activity android:name=".RequestListActivity"
             android:theme="@style/AppBaseTheme"/>
         <activity android:name=".SubmissionListActivity"

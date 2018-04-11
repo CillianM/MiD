@@ -1,4 +1,4 @@
-package integration.model;
+package ie.mid.identityengine.integration.model;
 
 public class StoredRequest {
     private String id;

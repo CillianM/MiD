@@ -1,6 +1,7 @@
 package ie.mid;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -42,6 +43,7 @@ public class SubmissionViewActivity extends AppCompatActivity implements Submiss
 
     Profile profile;
     Submission submission;
+    boolean fromCreate = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,12 +51,31 @@ public class SubmissionViewActivity extends AppCompatActivity implements Submiss
         setContentView(R.layout.activity_submission_view);
         DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
         handler.open();
-        profile = handler.getProfile(getIntent().getStringExtra("userId"));
+        String id = getIntent().getStringExtra("userId");
+        if(id != null) {
+            profile = handler.getProfile(id);
+        } else {
+            profile = handler.getProfileByServerId(getIntent().getStringExtra("serverId"));
+        }
+        fromCreate = getIntent().getBooleanExtra("fromCreate", false);
         showLoading();
         if(InternetUtil.isNetworkAvailable(getApplicationContext()))
             new SubmissionGetter(getApplicationContext(),this,profile,getIntent().getStringExtra("submissionId")).execute();
         else
             networkError();
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(fromCreate) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("userId", profile.getId());
+            startActivity(intent);
+            finish();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void networkError() {

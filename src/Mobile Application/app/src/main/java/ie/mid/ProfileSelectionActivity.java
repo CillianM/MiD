@@ -37,10 +37,6 @@ public class ProfileSelectionActivity extends AppCompatActivity implements IsSer
         PreferenceManager.setDefaultValues(this, R.xml.pref_main, false);
         profileImage = (RoundedImageView) findViewById(R.id.user_profile_photo);
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            //TODO implement handling of notification data here
-        }
         isServerLive();
         DatabaseHandler handler = new DatabaseHandler(this);
         handler.open();
@@ -62,7 +58,7 @@ public class ProfileSelectionActivity extends AppCompatActivity implements IsSer
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
-                    intent.putExtra("user", profiles.get(profileSpinner.getSelectedItemPosition()).getId());
+                    intent.putExtra("userId", profiles.get(profileSpinner.getSelectedItemPosition()).getId());
                     startActivity(intent);
                 }
             });

@@ -1,6 +1,6 @@
-package integration.util;
+package ie.mid.identityengine.integration.util;
 
-import integration.model.HttpCall;
+import ie.mid.identityengine.integration.model.HttpCall;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -40,6 +40,8 @@
             **/security/AuthProvider.java,
             **/Application.java
         </sonar.coverage.exclusions>
+        <includedCategories></includedCategories>
+        <excludedCategories></excludedCategories>
     </properties>
 
     <dependencies>
@@ -185,7 +187,31 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.21.0</version>
+        </dependency>
+
+
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>int</id>
+            <properties>
+                <includedCategories>ie.mid.identityengine.category.IntegrationTests</includedCategories>
+                <excludedCategories>ie.mid.identityengine.category.UnitTests</excludedCategories>
+            </properties>
+        </profile>
+        <profile>
+            <id>unit</id>
+            <properties>
+                <includedCategories>ie.mid.identityengine.category.UnitTests</includedCategories>
+                <excludedCategories>ie.mid.identityengine.category.IntegrationTests</excludedCategories>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <testSourceDirectory>src/test/java</testSourceDirectory>
@@ -206,7 +232,16 @@
                 </configuration>
             </plugin>
 
-            <!-- Sonar-JaCoCo integration plugin -->
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.21.0</version>
+                <configuration>
+                    <groups>${includedCategories}</groups>
+                    <excludedGroups>${excludedCategories}</excludedGroups>
+                </configuration>
+            </plugin>
+
+            <!-- Sonar-JaCoCo ie.mid.identityengine.integration plugin -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -214,6 +249,7 @@
                 <configuration>
                     <destFile>${sonar.jacoco.reportPath}</destFile>
                     <append>true</append>
+                    <excludes>${excludedCategories}</excludes>
                 </configuration>
                 <executions>
                     <execution>

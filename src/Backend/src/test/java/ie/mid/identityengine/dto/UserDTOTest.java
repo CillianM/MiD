@@ -1,13 +1,16 @@
 package ie.mid.identityengine.dto;
 
+import ie.mid.identityengine.category.UnitTests;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class UserDTOTest {
     @InjectMocks

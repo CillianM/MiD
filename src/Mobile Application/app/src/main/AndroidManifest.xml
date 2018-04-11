@@ -68,7 +68,13 @@
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden" />
+            android:configChanges="orientation|keyboardHidden">
+            <intent-filter>
+                <action android:name="OPEN_SUBMISSION" />
+                <action android:name="OPEN_REQUEST" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".CardSubmissionActivity"
             android:label="Submit Identity"
@@ -80,9 +86,11 @@
         <activity android:name=".SubmissionListActivity"
             android:theme="@style/AppBaseTheme"/>
         <activity android:name=".SubmissionViewActivity"
-            android:theme="@style/AppBaseTheme"/>
+            android:theme="@style/AppBaseTheme">
+        </activity>
         <activity android:name=".RequestViewActivity"
-                android:theme="@style/AppBaseTheme"/>
+            android:theme="@style/AppBaseTheme">
+        </activity>
     </application>
 
 </manifest>

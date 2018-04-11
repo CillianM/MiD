@@ -370,7 +370,12 @@ public class CardSubmissionActivity extends AppCompatActivity implements SubmitT
             handler.updateSubmissionId(cardId, submission.getId());
             handler.createSubmission(submission.getId(),cardId);
             handler.close();
-            finishActivity();
+            Intent intent = new Intent(this,SubmissionViewActivity.class);
+            intent.putExtra("userId",profile.getId());
+            intent.putExtra("submissionId",submission.getId());
+            intent.putExtra("fromCreate",true);
+            startActivity(intent);
+            finish();
         }
         else{
             error();

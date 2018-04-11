@@ -20,6 +20,10 @@ public class LoginActivity extends AppCompatActivity {
 
     static String userId;
     private Profile userProfile;
+    private boolean isNotification = false;
+    private boolean isSubmission = false;
+    private String submissionId = null;
+    private String requestId = null;
     PinLayout pinLayout;
     private FrameLayout mFrameNumber1;
     private FrameLayout mFrameNumber2;
@@ -40,11 +44,27 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Intent intent = getIntent();
-        userId = intent.getStringExtra("user");
-
+        userId = intent.getStringExtra("userId");
+        isNotification = false;
+        isSubmission = false;
+        String serverId = intent.getStringExtra("serverId");
+        submissionId = null;
+        requestId = null;
         DatabaseHandler handler = new DatabaseHandler(this);
         handler.open();
-        userProfile = handler.getProfile(userId);
+        if(serverId != null){
+            isNotification = true;
+            if(intent.getStringExtra("type").equals("REQUEST")){
+                isSubmission = false;
+                requestId = intent.getStringExtra("requestId");
+            } else{
+                isSubmission = true;
+                submissionId = intent.getStringExtra("submissionId");
+            }
+            userProfile = handler.getProfileByServerId(serverId);
+        }else{
+            userProfile = handler.getProfile(userId);
+        }
         handler.close();
 
         pinLayout = findViewById(R.id.pin_layout);
@@ -74,8 +94,21 @@ public class LoginActivity extends AppCompatActivity {
         byte[] correctHash = HashUtil.hexToByte(userProfile.getHash());
         byte[] hashedPassword = HashUtil.hashPassword(typedPin, salt);
         if (Arrays.equals(hashedPassword, correctHash)) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("userId", userId);
+            Intent intent;
+            if(isNotification){
+                if(isSubmission) {
+                    intent = new Intent(getApplicationContext(), SubmissionViewActivity.class);
+                    intent.putExtra("submissionId",submissionId);
+                }else{
+                    intent = new Intent(getApplicationContext(), RequestViewActivity.class);
+                    intent.putExtra("requestId",requestId);
+                    intent.putExtra("isRequest",false);
+                }
+            }else {
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+            }
+            intent.putExtra("fromCreate", true);
+            intent.putExtra("userId", userProfile.getId());
             startActivity(intent);
         } else {
             pinLayout.clearPassword();

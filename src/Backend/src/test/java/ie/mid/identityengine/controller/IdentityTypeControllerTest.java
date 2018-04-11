@@ -1,5 +1,6 @@
 package ie.mid.identityengine.controller;
 
+import ie.mid.identityengine.category.UnitTests;
 import ie.mid.identityengine.dto.IdentityTypeDTO;
 import ie.mid.identityengine.enums.FieldType;
 import ie.mid.identityengine.model.Field;
@@ -7,6 +8,7 @@ import ie.mid.identityengine.model.IdentityType;
 import ie.mid.identityengine.repository.IdentityTypeRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -22,6 +24,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class IdentityTypeControllerTest {
 

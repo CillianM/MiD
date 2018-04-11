@@ -1,5 +1,6 @@
 package ie.mid.identityengine.controller;
 
+import ie.mid.identityengine.category.UnitTests;
 import ie.mid.identityengine.dto.KeyDTO;
 import ie.mid.identityengine.dto.NewKeyDTO;
 import ie.mid.identityengine.dto.UserDTO;
@@ -10,6 +11,7 @@ import ie.mid.identityengine.security.KeyUtil;
 import ie.mid.identityengine.service.HyperledgerService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,6 +26,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class UserControllerTest {
 

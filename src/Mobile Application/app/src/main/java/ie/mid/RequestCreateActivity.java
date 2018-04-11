@@ -196,6 +196,12 @@ public class RequestCreateActivity extends AppCompatActivity implements Identity
     @Override
     public void onTaskComplete(Request request) {
         if(request != null){
+            Intent intent = new Intent(this,RequestViewActivity.class);
+            intent.putExtra("userId",profile.getId());
+            intent.putExtra("requestId",request.getId());
+            intent.putExtra("fromCreate",true);
+            intent.putExtra("isRequest",false);
+            startActivity(intent);
             finish();
         }
         else{

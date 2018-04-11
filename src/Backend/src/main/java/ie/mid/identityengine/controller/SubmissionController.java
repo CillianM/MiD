@@ -2,6 +2,7 @@ package ie.mid.identityengine.controller;
 
 import com.google.gson.JsonObject;
 import ie.mid.identityengine.dto.SubmissionDTO;
+import ie.mid.identityengine.enums.ClickAction;
 import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.exception.*;
@@ -197,16 +198,17 @@ public class SubmissionController {
         //Contact the user
         JsonObject messageObject = pushNotificationService.createMessageObject(
                 SUBMISSION_HEADER,
-                message);
+                message,
+                ClickAction.OPEN_SUBMISSION.toString());
         JsonObject dataObject = pushNotificationService.createDataObject(
                 NotificationType.APPLICATION_UPDATE,
                 new String[]{
                         "submissionId",
-                        "status"
+                        "serverId"
                 },
                 new String[]{
                         id,
-                        submissionToUpdate.getStatus()
+                        user.getId()
                 }
         );
         try {

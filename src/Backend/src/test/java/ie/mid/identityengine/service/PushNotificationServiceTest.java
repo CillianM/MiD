@@ -1,12 +1,15 @@
 package ie.mid.identityengine.service;
 
 import com.google.gson.JsonObject;
+import ie.mid.identityengine.category.UnitTests;
+import ie.mid.identityengine.enums.ClickAction;
 import ie.mid.identityengine.enums.NotificationType;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -18,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class PushNotificationServiceTest {
 
@@ -29,6 +33,7 @@ public class PushNotificationServiceTest {
     private static final String REQUEST_HEADER = "header";
     private static final String MESSAGE = "message";
     private static final String DATA = "data";
+    private static final String ACTION = ClickAction.OPEN_REQUEST.toString();
     private static final String TO = "to";
     private JsonObject MESSAGE_OBJECT = new JsonObject();
     private JsonObject DATA_OBJECT = new JsonObject();
@@ -45,7 +50,8 @@ public class PushNotificationServiceTest {
     public void createMessageObject() {
         JsonObject messageObject = pushNotificationService.createMessageObject(
                 REQUEST_HEADER,
-                MESSAGE);
+                MESSAGE,
+                ACTION);
         assertTrue(messageObject.toString().contains(MESSAGE));
     }
 

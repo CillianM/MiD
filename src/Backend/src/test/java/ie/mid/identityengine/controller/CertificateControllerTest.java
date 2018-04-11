@@ -1,5 +1,6 @@
 package ie.mid.identityengine.controller;
 
+import ie.mid.identityengine.category.UnitTests;
 import ie.mid.identityengine.dto.CertificateDTO;
 import ie.mid.identityengine.model.Certificate;
 import ie.mid.identityengine.model.Party;
@@ -9,6 +10,7 @@ import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.HyperledgerService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class CertificateControllerTest {
 

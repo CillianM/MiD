@@ -5,18 +5,11 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 
 import java.io.IOException;
 
-public class Request {
+public class Request extends InformationRequest{
 
     private String id;
     private String senderName;
-    private String senderId;
     private String recipientName;
-    private String recipientId;
-    private String status;
-    private String certificateId;
-    private String indentityTypeId;
-    private String identityTypeFields;
-    private String identityTypeValues;
     private String createdAt;
 
 
@@ -47,54 +40,6 @@ public class Request {
         this.recipientName = recipientName;
     }
 
-    public String getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(String senderId) {
-        this.senderId = senderId;
-    }
-
-    public String getRecipientId() {
-        return recipientId;
-    }
-
-    public void setRecipientId(String recipientId) {
-        this.recipientId = recipientId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getIndentityTypeId() {
-        return indentityTypeId;
-    }
-
-    public void setIndentityTypeId(String indentityTypeId) {
-        this.indentityTypeId = indentityTypeId;
-    }
-
-    public String getIdentityTypeFields() {
-        return identityTypeFields;
-    }
-
-    public void setIdentityTypeFields(String identityTypeFields) {
-        this.identityTypeFields = identityTypeFields;
-    }
-
-    public String getIdentityTypeValues() {
-        return identityTypeValues;
-    }
-
-    public void setIdentityTypeValues(String identityTypeValues) {
-        this.identityTypeValues = identityTypeValues;
-    }
-
     public String toJsonString() {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         try {
@@ -111,13 +56,5 @@ public class Request {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public String getCertificateId() {
-        return certificateId;
-    }
-
-    public void setCertificateId(String certificateId) {
-        this.certificateId = certificateId;
     }
 }

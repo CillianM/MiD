@@ -83,10 +83,10 @@ public class UserService {
     public User getUser(String userId,HttpCall httpCall) {
         backendService.setEndpointExtention("/user/" + userId);
 
-        String returnedParty = backendService.sendGet(httpCall);
-        if (returnedParty != null) {
+        String returnedUser = backendService.sendGet(httpCall);
+        if (returnedUser != null) {
             try {
-                return mapper.readValue(returnedParty, User.class);
+                return mapper.readValue(returnedUser, User.class);
             } catch (IOException e) {
                 return null;
             }
@@ -95,4 +95,31 @@ public class UserService {
     }
 
 
+    public User updateUser(String userId,HttpCall httpCall) {
+        backendService.setEndpointExtention("/user/" + userId);
+
+        String returnedUser = backendService.sendPut(httpCall);
+        if (returnedUser != null) {
+            try {
+                return mapper.readValue(returnedUser, User.class);
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    public User deleteUser(String userId, HttpCall httpCall) {
+        backendService.setEndpointExtention("/user/" + userId);
+
+        String returnedUser = backendService.sendDelete(httpCall);
+        if (returnedUser != null) {
+            try {
+                return mapper.readValue(returnedUser, User.class);
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return null;
+    }
 }

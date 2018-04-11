@@ -27,7 +27,6 @@ public class SubmissionGetter extends AsyncTask<Void, Void, Submission> {
         this.submissionService = new SubmissionService(context);
         this.submissionId = submissionId;
         this.profile = profile;
-        this.submissionId = submissionId;
     }
 
     @Override

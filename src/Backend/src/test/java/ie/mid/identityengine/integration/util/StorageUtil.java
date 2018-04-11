@@ -1,7 +1,7 @@
-package integration.util;
+package ie.mid.identityengine.integration.util;
 
 
-import integration.model.*;
+import ie.mid.identityengine.integration.model.*;
 
 public class StorageUtil {
 

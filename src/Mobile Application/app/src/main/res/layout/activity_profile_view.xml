@@ -6,32 +6,84 @@
     android:layout_height="match_parent"
     tools:context="ie.mid.ProfileViewActivity">
 
-    <ie.mid.view.RoundedImageView
-        android:id="@+id/profile_image"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:src="@drawable/pug" />
-
     <TextView
-        android:id="@+id/mid_text"
+        android:id="@+id/usernameText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:textSize="20sp"
-        android:layout_below="@id/profile_image"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:textColor="@color/colorPrimary"
         android:gravity="center"
-        android:text="MiD: 1234567890"/>
+        android:text="Username"/>
 
-    <ImageView
-        android:id="@+id/qr_code"
-        android:layout_marginTop="20dp"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_below="@id/mid_text"
-        android:layout_centerInParent="true"/>
+    <ie.mid.view.RoundedImageView
+        android:id="@+id/profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/usernameText"
+        android:src="@drawable/pug" />
+
+    <ie.mid.view.RoundedImageView
+        android:id="@+id/image_prompt"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@id/profile_image"
+        android:layout_alignEnd="@id/profile_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/ic_photo_camera_black_18dp"/>
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_margin="20dp"
+        android:hint="Current Username"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profile_image"/>
+
+    <RelativeLayout
+        android:id="@+id/loading_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/update_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true" />
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+    <Button
+        android:id="@+id/update_profile"
+        android:layout_margin="10dp"
+        android:text="Update Profile"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/delete_profile"/>
+
+    <Button
+        android:id="@+id/delete_profile"
+        android:layout_margin="10dp"
+        android:background="@color/colorPrimaryDark"
+        android:text="Delete Profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    </LinearLayout>
 
 </RelativeLayout>

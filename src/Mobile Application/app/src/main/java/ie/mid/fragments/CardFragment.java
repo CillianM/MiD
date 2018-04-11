@@ -184,6 +184,7 @@ public class CardFragment extends Fragment implements CardTaskCompleted {
         handler.removeCard(currentCardType.getId());
         handler.close();
         Intent intent = getActivity().getIntent();
+        intent.putExtra("userId",profile.getId());
         getActivity().finish();
         startActivity(intent);
     }

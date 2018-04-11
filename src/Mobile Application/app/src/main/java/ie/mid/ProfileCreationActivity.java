@@ -210,26 +210,28 @@ public class ProfileCreationActivity extends AppCompatActivity implements Valida
         }
         finalPath = newPath + UUID.randomUUID().toString() + extension;
         File newImage = new File(finalPath);
+        boolean newFile;
         try {
-            newImage.createNewFile();
+            newFile = newImage.createNewFile();
         } catch (IOException e) {
             return null;
         }
         try (FileChannel source = new FileInputStream(sourceImage).getChannel(); FileChannel destination = new FileOutputStream(newImage).getChannel()) {
-            if (destination != null && source != null) {
+            if (source != null) {
                 destination.transferFrom(source, 0, source.size());
             }
             if (source != null) {
                 source.close();
             }
-            if (destination != null) {
-                destination.close();
-            }
+            destination.close();
 
         } catch (Exception e) {
             return null;
         }
-        return finalPath;
+        if(newFile)
+            return finalPath;
+        else
+            return null;
     }
 
 

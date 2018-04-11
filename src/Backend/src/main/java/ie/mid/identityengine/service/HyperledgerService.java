@@ -9,6 +9,7 @@ import ie.mid.identityengine.model.IdentifyingParty;
 import ie.mid.identityengine.model.Individual;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -18,6 +19,8 @@ import java.util.UUID;
 @Service
 public class HyperledgerService {
 
+    @Value("${mid.hyperledger}")
+    private String hyperledgerUrl;
     private HttpService httpService;
     private Logger logger = LogManager.getLogger(HyperledgerService.class);
 

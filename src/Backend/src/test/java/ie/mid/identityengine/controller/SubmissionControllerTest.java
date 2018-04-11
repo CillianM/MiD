@@ -1,6 +1,7 @@
 package ie.mid.identityengine.controller;
 
 import com.google.gson.JsonObject;
+import ie.mid.identityengine.category.UnitTests;
 import ie.mid.identityengine.dto.SubmissionDTO;
 import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.model.Certificate;
@@ -15,6 +16,7 @@ import ie.mid.identityengine.service.PushNotificationService;
 import ie.mid.identityengine.service.StorageService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -31,6 +33,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class SubmissionControllerTest {
 
@@ -97,7 +100,7 @@ public class SubmissionControllerTest {
         when(submissionRepository.findByPartyId(anyString())).thenReturn(submissionList);
         when(submissionRepository.findByUserId(anyString())).thenReturn(submissionList);
         when(pushNotificationService.sendNotifictaionAndData(anyString(), any(JsonObject.class), any(JsonObject.class))).thenReturn(DATA);
-        when(pushNotificationService.createMessageObject(anyString(), anyString())).thenReturn(new JsonObject());
+        when(pushNotificationService.createMessageObject(anyString(), anyString(), anyString())).thenReturn(new JsonObject());
         when(pushNotificationService.createDataObject(any(NotificationType.class), any(), any())).thenReturn(new JsonObject());
         when(userRepository.findById(anyString())).thenReturn(user);
         when(partyRepository.findById(anyString())).thenReturn(party);

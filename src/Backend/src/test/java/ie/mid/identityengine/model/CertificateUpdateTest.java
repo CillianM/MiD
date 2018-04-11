@@ -1,10 +1,16 @@
 package ie.mid.identityengine.model;
 
+import ie.mid.identityengine.category.UnitTests;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class CertificateUpdateTest {
 
     private CertificateUpdate certificateUpdate;

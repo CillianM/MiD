@@ -1,12 +1,18 @@
 package ie.mid.identityengine.security;
 
+import ie.mid.identityengine.category.UnitTests;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.security.KeyPair;
 
 import static org.junit.Assert.*;
 
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class DataEncryptionTest {
 
     private String publicKey;

@@ -1,7 +1,10 @@
 package ie.mid.identityengine.dto;
 
+import ie.mid.identityengine.category.UnitTests;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+@Category(UnitTests.class)
 public class InformationRequestDTOTest {
     @Test
     public void getSender() throws Exception {

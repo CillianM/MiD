@@ -49,7 +49,6 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
     IdentityType identityType;
     Request viewableRequest;
     IdentityRequestAdapter identityRequestAdapter;
-    boolean isRequest;
     Button acceptButton;
     Button rejectButton;
     RelativeLayout requestLayout;
@@ -58,18 +57,24 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
     InformationRequest informationRequest;
     private String submissionId;
     private Certificate retrievedCertificate;
+    boolean fromCreate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_view);
         getSupportActionBar().setTitle("Request");
-        userId = getIntent().getStringExtra("userId");
         DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
         handler.open();
+        userId = getIntent().getStringExtra("userId");
+        if(userId != null) {
+            profile = handler.getProfile(userId);
+        } else {
+            profile = handler.getProfileByServerId(getIntent().getStringExtra("serverId"));
+        }
         profile = handler.getProfile(userId);
         requestId = getIntent().getStringExtra("requestId");
-        isRequest = getIntent().getBooleanExtra("isRequest", true);
+        fromCreate = getIntent().getBooleanExtra("fromCreate",false);
         handler.close();
         requestLayout = findViewById(R.id.request_layout);
         acceptButton = findViewById(R.id.accept_button);
@@ -91,10 +96,9 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
                 rejectRequest();
             }
         });
-        if (!isRequest) {
-            acceptButton.setVisibility(View.INVISIBLE);
-            rejectButton.setVisibility(View.INVISIBLE);
-        }
+        acceptButton.setVisibility(View.INVISIBLE);
+        rejectButton.setVisibility(View.INVISIBLE);
+
 
         showLoading();
         if (InternetUtil.isNetworkAvailable(getApplicationContext())) {
@@ -103,6 +107,19 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
             networkError();
         }
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(fromCreate) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("userId", profile.getId());
+            startActivity(intent);
+            finish();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void submitRequest(InformationRequest request) {
@@ -237,7 +254,7 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
             if (status.equals(CardStatus.ACCEPTED.toString()) || status.equals(CardStatus.PENDING.toString()) || status.equals(CardStatus.SUBMITTED.toString())) {
                 this.viewableRequest = viewableRequest;
                 this.identityType = identityType;
-                if (isRequest) {
+                if (viewableRequest.getRecipientId().equals(profile.getServerId())) {
                     setupRecipientView();
                 } else {
                     setupSenderView();
@@ -262,6 +279,8 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
     }
 
     private void setupRecipientView() {
+        acceptButton.setVisibility(View.VISIBLE);
+        rejectButton.setVisibility(View.VISIBLE);
         String status = viewableRequest.getStatus();
         if (!hasId() && !status.equals(CardStatus.ACCEPTED.toString())) {
             sendToCreate();

@@ -1,19 +1,16 @@
-package integration;
+package ie.mid.identityengine.integration.stepdefs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
-import cucumber.api.junit.Cucumber;
 import ie.mid.identityengine.dto.IdentityTypeDTO;
 import ie.mid.identityengine.enums.FieldType;
+import ie.mid.identityengine.integration.model.HttpCall;
+import ie.mid.identityengine.integration.model.StoredIdentityType;
+import ie.mid.identityengine.integration.util.HttpUtil;
+import ie.mid.identityengine.integration.util.StorageUtil;
 import ie.mid.identityengine.model.Field;
 import ie.mid.identityengine.security.DataEncryption;
-import integration.model.HttpCall;
-import integration.model.StoredIdentityType;
-import integration.util.HttpUtil;
-import integration.util.StorageUtil;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +18,6 @@ import java.util.List;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/features")
 public class IdentityTypeIntegrationTest {
 
     private static final String NAME = "TEST_IDENTITY_TYPE";

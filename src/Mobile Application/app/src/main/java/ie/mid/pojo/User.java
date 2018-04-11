@@ -1,5 +1,10 @@
 package ie.mid.pojo;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
+import java.io.IOException;
+
 public class User {
 
     private String id;
@@ -67,5 +72,15 @@ public class User {
 
     public void setUserToken(String userToken) {
         this.userToken = userToken;
+    }
+
+    public String toJsonString() {
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        try {
+            return ow.writeValueAsString(this);
+        } catch (IOException e) {
+            return null;
+        }
+
     }
 }

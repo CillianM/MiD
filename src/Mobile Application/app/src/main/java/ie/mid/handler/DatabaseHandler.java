@@ -306,6 +306,29 @@ public class DatabaseHandler {
         return null;
     }
 
+    public Profile getProfileByServerId(String id) {
+        String selectQuery = "SELECT ID, PROFILE_NAME,PROFILE_IMG,HASH,SALT,SERVER_ID,USER_TOKEN,PUBLIC_KEY,PRIVATE_KEY FROM " + PROFILE_TABLE_NAME + " WHERE " + SERVER_ID + "='" + id + "'";
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        Profile profile = new Profile();
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                profile = new Profile(
+                        cursor.getString(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getString(7),
+                        cursor.getString(8)
+                );
+            }
+            return profile;
+        }
+        return null;
+    }
+
     public List<CardType> getUserCards(String id) {
         String selectQuery = "SELECT ID ,TITLE ,CARD_ID ,OWNER_ID ,FIELD_NAME ,FIELD_VALUE, COVER_IMG_URL,STATUS_CODE,PARTY_ID,SUBMISSION_ID,VERSION_NUMBER FROM " + CARD_TABLE_NAME + " WHERE " + OWNER_ID + "='" + id + "'";
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -527,6 +550,13 @@ public class DatabaseHandler {
     public boolean updateProfileName(String id,String name) {
         ContentValues content = new ContentValues();
         content.put(PROFILE_NAME,name);
+        db.update(PROFILE_TABLE_NAME,content,ID + " = ?", new String[] { id });
+        return true;
+    }
+
+    public boolean updateProfileImg(String id,String path) {
+        ContentValues content = new ContentValues();
+        content.put(PROFILE_IMG,path);
         db.update(PROFILE_TABLE_NAME,content,ID + " = ?", new String[] { id });
         return true;
     }

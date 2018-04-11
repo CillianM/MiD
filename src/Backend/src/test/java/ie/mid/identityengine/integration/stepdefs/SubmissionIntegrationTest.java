@@ -1,24 +1,19 @@
-package integration;
+package ie.mid.identityengine.integration.stepdefs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
-import cucumber.api.junit.Cucumber;
 import ie.mid.identityengine.dto.SubmissionDTO;
 import ie.mid.identityengine.enums.RequestStatus;
+import ie.mid.identityengine.integration.model.HttpCall;
+import ie.mid.identityengine.integration.model.StoredSubmission;
+import ie.mid.identityengine.integration.util.HttpUtil;
+import ie.mid.identityengine.integration.util.StorageUtil;
 import ie.mid.identityengine.security.DataEncryption;
-import integration.model.HttpCall;
-import integration.model.StoredSubmission;
-import integration.util.HttpUtil;
-import integration.util.StorageUtil;
-import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/features")
 public class SubmissionIntegrationTest {
 
     private static final String SUBMISSION_DATA = "SUBMISSION_DATA";

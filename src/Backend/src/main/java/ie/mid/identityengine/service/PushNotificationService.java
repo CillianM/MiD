@@ -27,10 +27,12 @@ public class PushNotificationService {
         this.httpClient = HttpClientBuilder.create().build();
     }
 
-    public JsonObject createMessageObject(String title, String body){
+    public JsonObject createMessageObject(String title, String body, String clickAction) {
         JsonObject notificationObject = new JsonObject();
         notificationObject.addProperty("title",title);
         notificationObject.addProperty("body",body);
+        notificationObject.addProperty("sound", "default");
+        notificationObject.addProperty("click_action", clickAction);
         return notificationObject;
     }
 

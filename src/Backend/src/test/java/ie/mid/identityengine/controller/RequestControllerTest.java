@@ -1,6 +1,7 @@
 package ie.mid.identityengine.controller;
 
 import com.google.gson.JsonObject;
+import ie.mid.identityengine.category.UnitTests;
 import ie.mid.identityengine.dto.CertificateDTO;
 import ie.mid.identityengine.dto.InformationRequestDTO;
 import ie.mid.identityengine.dto.RequestDTO;
@@ -19,6 +20,7 @@ import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.PushNotificationService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,6 +38,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+@Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RequestControllerTest {
 
@@ -118,7 +121,7 @@ public class RequestControllerTest {
         when(partyRepository.save(any(Party.class))).thenReturn(party);
         when(partyRepository.findById(anyString())).thenReturn(party);
         when(pushNotificationService.sendNotifictaionAndData(anyString(), any(JsonObject.class), any(JsonObject.class))).thenReturn(ID);
-        when(pushNotificationService.createMessageObject(anyString(), anyString())).thenReturn(new JsonObject());
+        when(pushNotificationService.createMessageObject(anyString(), anyString(), anyString())).thenReturn(new JsonObject());
         when(pushNotificationService.createDataObject(any(NotificationType.class), any(), any())).thenReturn(new JsonObject());
         authentication = new UsernamePasswordAuthenticationToken(ID, ID);
     }

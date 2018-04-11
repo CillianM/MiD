@@ -103,6 +103,29 @@ public class UserController {
         return createdUser;
     }
 
+    @PutMapping(value = "/{id}")
+    @ResponseBody
+    public UserDTO updateUser(@PathVariable String id, @RequestBody UserDTO userDTO, Authentication authentication) {
+        logger.debug("'PUT' request to updateUser with id " + id);
+        if (isInvalidUser(userDTO)) {
+            logger.error("Invalid user: " + userDTO);
+            throw new BadRequestException();
+        }
+        User user = userRepository.findById(id);
+        if (user == null) {
+            logger.error("No user found with id " + id);
+            throw new ResourceNotFoundException();
+        }
+        if (!user.getId().equals(authentication.getName())) {
+            logger.error("Authentication failure: " + authentication.getName() + " != " + user.getId());
+            throw new ResourceForbiddenException(authentication.getName() + " is forbidden from resource " + id);
+        }
+        user.setNickname(userDTO.getNickname());
+        userRepository.save(user);
+        logger.debug("Username updated, returning...");
+        return userDTO;
+    }
+
     @PutMapping(value = "/{id}/token")
     @ResponseBody
     public UserDTO updateUserToken(@PathVariable String id, @RequestBody String token, Authentication authentication) {

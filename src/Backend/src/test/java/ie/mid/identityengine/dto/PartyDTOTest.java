@@ -1,11 +1,14 @@
 package ie.mid.identityengine.dto;
 
+import ie.mid.identityengine.category.UnitTests;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.InjectMocks;
 
 import static org.junit.Assert.assertEquals;
 
+@Category(UnitTests.class)
 public class PartyDTOTest {
 
     @InjectMocks

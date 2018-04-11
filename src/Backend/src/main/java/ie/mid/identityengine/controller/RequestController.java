@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import ie.mid.identityengine.dto.CertificateDTO;
 import ie.mid.identityengine.dto.InformationRequestDTO;
 import ie.mid.identityengine.dto.RequestDTO;
+import ie.mid.identityengine.enums.ClickAction;
 import ie.mid.identityengine.enums.FieldType;
 import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
@@ -174,10 +175,19 @@ public class RequestController {
         //Contact the user with the id of the request
         JsonObject messageObject = pushNotificationService.createMessageObject(
                 REQUEST_HEADER,
-                message);
+                message,
+                ClickAction.OPEN_REQUEST.toString());
 
-        JsonObject dataObject = pushNotificationService.createDataObject(NotificationType.REQUEST, new String[]{"fields"},
-                new String[]{request.getIdentityTypeFields()}
+        JsonObject dataObject = pushNotificationService.createDataObject(
+                NotificationType.REQUEST,
+                new String[]{
+                        "requestId",
+                        "serverId"
+                },
+                new String[]{
+                        request.getId(),
+                        recipient.getId()
+                }
         );
         try {
             pushNotificationService.sendNotifictaionAndData(recipient.getFcmToken(), messageObject,dataObject);
@@ -247,10 +257,19 @@ public class RequestController {
             //Contact the user with the id of the request
             JsonObject messageObject = pushNotificationService.createMessageObject(
                     REQUEST_HEADER,
-                    message);
+                    message,
+                    ClickAction.OPEN_REQUEST.toString());
 
-            JsonObject dataObject = pushNotificationService.createDataObject(NotificationType.REQUEST, new String[]{"response"},
-                    new String[]{request.getUserResponse()}
+            JsonObject dataObject = pushNotificationService.createDataObject(
+                    NotificationType.REQUEST,
+                    new String[]{
+                            "requestId",
+                            "serverId"
+                    },
+                    new String[]{
+                            request.getId(),
+                            sender.getId()
+                    }
             );
             try {
                 pushNotificationService.sendNotifictaionAndData(sender.getFcmToken(), messageObject,dataObject);

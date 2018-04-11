@@ -1,9 +1,11 @@
 package ie.mid.identityengine.dto;
 
+import ie.mid.identityengine.category.UnitTests;
 import ie.mid.identityengine.enums.FieldType;
 import ie.mid.identityengine.model.Field;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.InjectMocks;
 
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+@Category(UnitTests.class)
 public class IdentityTypeDTOTest {
 
     @InjectMocks

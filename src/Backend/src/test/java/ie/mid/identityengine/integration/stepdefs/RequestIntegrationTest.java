@@ -1,32 +1,27 @@
-package integration;
+package ie.mid.identityengine.integration.stepdefs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cucumber.api.CucumberOptions;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import cucumber.api.junit.Cucumber;
 import ie.mid.identityengine.dto.InformationRequestDTO;
 import ie.mid.identityengine.dto.NewUserDTO;
 import ie.mid.identityengine.dto.RequestDTO;
 import ie.mid.identityengine.dto.UserDTO;
 import ie.mid.identityengine.enums.RequestStatus;
+import ie.mid.identityengine.integration.model.HttpCall;
+import ie.mid.identityengine.integration.model.StoredRequest;
+import ie.mid.identityengine.integration.model.StoredUser;
+import ie.mid.identityengine.integration.util.HttpUtil;
+import ie.mid.identityengine.integration.util.StorageUtil;
 import ie.mid.identityengine.security.DataEncryption;
 import ie.mid.identityengine.security.KeyUtil;
-import integration.model.HttpCall;
-import integration.model.StoredRequest;
-import integration.model.StoredUser;
-import integration.util.HttpUtil;
-import integration.util.StorageUtil;
-import org.junit.runner.RunWith;
 
 import java.security.KeyPair;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/features")
 public class RequestIntegrationTest {
 
     private static final String FCM_TOKEN = "FCM_TOKEN";

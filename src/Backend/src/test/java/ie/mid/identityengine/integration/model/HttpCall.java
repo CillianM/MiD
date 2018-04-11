@@ -1,4 +1,4 @@
-package integration.model;
+package ie.mid.identityengine.integration.model;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 

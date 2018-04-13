@@ -54,7 +54,7 @@ public class CertificateControllerTest {
         Party party = new Party();
         party.setId(ID);
         party.setName(ID);
-        when(hyperledgerService.createCertificate(anyString(), anyString())).thenReturn(certificate);
+        when(hyperledgerService.createCertificate(anyString(), anyString(), anyString())).thenReturn(certificate);
         when(hyperledgerService.getCertificate(anyString())).thenReturn(certificate);
         when(userRepository.findById(anyString())).thenReturn(user);
         when(partyRepository.findById(anyString())).thenReturn(party);

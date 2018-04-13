@@ -1,8 +1,8 @@
 package ie.mid.identityengine.integration.util;
 
 import ie.mid.identityengine.integration.model.HttpCall;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.net.URL;
 public class HttpUtil {
 
     private static String ENDPOINT = "http://localhost:8080/mid";
-    private static final Logger logger = LogManager.getLogger(HttpUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String JSON = "application/json";
     private static final String GET = "GET";

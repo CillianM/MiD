@@ -253,4 +253,27 @@ public class RequestIntegrationTest {
         String password = DataEncryption.encryptText(StorageUtil.storedUser.getToken(), StorageUtil.storedUser.getPrivateKey());
         HttpUtil.sendPut(new HttpCall(mapper.writeValueAsString(informationRequestDTO), StorageUtil.storedUser.getId(), password));
     }
+
+    @When("^the client responds to the request with unknown fields$")
+    public void theClientRespondsToTheRequestWithUnknownFields() throws Throwable {
+        HttpUtil.endpointExtention = "/request/" + StorageUtil.storedRequest.getId();
+        //Create user to be sent
+        StoredRequest storedRequest = new StoredRequest();
+        storedRequest.setSenderId(StorageUtil.toRequestUser.getId());
+        storedRequest.setReceiverId(StorageUtil.storedUser.getId());
+        storedRequest.setIdentityTypeId(StorageUtil.storedIdentityType.getId());
+        storedRequest.setFieldsRequested("SURNAME");
+        ObjectMapper mapper = new ObjectMapper();
+        InformationRequestDTO informationRequestDTO = new InformationRequestDTO();
+        informationRequestDTO.setIdentityTypeFields(storedRequest.getFieldsRequested());
+        informationRequestDTO.setIdentityTypeValues("Nonsense");
+        informationRequestDTO.setCertificateId(StorageUtil.storedSubmission.getCertId());
+        informationRequestDTO.setIndentityTypeId(storedRequest.getIdentityTypeId());
+        informationRequestDTO.setSenderId(storedRequest.getSenderId());
+        informationRequestDTO.setRecipientId(storedRequest.getReceiverId());
+        informationRequestDTO.setStatus(RequestStatus.ACCEPTED.toString());
+        StorageUtil.storedRequest = storedRequest;
+        String password = DataEncryption.encryptText(StorageUtil.storedUser.getToken(), StorageUtil.storedUser.getPrivateKey());
+        HttpUtil.sendPut(new HttpCall(mapper.writeValueAsString(informationRequestDTO), StorageUtil.storedUser.getId(), password));
+    }
 }

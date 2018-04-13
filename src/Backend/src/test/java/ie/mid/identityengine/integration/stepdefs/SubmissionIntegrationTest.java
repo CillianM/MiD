@@ -10,6 +10,7 @@ import ie.mid.identityengine.integration.model.StoredSubmission;
 import ie.mid.identityengine.integration.util.HttpUtil;
 import ie.mid.identityengine.integration.util.StorageUtil;
 import ie.mid.identityengine.security.DataEncryption;
+import ie.mid.identityengine.security.KeyUtil;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -24,12 +25,15 @@ public class SubmissionIntegrationTest {
         StoredSubmission storedSubmission = new StoredSubmission();
         storedSubmission.setPartyId(StorageUtil.storedParty.getId());
         storedSubmission.setUserId(StorageUtil.storedUser.getId());
-        storedSubmission.setData(SUBMISSION_DATA);
+        storedSubmission.setData("FIRSTNAME:" + StorageUtil.storedUser.getName());
+        storedSubmission.setDataKey(KeyUtil.generateAesKey());
         ObjectMapper mapper = new ObjectMapper();
         SubmissionDTO submissionDTO = new SubmissionDTO();
         submissionDTO.setPartyId(storedSubmission.getPartyId());
         submissionDTO.setUserId(storedSubmission.getUserId());
-        submissionDTO.setData(storedSubmission.getData());
+        submissionDTO.setData(DataEncryption.aesEncryption(storedSubmission.getData(), storedSubmission.getDataKey()));
+        submissionDTO.setDataKey(DataEncryption.encryptTextPublic(storedSubmission.getDataKey(), StorageUtil.storedParty.getPublicKey()));
+        submissionDTO.setSubmissionHash(KeyUtil.hashString(storedSubmission.getData()));
         StorageUtil.storedSubmission = storedSubmission;
         String password = DataEncryption.encryptText(StorageUtil.storedUser.getToken(), StorageUtil.storedUser.getPrivateKey());
         HttpUtil.sendPost(new HttpCall(mapper.writeValueAsString(submissionDTO), StorageUtil.storedUser.getId(), password));

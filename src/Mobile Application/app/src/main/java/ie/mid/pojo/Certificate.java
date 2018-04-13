@@ -3,6 +3,7 @@ package ie.mid.pojo;
 public class Certificate {
 
     private String id;
+    private String submissionHash;
     private String ownerName;
     private String ownedBy;
     private String creatorName;
@@ -67,5 +68,13 @@ public class Certificate {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getSubmissionHash() {
+        return submissionHash;
+    }
+
+    public void setSubmissionHash(String submissionHash) {
+        this.submissionHash = submissionHash;
     }
 }

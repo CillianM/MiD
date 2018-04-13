@@ -28,6 +28,20 @@ public class HashUtil {
         }
     }
 
+    public static String hashString(String s) {
+        byte[] stringArray = s.getBytes();
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = messageDigest.digest(stringArray);
+            for (int i = 0; i < 200 - 1; i++) {
+                hash = messageDigest.digest(hash);
+            }
+            return byteToBase64(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new AssertionError("Error while hashing: " + e.getMessage(), e);
+        }
+    }
+
     public static String byteToBase64(byte[] array){
         return Base64.encodeToString(array,Base64.DEFAULT);
     }

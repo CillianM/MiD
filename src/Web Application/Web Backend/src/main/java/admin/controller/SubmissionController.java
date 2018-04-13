@@ -9,9 +9,12 @@ import admin.model.Party;
 import admin.repository.PartyRepository;
 import admin.security.DataEncryption;
 import admin.service.HttpService;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping(value = "/submission")
@@ -33,7 +36,6 @@ public class SubmissionController {
             httpService.setEndpointExtention("/submission/party/" + partyId);
             HttpCall httpCall = new HttpCall();
             String pass = DataEncryption.encryptText(party.getToken(),party.getPrivateKey());
-            String unpass = DataEncryption.decryptText(pass,party.getPublicKey());
             httpCall.setAuthHeader(partyId,pass );
             String reponse = httpService.sendGet(httpCall);
             if(reponse == null) throw new BadRequestException();
@@ -55,7 +57,19 @@ public class SubmissionController {
             httpCall.setAuthHeader(partyId, DataEncryption.encryptText(party.getToken(),party.getPrivateKey()));
             String reponse = httpService.sendGet(httpCall);
             if(reponse == null) throw new BadRequestException();
-            return reponse;
+
+            //Unencrypt party submission data
+            ObjectMapper mapper = new ObjectMapper();
+            SubmissionDTO submissionDTO;
+            try {
+                submissionDTO = mapper.readValue(reponse,SubmissionDTO.class);
+            } catch (IOException e) {
+                return null;
+            }
+            String unencyptedAes = DataEncryption.decryptText(submissionDTO.getDataKey(),party.getPrivateKey());
+            submissionDTO.setData(DataEncryption.aesDecryption(submissionDTO.getData(),unencyptedAes));
+            ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            return writer.writeValueAsString(submissionDTO);
         }catch (Exception e){
             throw new BadRequestException();
         }

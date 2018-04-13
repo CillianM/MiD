@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,7 +17,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import ie.mid.adapter.CardFieldListAdapter;
+import ie.mid.adapter.FieldListAdapter;
 import ie.mid.adapter.IdentityRequestAdapter;
 import ie.mid.async.CertificateGetter;
 import ie.mid.async.RequestGetter;
@@ -34,7 +33,7 @@ import ie.mid.model.CardField;
 import ie.mid.model.CardType;
 import ie.mid.model.Field;
 import ie.mid.model.Profile;
-import ie.mid.model.ViewableRequest;
+import ie.mid.model.SubmissionField;
 import ie.mid.pojo.Certificate;
 import ie.mid.pojo.IdentityType;
 import ie.mid.pojo.InformationRequest;
@@ -310,13 +309,12 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
                 String[] answers = viewableRequest.getIdentityTypeValues().split(",");
                 String[] types = viewableRequest.getIdentityTypeFields().split(",");
                 String[] titles = getIdentityTitles(identityType, types);
-                List<CardField> cardFields = new ArrayList<>();
+                List<SubmissionField> cardFields = new ArrayList<>();
                 for (int i = 0; i < answers.length; i++) {
-                    CardField cardField = new CardField(answers[i], types[i]);
-                    cardField.setFieldTitle(titles[i]);
-                    cardFields.add(cardField);
+                    SubmissionField submissionField = new SubmissionField(answers[i], types[i],titles[i]);
+                    cardFields.add(submissionField);
                 }
-                requestedInfo.setAdapter(new CardFieldListAdapter(getApplicationContext(), cardFields));
+                requestedInfo.setAdapter(new FieldListAdapter(getApplicationContext(), cardFields));
             } else {
                 selectedFields = new ArrayList<>();
                 for (Field field : identityType.getFields()) {
@@ -346,26 +344,24 @@ public class RequestViewActivity extends AppCompatActivity implements RequestTas
             rejectButton.setText("Delete");
             String[] types = viewableRequest.getIdentityTypeFields().split(",");
             String[] titles = getIdentityTitles(identityType, types);
-            List<CardField> cardFields = new ArrayList<>();
+            List<SubmissionField> submissionFields = new ArrayList<>();
             for (int i = 0; i < types.length; i++) {
-                CardField cardField = new CardField("", types[i]);
-                cardField.setFieldTitle(titles[i]);
-                cardFields.add(cardField);
+                SubmissionField submissionField = new SubmissionField("", types[i],titles[i]);
+                submissionFields.add(submissionField);
             }
-            requestedInfo.setAdapter(new CardFieldListAdapter(getApplicationContext(), cardFields));
+            requestedInfo.setAdapter(new FieldListAdapter(getApplicationContext(), submissionFields));
         } else if (status.equals(CardStatus.ACCEPTED.toString())) {
             acceptButton.setVisibility(View.INVISIBLE);
             rejectButton.setText("Delete");
             String[] answers = viewableRequest.getIdentityTypeValues().split(",");
             String[] types = viewableRequest.getIdentityTypeFields().split(",");
             String[] titles = getIdentityTitles(identityType, types);
-            List<CardField> cardFields = new ArrayList<>();
+            List<SubmissionField> submissionFields = new ArrayList<>();
             for (int i = 0; i < answers.length; i++) {
-                CardField cardField = new CardField(answers[i], types[i]);
-                cardField.setFieldTitle(titles[i]);
-                cardFields.add(cardField);
+                SubmissionField submissionField = new SubmissionField(answers[i], types[i],titles[i]);
+                submissionFields.add(submissionField);
             }
-            requestedInfo.setAdapter(new CardFieldListAdapter(getApplicationContext(), cardFields));
+            requestedInfo.setAdapter(new FieldListAdapter(getApplicationContext(), submissionFields));
             getCertificate(viewableRequest.getCertificateId());
         } else {
             selectedFields = new ArrayList<>();

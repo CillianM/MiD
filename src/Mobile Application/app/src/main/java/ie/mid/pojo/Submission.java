@@ -13,6 +13,8 @@ public class Submission {
     private String partyName;
     private String partyId;
     private String certId;
+    private String dataKey;
+    private String submissionHash;
     private String data;
     private String status;
     private String date;
@@ -84,6 +86,14 @@ public class Submission {
         this.partyName = partyName;
     }
 
+    public String getSubmissionHash() {
+        return submissionHash;
+    }
+
+    public void setSubmissionHash(String submissionHash) {
+        this.submissionHash = submissionHash;
+    }
+
     public String toJsonString() {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         try {
@@ -100,5 +110,13 @@ public class Submission {
 
     public void setCertId(String certId) {
         this.certId = certId;
+    }
+
+    public String getDataKey() {
+        return dataKey;
+    }
+
+    public void setDataKey(String dataKey) {
+        this.dataKey = dataKey;
     }
 }

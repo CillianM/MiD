@@ -21,6 +21,10 @@ public class Submission {
     private String partyId;
     @Column(name = "certificate_id")
     private String certificateId;
+    @Column(name = "submission_hash", nullable = false, length = 450)
+    private String submissionHash;
+    @Column(name = "data_key", nullable = false, length = 450)
+    private String dataKey;
     @Column(name = "data", nullable = false)
     private String data;
     @Column(name = "status", nullable = false)
@@ -100,6 +104,22 @@ public class Submission {
         this.certificateId = certificateId;
     }
 
+    public String getSubmissionHash() {
+        return submissionHash;
+    }
+
+    public void setSubmissionHash(String submissionHash) {
+        this.submissionHash = submissionHash;
+    }
+
+    public String getDataKey() {
+        return dataKey;
+    }
+
+    public void setDataKey(String dataKey) {
+        this.dataKey = dataKey;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Submission{");
@@ -107,7 +127,9 @@ public class Submission {
         sb.append(", userId='").append(userId).append('\'');
         sb.append(", partyId='").append(partyId).append('\'');
         sb.append(", certificateId='").append(certificateId).append('\'');
+        sb.append(", submissionHash='").append(submissionHash).append('\'');
         sb.append(", data='").append(data).append('\'');
+        sb.append(", dataKey='").append(dataKey).append('\'');
         sb.append(", status='").append(status).append('\'');
         sb.append(", createdAt=").append(createdAt);
         sb.append(", updatedAt=").append(updatedAt);

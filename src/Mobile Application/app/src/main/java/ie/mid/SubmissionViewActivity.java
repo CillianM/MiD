@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,23 +20,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
-import ie.mid.adapter.CardFieldListAdapter;
-import ie.mid.adapter.SubmissionListAdapter;
+import ie.mid.adapter.FieldListAdapter;
 import ie.mid.async.CertificateGetter;
 import ie.mid.async.SubmissionGetter;
 import ie.mid.enums.CardStatus;
 import ie.mid.handler.DatabaseHandler;
 import ie.mid.interfaces.CertificateTaskCompleted;
 import ie.mid.interfaces.SubmissionTaskCompleted;
-import ie.mid.model.CardField;
+import ie.mid.model.CreatedSubmission;
 import ie.mid.model.Profile;
 import ie.mid.model.SubmissionData;
-import ie.mid.model.ViewableSubmission;
 import ie.mid.pojo.Certificate;
 import ie.mid.pojo.Submission;
 import ie.mid.util.HashUtil;
 import ie.mid.util.InternetUtil;
-import ie.mid.view.RoundedImageView;
 
 public class SubmissionViewActivity extends AppCompatActivity implements SubmissionTaskCompleted,CertificateTaskCompleted {
 
@@ -124,9 +120,15 @@ public class SubmissionViewActivity extends AppCompatActivity implements Submiss
             String status = "Submission status: " + submission.getStatus();
             statusText.setText(status);
             ListView cardFieldsList = findViewById(R.id.card_fields);
-            if (submission.getData() !=null) {
-                SubmissionData submissionData = getSubmissionData(submission.getData());
-                CardFieldListAdapter adapter = new CardFieldListAdapter(getApplicationContext(),submissionData.getCardFields());
+            String submissionDataString;
+            DatabaseHandler handler = new DatabaseHandler(getApplicationContext());
+            handler.open();
+            CreatedSubmission createdSubmission = handler.getSubmission(submission.getId());
+            submissionDataString = createdSubmission.getData();
+            handler.close();
+            SubmissionData submissionData = getSubmissionData(submissionDataString);
+            if (submissionData !=null && submissionDataString != null) {
+                FieldListAdapter adapter = new FieldListAdapter(getApplicationContext(),submissionData.getSubmissionFields());
                 cardFieldsList.setAdapter(adapter);
                 setImage(submissionData.getImageData());
             }

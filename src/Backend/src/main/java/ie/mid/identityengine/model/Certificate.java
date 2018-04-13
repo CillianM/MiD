@@ -3,6 +3,7 @@ package ie.mid.identityengine.model;
 public class Certificate {
     private String $class;
     private String certId;
+    private String submissionHash;
     private String dateCreated;
     private String status;
     private String trustee;
@@ -59,11 +60,20 @@ public class Certificate {
         this.status = status;
     }
 
+    public String getSubmissionHash() {
+        return submissionHash;
+    }
+
+    public void setSubmissionHash(String submissionHash) {
+        this.submissionHash = submissionHash;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Certificate{");
         sb.append("$class='").append($class).append('\'');
         sb.append(", certId='").append(certId).append('\'');
+        sb.append(", submissionHash='").append(submissionHash).append('\'');
         sb.append(", dateCreated='").append(dateCreated).append('\'');
         sb.append(", status='").append(status).append('\'');
         sb.append(", trustee='").append(trustee).append('\'');

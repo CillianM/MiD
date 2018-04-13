@@ -16,13 +16,14 @@ import ie.mid.R;
 import ie.mid.enums.CardStatus;
 import ie.mid.enums.DataType;
 import ie.mid.model.CardField;
+import ie.mid.model.SubmissionField;
 
-public class CardFieldListAdapter extends BaseAdapter {
+public class FieldListAdapter extends BaseAdapter {
 
     private Context context;
-    private List<CardField> cardFields;
+    private List<SubmissionField> cardFields;
 
-    public CardFieldListAdapter(Context context, List<CardField> cardFields) {
+    public FieldListAdapter(Context context, List<SubmissionField> cardFields) {
         this.context = context;
         this.cardFields = cardFields;
     }

@@ -9,14 +9,8 @@ import ie.mid.identityengine.enums.FieldType;
 import ie.mid.identityengine.enums.NotificationType;
 import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.exception.BadRequestException;
-import ie.mid.identityengine.model.IdentityType;
-import ie.mid.identityengine.model.Party;
-import ie.mid.identityengine.model.Request;
-import ie.mid.identityengine.model.User;
-import ie.mid.identityengine.repository.IdentityTypeRepository;
-import ie.mid.identityengine.repository.PartyRepository;
-import ie.mid.identityengine.repository.RequestRepository;
-import ie.mid.identityengine.repository.UserRepository;
+import ie.mid.identityengine.model.*;
+import ie.mid.identityengine.repository.*;
 import ie.mid.identityengine.service.PushNotificationService;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,6 +52,9 @@ public class RequestControllerTest {
     private IdentityTypeRepository identityTypeRepository;
 
     @Mock
+    private SubmissionRepository submissionRepository;
+
+    @Mock
     private CertificateController certificateController;
 
     @Mock
@@ -66,6 +63,7 @@ public class RequestControllerTest {
     private static final String ID = "id";
     private static final String NAME = "name";
     private static final String FCM = "fcm";
+    private static final String HASH = "svLsZZ8s+M0XtZFQ/a4y1l7vsIUZHQExQtNfYARvhnw=";
     private static final String FIELDS = "KEY,EXPIRY";
     private InformationRequestDTO requestDTO = new InformationRequestDTO();
     private Authentication authentication;
@@ -103,6 +101,10 @@ public class RequestControllerTest {
         certificate.setId(ID);
         certificate.setOwnedBy(ID);
         certificate.setCreatedBy(ID);
+        certificate.setSubmissionHash(HASH);
+        Submission submission = new Submission();
+        submission.setId(ID);
+        submission.setSubmissionHash(HASH);
         requestDTO.setRecipientId(ID);
         requestDTO.setSenderId(ID);
         requestDTO.setIndentityTypeId(ID);
@@ -123,6 +125,7 @@ public class RequestControllerTest {
         when(pushNotificationService.sendNotifictaionAndData(anyString(), any(JsonObject.class), any(JsonObject.class))).thenReturn(ID);
         when(pushNotificationService.createMessageObject(anyString(), anyString(), anyString())).thenReturn(new JsonObject());
         when(pushNotificationService.createDataObject(any(NotificationType.class), any(), any())).thenReturn(new JsonObject());
+        when(submissionRepository.findByCertificateId(anyString())).thenReturn(submission);
         authentication = new UsernamePasswordAuthenticationToken(ID, ID);
     }
 
@@ -192,14 +195,14 @@ public class RequestControllerTest {
 
     @Test
     public void updateRejectedRequest() throws Exception {
-        this.requestDTO.setIdentityTypeValues(RequestStatus.REJECTED.toString());
+        this.requestDTO.setStatus(RequestStatus.REJECTED.toString());
         RequestDTO requestDTO = requestController.updateRequest(ID, this.requestDTO);
         assertEquals(ID, requestDTO.getId());
     }
 
     @Test
     public void updateResindedRequest() throws Exception {
-        this.requestDTO.setIdentityTypeValues(RequestStatus.RESCINDED.toString());
+        this.requestDTO.setStatus(RequestStatus.RESCINDED.toString());
         RequestDTO requestDTO = requestController.updateRequest(ID, this.requestDTO);
         assertEquals(ID, requestDTO.getId());
     }
@@ -207,7 +210,7 @@ public class RequestControllerTest {
     @Test(expected = BadRequestException.class)
     public void updateBadRequest() {
         this.requestDTO.setRecipientId(null);
-        this.requestDTO.setIdentityTypeValues(RequestStatus.DROPPED.toString());
+        this.requestDTO.setStatus(RequestStatus.DROPPED.toString());
         requestController.updateRequest(ID, this.requestDTO);
         this.requestDTO.setRecipientId(ID);
     }

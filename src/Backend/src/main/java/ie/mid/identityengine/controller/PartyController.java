@@ -14,8 +14,8 @@ import ie.mid.identityengine.model.Party;
 import ie.mid.identityengine.repository.PartyRepository;
 import ie.mid.identityengine.security.DataEncryption;
 import ie.mid.identityengine.service.HyperledgerService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -38,7 +38,7 @@ public class PartyController {
     @Autowired
     HyperledgerService hyperledgerService;
 
-    private Logger logger = LogManager.getLogger(PartyController.class);
+    private Logger logger = LoggerFactory.getLogger(PartyController.class);
 
     @GetMapping
     @ResponseBody

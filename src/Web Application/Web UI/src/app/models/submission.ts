@@ -13,14 +13,13 @@ export class Submission{
 
 export class SubmissionData {
     imageData:string;
-    cardFields:CardField[];
+    submissionFields:SubmissionField[];
 }
 
-export class CardField {
+export class SubmissionField {
     fieldEntry: String;
     fieldType: String;
     fieldTitle: String;
-    dataIcon: number;
 }
 
 export class Data {

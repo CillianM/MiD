@@ -8,6 +8,7 @@ public class CertificateDTO {
     private String creatorName;
     private String createdBy;
     private String createdAt;
+    private String submissionHash;
     private String status;
 
     public CertificateDTO() {
@@ -70,10 +71,19 @@ public class CertificateDTO {
         this.creatorName = creatorName;
     }
 
+    public String getSubmissionHash() {
+        return submissionHash;
+    }
+
+    public void setSubmissionHash(String submissionHash) {
+        this.submissionHash = submissionHash;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("CertificateDTO{");
         sb.append("id='").append(id).append('\'');
+        sb.append(", submissionHash='").append(submissionHash).append('\'');
         sb.append(", ownerName='").append(ownerName).append('\'');
         sb.append(", ownedBy='").append(ownedBy).append('\'');
         sb.append(", creatorName='").append(creatorName).append('\'');

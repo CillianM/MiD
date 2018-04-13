@@ -16,8 +16,8 @@ import ie.mid.identityengine.repository.UserRepository;
 import ie.mid.identityengine.service.HyperledgerService;
 import ie.mid.identityengine.service.PushNotificationService;
 import ie.mid.identityengine.service.StorageService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,7 +53,7 @@ public class SubmissionController {
     StorageService storageService;
 
     private static final String SUBMISSION_HEADER = "MiD Submission Update";
-    private static final Logger logger = LogManager.getLogger(SubmissionController.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SubmissionController.class.getName());
 
 
     @GetMapping(value = "/party/{partyId}")
@@ -116,6 +116,8 @@ public class SubmissionController {
         dto.setUserId(submission.getUserId());
         dto.setPartyName(getPartyName(submission.getPartyId()));
         dto.setPartyId(submission.getPartyId());
+        dto.setDataKey(submission.getDataKey());
+        dto.setSubmissionHash(submission.getSubmissionHash());
         dto.setStatus(submission.getStatus());
         dto.setDate(submission.getCreatedAt().toString());
         dto.setCertId(submission.getCertificateId());
@@ -143,7 +145,9 @@ public class SubmissionController {
         submission.setStatus(RequestStatus.PENDING.toString());
         submission.setUserId(submissionToCreate.getUserId());
         submission.setPartyId(submissionToCreate.getPartyId());
+        submission.setDataKey(submissionToCreate.getDataKey());
         //Save data to file
+        submission.setSubmissionHash(submissionToCreate.getSubmissionHash());
         submission.setData(storageService.saveData(submissionToCreate.getData()));
         if (submission.getData() == null) {
             throw new ServerErrorException("Error saving data to server");
@@ -231,7 +235,7 @@ public class SubmissionController {
             logger.error("No party exists with id " + submission.getPartyId());
             return null;
         }
-        return hyperledgerService.createCertificate(party.getNetworkId(),user.getNetworkId());
+        return hyperledgerService.createCertificate(party.getNetworkId(), user.getNetworkId(), submission.getSubmissionHash());
     }
 
     private List<SubmissionDTO> submissionListToDTOList(List<Submission> submissionList) {
@@ -245,6 +249,8 @@ public class SubmissionController {
             dto.setPartyName(getPartyName(submission.getPartyId()));
             dto.setPartyId(submission.getPartyId());
             dto.setStatus(submission.getStatus());
+            dto.setDataKey(submission.getDataKey());
+            dto.setSubmissionHash(submission.getSubmissionHash());
             dto.setDate(submission.getCreatedAt().toString());
             dto.setCertId(submission.getCertificateId());
             submissionDTOList.add(dto);

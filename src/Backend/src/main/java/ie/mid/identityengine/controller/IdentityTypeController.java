@@ -9,8 +9,8 @@ import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.Field;
 import ie.mid.identityengine.model.IdentityType;
 import ie.mid.identityengine.repository.IdentityTypeRepository;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -28,7 +28,7 @@ public class IdentityTypeController {
     @Autowired
     IdentityTypeRepository identityTypeRepository;
 
-    private Logger logger = LogManager.getLogger(IdentityTypeController.class);
+    private Logger logger = LoggerFactory.getLogger(IdentityTypeController.class);
 
     @GetMapping()
     @ResponseBody

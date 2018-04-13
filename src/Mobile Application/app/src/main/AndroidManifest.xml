@@ -76,7 +76,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CardSubmissionActivity"
+            android:name=".SubmissionCreateActivity"
             android:label="Submit Identity"
             android:theme="@style/AppBaseTheme" />
         <activity

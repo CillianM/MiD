@@ -10,8 +10,8 @@ import ie.mid.identityengine.exception.ResourceForbiddenException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
 import ie.mid.identityengine.model.Key;
 import ie.mid.identityengine.repository.KeyRepository;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -28,7 +28,7 @@ public class KeyController {
     @Autowired
     KeyRepository keyRepository;
 
-    private Logger logger = LogManager.getLogger(KeyController.class);
+    private Logger logger = LoggerFactory.getLogger(KeyController.class);
 
     @GetMapping(value = "/{ownerId}")
     @ResponseBody

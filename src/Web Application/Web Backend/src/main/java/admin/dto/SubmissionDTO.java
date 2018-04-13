@@ -8,7 +8,9 @@ public class SubmissionDTO {
     private String partyName;
     private String partyId;
     private String certId;
+    private String dataKey;
     private String data;
+    private String submissionHash;
     private String status;
     private String date;
 
@@ -86,5 +88,21 @@ public class SubmissionDTO {
 
     public void setCertId(String certId) {
         this.certId = certId;
+    }
+
+    public String getSubmissionHash() {
+        return submissionHash;
+    }
+
+    public void setSubmissionHash(String submissionHash) {
+        this.submissionHash = submissionHash;
+    }
+
+    public String getDataKey() {
+        return dataKey;
+    }
+
+    public void setDataKey(String dataKey) {
+        this.dataKey = dataKey;
     }
 }

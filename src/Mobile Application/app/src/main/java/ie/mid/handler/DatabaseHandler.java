@@ -114,12 +114,14 @@ public class DatabaseHandler {
             ");";
 
     //Submission database
-    private static final String SUBMISSION_STATUS = "submission_status";
+    private static final String SUBMISSION_KEY = "submission_key";
+    private static final String SUBMISSION_DATA = "submission_data";
     private static final String SUBMISSION_TABLE_NAME = "submission_table";
     private static final String SUBMISSION_TABLE_NAME_CREATE = "create table " + SUBMISSION_TABLE_NAME + " (" +
             ID + " text not null, " +
             SUBMISSION_ID + " text not null, " +
-            SUBMISSION_STATUS + " text not null," +
+            SUBMISSION_KEY + " text not null," +
+            SUBMISSION_DATA + " text not null," +
             CARD_ID + " text not null," +
             CREATION_DATE + " text not null," +
             UPDATED_DATE + " text not null" +
@@ -205,12 +207,13 @@ public class DatabaseHandler {
         return new Profile(id,name,profileImg,hash,salt,serverId,userToken,publicKey,privateKey);
     }
 
-    public CreatedSubmission createSubmission(String submissionId, String cardId){
+    public CreatedSubmission createSubmission(String submissionId, String cardId, String submissionData,String submissionKey){
         String id = UUID.randomUUID().toString();
         ContentValues content = new ContentValues();
         content.put(ID, id);
         content.put(SUBMISSION_ID,submissionId);
-        content.put(SUBMISSION_STATUS, CardStatus.PENDING.toString());
+        content.put(SUBMISSION_DATA, submissionData);
+        content.put(SUBMISSION_KEY, submissionKey);
         content.put(CARD_ID,cardId);
         content.put(CREATION_DATE, getTimestamp());
         content.put(UPDATED_DATE, getTimestamp());
@@ -264,7 +267,7 @@ public class DatabaseHandler {
     }
 
     public CreatedSubmission getSubmission(String id) {
-        String selectQuery = "SELECT ID, SUBMISSION_ID,CARD_ID,SUBMISSION_STATUS,CREATION_DATE,UPDATED_DATE FROM " + SUBMISSION_TABLE_NAME + " WHERE " + SUBMISSION_ID + "='" + id + "'";
+        String selectQuery = "SELECT ID, SUBMISSION_ID,CARD_ID,SUBMISSION_DATA,SUBMISSION_KEY,CREATION_DATE,UPDATED_DATE FROM " + SUBMISSION_TABLE_NAME + " WHERE " + SUBMISSION_ID + "='" + id + "'";
         Cursor cursor = db.rawQuery(selectQuery, null);
         CreatedSubmission createdSubmission = new CreatedSubmission();
         if (cursor.getCount() != 0) {
@@ -275,7 +278,8 @@ public class DatabaseHandler {
                         cursor.getString(2),
                         cursor.getString(3),
                         cursor.getString(4),
-                        cursor.getString(5)
+                        cursor.getString(5),
+                        cursor.getString(6)
                 );
             }
             return createdSubmission;

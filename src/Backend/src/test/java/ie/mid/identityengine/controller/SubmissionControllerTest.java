@@ -106,7 +106,7 @@ public class SubmissionControllerTest {
         when(partyRepository.findById(anyString())).thenReturn(party);
         when(storageService.saveData(anyString())).thenReturn(PATH);
         when(storageService.loadData(PATH)).thenReturn(DATA);
-        when(hyperledgerService.createCertificate(anyString(), anyString())).thenReturn(certificate);
+        when(hyperledgerService.createCertificate(anyString(), anyString(), anyString())).thenReturn(certificate);
 
         authentication = new UsernamePasswordAuthenticationToken(ID, ID);
     }

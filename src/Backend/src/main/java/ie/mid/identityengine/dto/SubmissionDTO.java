@@ -8,6 +8,8 @@ public class SubmissionDTO {
     private String partyName;
     private String partyId;
     private String certId;
+    private String submissionHash;
+    private String dataKey;
     private String data;
     private String status;
     private String date;
@@ -88,6 +90,22 @@ public class SubmissionDTO {
         this.certId = certId;
     }
 
+    public String getSubmissionHash() {
+        return submissionHash;
+    }
+
+    public void setSubmissionHash(String submissionHash) {
+        this.submissionHash = submissionHash;
+    }
+
+    public String getDataKey() {
+        return dataKey;
+    }
+
+    public void setDataKey(String dataKey) {
+        this.dataKey = dataKey;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("SubmissionDTO{");
@@ -97,6 +115,8 @@ public class SubmissionDTO {
         sb.append(", partyName='").append(partyName).append('\'');
         sb.append(", partyId='").append(partyId).append('\'');
         sb.append(", certId='").append(certId).append('\'');
+        sb.append(", submissionHash='").append(submissionHash).append('\'');
+        sb.append(", dataKey='").append(dataKey).append('\'');
         sb.append(", data='").append(data).append('\'');
         sb.append(", status='").append(status).append('\'');
         sb.append(", date='").append(date).append('\'');

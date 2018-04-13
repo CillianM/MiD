@@ -11,17 +11,12 @@ import ie.mid.identityengine.enums.RequestStatus;
 import ie.mid.identityengine.exception.BadRequestException;
 import ie.mid.identityengine.exception.ResourceForbiddenException;
 import ie.mid.identityengine.exception.ResourceNotFoundException;
-import ie.mid.identityengine.model.IdentityType;
-import ie.mid.identityengine.model.Party;
-import ie.mid.identityengine.model.Request;
-import ie.mid.identityengine.model.User;
-import ie.mid.identityengine.repository.IdentityTypeRepository;
-import ie.mid.identityengine.repository.PartyRepository;
-import ie.mid.identityengine.repository.RequestRepository;
-import ie.mid.identityengine.repository.UserRepository;
+import ie.mid.identityengine.model.*;
+import ie.mid.identityengine.repository.*;
 import ie.mid.identityengine.service.PushNotificationService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import ie.mid.identityengine.service.StorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +28,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static ie.mid.identityengine.security.KeyUtil.hashString;
 
 @Controller
 @RequestMapping("/request")
@@ -49,11 +46,15 @@ public class RequestController {
     @Autowired
     IdentityTypeRepository identityTypeRepository;
     @Autowired
+    SubmissionRepository submissionRepository;
+    @Autowired
     CertificateController certificateController;
+    @Autowired
+    StorageService storageService;
     @Autowired
     PushNotificationService pushNotificationService;
 
-    private Logger logger = LogManager.getLogger(RequestController.class.getName());
+    private Logger logger = LoggerFactory.getLogger(RequestController.class.getName());
 
     private static final String USER_NOT_EXIST = "User does not exits";
 
@@ -238,6 +239,10 @@ public class RequestController {
                 logger.error("No certificate exists with id " + informationRequestDTO.getCertificateId());
                 throw new ResourceNotFoundException("No certificate exists with id " + informationRequestDTO.getCertificateId());
             }
+            if (isInvalidIdentityFields(informationRequestDTO, certificate)) {
+                logger.error("Identity fields don't match whats on file " + informationRequestDTO);
+                throw new BadRequestException("Identity fields don't match whats on file " + informationRequestDTO);
+            }
             request.setUserResponse(informationRequestDTO.getIdentityTypeValues());
             request.setStatus(RequestStatus.ACCEPTED.toString());
             request.setCertificateId(informationRequestDTO.getCertificateId());
@@ -340,6 +345,29 @@ public class RequestController {
             }
         }
         return false;
+    }
+
+    private boolean isInvalidIdentityFields(InformationRequestDTO informationRequestDTO, CertificateDTO certificateDTO) {
+        Submission submission = submissionRepository.findByCertificateId(certificateDTO.getId());
+        if (submission == null) {
+            logger.error("No submission found for certifcate id: " + certificateDTO.getId());
+            return true;
+        }
+        if (!submission.getSubmissionHash().equals(certificateDTO.getSubmissionHash())) {
+            logger.error("Hash for submission and certificate are not equal: " + submission.getSubmissionHash() + " != " + certificateDTO.getSubmissionHash());
+            return true;
+        }
+
+        String[] responseValues = informationRequestDTO.getIdentityTypeValues().split(",");
+        String[] types = informationRequestDTO.getIdentityTypeFields().split(",");
+        List<String> submissionTypeHashes = new ArrayList<>();
+        for (int i = 0; i < responseValues.length; i++) {
+            String type = types[i] + ":" + responseValues[i];
+            String b64SubmissionEntry = hashString(type);
+            submissionTypeHashes.add(b64SubmissionEntry);
+        }
+        String[] submissionEntries = submission.getSubmissionHash().split(",");
+        return !(Arrays.asList(submissionEntries).containsAll(submissionTypeHashes));
     }
 
     private boolean containsInvalidFields(String identityTypeFields, IdentityType identityType) {

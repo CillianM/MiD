@@ -69,3 +69,17 @@ Feature: A request can be created, viewed and responded to
     And the requesting client receives back a reference to the created request
     When the client responds to the request with updated fields
     Then the client receives status code of 400
+
+
+  Scenario: Receiving client responds to a request unsuccessfully due to unknown field entries
+    Given the client calls /submission for an existing party
+    Then the client receives status code of 200
+    And the client receives back a reference to the created submission
+    Then the client calls /submission to update an existing submission as a party
+    Then the client receives status code of 200
+    And the client receives back a reference to the updated submission
+    When the requesting client sends a request to another user
+    Then the client receives status code of 200
+    And the requesting client receives back a reference to the created request
+    When the client responds to the request with unknown fields
+    Then the client receives status code of 400

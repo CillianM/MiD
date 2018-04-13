@@ -8,27 +8,29 @@ public class CreatedSubmission {
     private String id;
     private String submissionId;
     private String cardId;
-    private String status;
+    private String data;
     private String createdDate;
     private String updatedDate;
+    private String submissionKey;
 
     public CreatedSubmission() {
     }
 
-    public CreatedSubmission(String id, String submissionId, String cardId, String status, String createdDate, String updatedDate) {
+    public CreatedSubmission(String id, String submissionId, String cardId, String data, String submissionKey,String createdDate, String updatedDate) {
         this.id = id;
         this.submissionId = submissionId;
         this.cardId = cardId;
-        this.status = status;
+        this.data = data;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
+        this.submissionKey = submissionKey;
     }
 
-    public CreatedSubmission(String id, String submissionId, String cardId, String status) {
+    public CreatedSubmission(String id, String submissionId, String cardId, String data) {
         this.id = id;
         this.submissionId = submissionId;
         this.cardId = cardId;
-        this.status = status;
+        this.data = data;
     }
 
     public String getId() {
@@ -55,12 +57,12 @@ public class CreatedSubmission {
         this.cardId = cardId;
     }
 
-    public String getStatus() {
-        return status;
+    public String getData() {
+        return data;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setData(String data) {
+        this.data = data;
     }
 
     public String getCreatedDate() {
@@ -77,5 +79,13 @@ public class CreatedSubmission {
 
     public void setUpdatedDate(String updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public String getSubmissionKey() {
+        return submissionKey;
+    }
+
+    public void setSubmissionKey(String submissionKey) {
+        this.submissionKey = submissionKey;
     }
 }

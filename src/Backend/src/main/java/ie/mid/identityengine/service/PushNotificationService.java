@@ -7,8 +7,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class PushNotificationService {
     private static final String FIREBASE_URL = "https://fcm.googleapis.com/fcm/send";
     private static final String TOPIC_URL = "/topics/";
     HttpClient httpClient;
-    private Logger logger = LogManager.getLogger(PushNotificationService.class);
+    private Logger logger = LoggerFactory.getLogger(PushNotificationService.class);
 
     public PushNotificationService() {
         this.httpClient = HttpClientBuilder.create().build();

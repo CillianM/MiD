@@ -29,7 +29,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import ie.mid.async.SubmissionCreator;
-import ie.mid.backend.SubmissionService;
 import ie.mid.enums.DataType;
 import ie.mid.handler.DatabaseHandler;
 import ie.mid.interfaces.SubmitTaskCompleted;
@@ -40,10 +39,11 @@ import ie.mid.pojo.Submission;
 import ie.mid.util.HashUtil;
 import ie.mid.util.InternetUtil;
 
-public class CardSubmissionActivity extends AppCompatActivity implements SubmitTaskCompleted{
+public class SubmissionCreateActivity extends AppCompatActivity implements SubmitTaskCompleted{
 
     private String userId;
     private String cardId;
+    private String submissionData;
     private CardType cardType;
     private List<TextInputEditText> fields;
     private Profile profile;
@@ -268,11 +268,13 @@ public class CardSubmissionActivity extends AppCompatActivity implements SubmitT
         SubmissionData submissionData = new SubmissionData(cardType.getVersionNumber(), imageData,cardType.getDataList());
         Submission submission = new Submission();
         submission.setData(submissionData.toString());
+        this.submissionData = submission.getData();
         submission.setUserId(profile.getServerId());
         submission.setPartyId(cardType.getPartyId());
+        submission.setSubmissionHash(submissionData.createSubmissionHash());
         showLoading();
         if(InternetUtil.isNetworkAvailable(getApplicationContext())) {
-            new SubmissionCreator(getApplicationContext(), this, new SubmissionService(getApplicationContext()),profile).execute(submission);
+            new SubmissionCreator(getApplicationContext(), this,profile).execute(submission);
         }
         else{
             hideLoading();
@@ -368,7 +370,7 @@ public class CardSubmissionActivity extends AppCompatActivity implements SubmitT
             handler.open();
             handler.updateCardStatus(cardId, submission.getStatus());
             handler.updateSubmissionId(cardId, submission.getId());
-            handler.createSubmission(submission.getId(),cardId);
+            handler.createSubmission(submission.getId(),cardId,submissionData,submission.getDataKey());
             handler.close();
             Intent intent = new Intent(this,SubmissionViewActivity.class);
             intent.putExtra("userId",profile.getId());

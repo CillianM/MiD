@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -33,15 +34,24 @@ public class DataEncryption {
             byte[] decodedBase64 = Base64.decodeBase64(encodedBase64String);
             byte [] keyArray = Base64.decodeBase64(keyString);
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-            X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(keyArray);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            PublicKey publicKey = keyFactory.generatePublic(x509EncodedKeySpec);
-            cipher.init(Cipher.DECRYPT_MODE, publicKey);
+            PrivateKey privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(keyArray));
+            cipher.init(Cipher.DECRYPT_MODE, privateKey);
             return new String(cipher.doFinal(decodedBase64),"UTF-8");
         } catch (Exception e){
             logger.error("Error decrypting text " + encodedBase64String,e);
             return null;
         }
+    }
+
+    public static String aesDecryption(String cipherText, String aesKey) throws Exception
+    {
+        byte [] cipherArray = Base64ToByte(cipherText);
+        byte[] key = Base64ToByte(aesKey);
+        SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey);
+        return new String(cipher.doFinal(cipherArray),"UTF-8");
     }
 
     private static byte[] Base64ToByte(String base64){

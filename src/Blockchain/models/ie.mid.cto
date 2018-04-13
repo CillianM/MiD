@@ -6,6 +6,7 @@ namespace ie.mid
 
 asset Certificate identified by certId {
     o String certId
+    o String submissionHash
     o String dateCreated
     o String status
     --> IdentifyingParty trustee

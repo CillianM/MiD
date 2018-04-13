@@ -7,8 +7,8 @@ import ie.mid.identityengine.model.Certificate;
 import ie.mid.identityengine.model.CertificateUpdate;
 import ie.mid.identityengine.model.IdentifyingParty;
 import ie.mid.identityengine.model.Individual;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class HyperledgerService {
     @Value("${mid.hyperledger}")
     private String hyperledgerUrl;
     private HttpService httpService;
-    private Logger logger = LogManager.getLogger(HyperledgerService.class);
+    private Logger logger = LoggerFactory.getLogger(HyperledgerService.class);
 
     public HyperledgerService() {
        httpService = new HttpService();
@@ -40,9 +40,9 @@ public class HyperledgerService {
         }
     }
 
-    public Certificate createCertificate(String partyId,String userId){
+    public Certificate createCertificate(String partyId, String userId, String submissionHash) {
         logger.debug("Sending 'POST' request to certificate for partyId " + partyId + " and userId " + userId);
-        JsonObject party = createCertificateJson(partyId,userId);
+        JsonObject party = createCertificateJson(partyId, userId, submissionHash);
         httpService.setEndpointExtention("/Certificate");
         String response = httpService.sendPost(party.toString());
         if (response != null) {
@@ -138,11 +138,12 @@ public class HyperledgerService {
         return jsonObject;
     }
 
-    private JsonObject createCertificateJson(String partyId,String userId){
+    private JsonObject createCertificateJson(String partyId, String userId, String submissionHash) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("$class","ie.mid.Certificate");
         jsonObject.addProperty("certId", UUID.randomUUID().toString());
+        jsonObject.addProperty("submissionHash", submissionHash);
         jsonObject.addProperty("dateCreated",timestamp.toString());
         jsonObject.addProperty("status", EntityStatus.ACTIVE.toString());
         jsonObject.addProperty("trustee", "resource:ie.mid.IdentifyingParty#" + partyId);
@@ -167,6 +168,7 @@ public class HyperledgerService {
             certificate.setOwner(owner.substring(owner.lastIndexOf('#') + 1));
             String trustee = certificate.getTrustee();
             certificate.setTrustee(trustee.substring(trustee.lastIndexOf('#') + 1));
+            certificate.setSubmissionHash(certificate.getSubmissionHash());
             return certificate;
         } catch (IOException e) {
             logger.error("Error marshalling JSON " + json + " to Certificate");

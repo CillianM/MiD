@@ -12,7 +12,7 @@
   <img class="profile-container" [src]="'data:image/jpg;base64,'+submissionData?.imageData | safeHtml" alt="Photo of man">
   <div class="info-container">
     <table class="info-table">
-        <tr *ngFor="let field of submissionData?.cardFields">
+        <tr *ngFor="let field of submissionData?.submissionFields">
             <th>{{field.fieldTitle}}</th>
             <td>{{field.fieldEntry}}</td>
           </tr>    

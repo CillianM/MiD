@@ -17,8 +17,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ie.mid.CardCreateActivity;
-import ie.mid.CardSubmissionActivity;
+import ie.mid.SubmissionCreateActivity;
 import ie.mid.R;
 import ie.mid.adapter.CardDataAdapter;
 import ie.mid.enums.CardStatus;
@@ -58,7 +57,7 @@ public class ListFragment extends Fragment {
             @Override
             public void onItemClick(View v, int position) {
                 if(position == 0 && Objects.equals(cardType.getStatus(), CardStatus.NOT_VERIFIED.toString())) {
-                    Intent intent = new Intent(getActivity(), CardSubmissionActivity.class);
+                    Intent intent = new Intent(getActivity(), SubmissionCreateActivity.class);
                     intent.putExtra("userId",cardType.getOwnerId());
                     intent.putExtra("cardId",cardType.getId());
                     startActivity(intent);

@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 @Category(IntegrationTests.class)
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        features = ".",
+        features = "src/test/resources",
         format = {"pretty", "html:target/cucumber", "json:target/mid-integration-test.json"},
         glue = {"ie.mid.identityengine.integration.stepdefs"}
 )

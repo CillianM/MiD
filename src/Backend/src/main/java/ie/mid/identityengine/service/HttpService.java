@@ -1,7 +1,7 @@
 package ie.mid.identityengine.service;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.net.URL;
 class HttpService {
 
     private String ENDPOINT = "http://192.168.0.152:3000/api";
-    private static final Logger logger = LogManager.getLogger(HttpService.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpService.class);
     private String endpointExtention;
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String JSON = "application/json";

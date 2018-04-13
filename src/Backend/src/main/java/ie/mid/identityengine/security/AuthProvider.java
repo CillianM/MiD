@@ -9,8 +9,8 @@ import ie.mid.identityengine.model.User;
 import ie.mid.identityengine.repository.KeyRepository;
 import ie.mid.identityengine.repository.PartyRepository;
 import ie.mid.identityengine.repository.UserRepository;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,7 +32,7 @@ public class AuthProvider implements AuthenticationProvider {
     @Autowired
     private KeyRepository keyRepository;
 
-    private Logger logger = LogManager.getLogger(AuthProvider.class);
+    private Logger logger = LoggerFactory.getLogger(AuthProvider.class);
 
     @Override
     public Authentication authenticate(Authentication authentication) {

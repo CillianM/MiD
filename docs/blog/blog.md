@@ -34,6 +34,7 @@
 - [5th March 2018 - Access Control](#5th-march-2018-access-control)
 - [14th March 2018 - SSL Security](#14th-march-2018-ssl-security)
 - [22nd March 2018 - Website Promo Page](#22nd-march-2018-website-promo-page)
+- [16th April 2018 - Testing Wrap-Up & Documentation](#16th-april-2018-testing-wrap-up-documentation)
 
 
 ## Intro
@@ -330,4 +331,14 @@ I have implemented Log4J2 into the backend application. This will allow for easy
 Above is a screenshot of the homepage. It has 3 links to download the application, view source code and the supporting documentation within gitlab.
 
 ### What will be done
-I now need to look into creating BDDs (Behavior-driven development). This will be in the for of cucumber integration tests for the backend. It will allow for human readable tests and further testing of the applications backend. 
+I now need to look into creating BDDs (Behavior-driven development). This will be in the for of cucumber integration tests for the backend. It will allow for human readable tests and further testing of the applications backend.
+
+## 16th April 2018 - Testing Wrap-Up & Documentation
+
+### What has been done
+Over the last month I have been busy compiling all of the tests that will go into the backend portion of MiD. Everything is now put together and just requires some polishing. I have implemented more unit tests and create full BDDs for end to end testing of the application. There have been some updates to both the backend and mobile application as a result of these tests. The primary update is the further securing of submission data and request verfication from these submissions. This means that when someone makes a submission I will store a hash of each field of the data, each time a request is answered by a user the fields they're answering with are compared against these hashes so that i can ensure no updated data is being sent. This means that we ensure users are sending what was verified and not what has been made up by them. This oversight was brought up during the BDD portion when i tried to update it with illegal data and it passed.<br> 
+I have compiled both this testing and all other forms done throughout MiD into [testing documentation](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/documentation/Testing%20Documentation.pdf) that will add to the technical manual that I am still working on. Along with this I have created the initial draft of the [user manaul](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/documentation/User%20Manual.pdf) and I hope to get feedback from Geoff in our next meeting.
+
+### What will be done
+I will work on any feedback Geoff gives me on the current documentation I have. He is happy with the level of testing documentation I have and would like me to ensure that there is evidence of action taken on these tests. I will work on this, feedback on the user manual and hopefully start my technical manual.<br>
+I will also go back over both the mobile and backend applications and refactor what I can. I'd like to ensure the code is as clean and readable as possible. I will also try to keep code coverage above 80%.

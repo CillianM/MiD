@@ -35,6 +35,7 @@
 - [14th March 2018 - SSL Security](#14th-march-2018-ssl-security)
 - [22nd March 2018 - Website Promo Page](#22nd-march-2018-website-promo-page)
 - [16th April 2018 - Testing Wrap-Up & Documentation](#16th-april-2018-testing-wrap-up-documentation)
+- [24th April 2018 - Drafted Documentation](#24th-april-2018-drafted-documentation)
 
 
 ## Intro
@@ -342,3 +343,18 @@ I have compiled both this testing and all other forms done throughout MiD into [
 ### What will be done
 I will work on any feedback Geoff gives me on the current documentation I have. He is happy with the level of testing documentation I have and would like me to ensure that there is evidence of action taken on these tests. I will work on this, feedback on the user manual and hopefully start my technical manual.<br>
 I will also go back over both the mobile and backend applications and refactor what I can. I'd like to ensure the code is as clean and readable as possible. I will also try to keep code coverage above 80%.
+
+## 24th April 2018 - Drafted Documentation
+
+### What has been done
+Over the course of the last week I have been working on the documentation for the final submission, these are initial drafts and I would like to revist them to ensure they're covering all the content that I would like them to.<br>
+The documents to be submitted are
+- [Testing Documentation]((https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/documentation/Testing%20Documentation.pdf))
+- [User Manual](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/documentation/User%20Manual.pdf)
+- [Technical Manual](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/documentation/Technical%20Manual.pdf)
+    + There is [API documentation](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/documentation/API%20Documentation.md) to cover all of the endpoints and the security policies for the backend that is used as an addendum to the technical manual as well as the user manual. I didn't think it needed to be included in the documentation as it was too verbose but its a good document to link to within the submission documentation.
+
+All documents cover the general structure of what is to be delivered so it is just a matter of revising them for grammar errors and adding/removing content where necessary.
+
+### What will be done
+I won't be able to work on the project until at least the 16th May due to the examination period starting. The project is in a very good place and the time spent between the 16th and 21st (submission date) will be used for tidying up what is already there. I will also need to create the video walkthrough during this period.

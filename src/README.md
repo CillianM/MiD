@@ -1,1 +1,1 @@
-All of your source code (and other program resources) should be placed in this sub-directory.
+All of your source code (and other program resources) can be found within this directory and its contained sub-directory. Each directory contains its own readme detailing the portion of the application and its dependencies.

@@ -1,54 +1,5 @@
-# My Project Title
+# MiD - My Identity
 
-This is a template for CA400 projects.  Please read these instructions carefully.
-
-This file is written in
-[markdown](https://guides.github.com/features/mastering-markdown/).  Markdown
-is a suitable format for documents stored in git repositories.
-
-## Instructions
-
-You *must* do the following:
-
-1 - Fork this repo.
-
-2 - Rename your fork using the format (all lower case letters)
-
-    2018-ca400-username
-
-replacing `username` with your School of Computing login name.
-
-For example, if Stephen Blott were to be doing a fourth-year project, he would rename
-his repo as:
-
- 2018-ca400-sblott
-
-You can rename your repo by selecting *Edit Project* from the drop-down menu
-(with a gear icon) on the top right of your project's home page.  Change the
-*Project name* field **and** the *Path*.
-
-You should also update the *Project description*.
-
-3 - This directory has two sub-directories.
-
-- All of your source code should be placed in the `src` sub-directory.
-
-- All of your documentation should be placed in the `docs` sub-directory.
-
-- Your project blog should be placed in the `blog` sub-directory. 
-
-
-4 - There is further important documentation in the `docs` directory.  Read that next.
-
-When you are have followed all of these instructions and are sure that you
-understand what is expected, you may replace the contents of this file with a
-brief description of your project (two or three paragraphs).
-
-## Additional Resources
-
-- Git [cheat sheet](https://gitlab.computing.dcu.ie/sblott/local-gitlab-documentation/blob/master/cheat-sheet.md)
-- Gitlab [CI environment](https://gitlab.computing.dcu.ie/sblott/docker-ci-environment) and it's [available software](https://gitlab.computing.dcu.ie/sblott/docker-ci-environment/blob/master/Dockerfile)
-- Example projects with CI configured:
-   * [Python](https://gitlab.computing.dcu.ie/sblott/test-project-python)
-   * [Java](https://gitlab.computing.dcu.ie/sblott/test-project-java)
-   * [MySql](https://gitlab.computing.dcu.ie/sblott/test-project-mysql)
+MiD is an identity engine that will aid in proving a person’s identity. Using a mobile application, it stores information on the user locally and will only be sent out with the user’s permission. This information is verified by respected institutions and the proof of that verification will be stored with a distributed, tamper-resistant solution called the “Blockchain”.
+This system aims to tackle the problem of identity fraud, where the need for someone to prove who they are in the modern, social-network driven society is incredibly difficult, as many people leave themselves vulnerable by voluntarily exposing very personal information. By streamlining this process into a safe and secure service will aid in providing not only peace of mind to users but will save companies, and even countries a lot of money in the long run.
+Detailed documentation on the development can be found on the [Gitlab blog](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/blog/blog.md) or the [Trello board](https://trello.com/b/Lp2PAf1i/mid-identity-engine) that I used to create and monitor development tasks.

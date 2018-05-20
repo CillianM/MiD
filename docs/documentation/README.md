@@ -1,17 +1,10 @@
-Place your user manual and technical documentation in this directory.
+This directory contains the documentation of the finished project MiD and is divided as follows:
 
-PDF is the preferred format.
-
-The first page of each document should contain at least:
-
-- your name,
-- your project title,
-- the type of document (e.g. *Technical Manual*)
-- your student number, and
-- the date you finished working on the document.
-
-In addition, the file names you choose to use should make clear what the document content is.
-
-**The final version of your documents should be converted to PDF and stored in this same directory**
-
-*Do not place any other files in this directory.*
+- [User Manual](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/documentation/User%20Manual.pdf)
+    + This documentation outlines the steps to install and use the components within MiD
+- [Technical Manual](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/documentation/Technical%20Manual.pdf)
+    + The technical manual outlines the design behind each primary component within MiD
+- [Testing Documentation](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/documentation/Testing%20Documentation.pdf)
+    + Seperated out for readability, this documentation outlines the testing of each of the primary components within MiD
+- [API Documentation](https://gitlab.computing.dcu.ie/mcneilc2/2018-ca400-mcneilc2/blob/master/docs/documentation/API%20Documentation.md)
+    + Also seperated out for readability, this outlines the security policy of the API every endpoint within MiD

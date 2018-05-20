@@ -36,6 +36,7 @@
 - [22nd March 2018 - Website Promo Page](#22nd-march-2018-website-promo-page)
 - [16th April 2018 - Testing Wrap-Up & Documentation](#16th-april-2018-testing-wrap-up-documentation)
 - [24th April 2018 - Drafted Documentation](#24th-april-2018-drafted-documentation)
+- [20th May 2018 - Wrap Up](#20th-may-2018-wrap-up)
 
 
 ## Intro
@@ -358,3 +359,11 @@ All documents cover the general structure of what is to be delivered so it is ju
 
 ### What will be done
 I won't be able to work on the project until at least the 16th May due to the examination period starting. The project is in a very good place and the time spent between the 16th and 21st (submission date) will be used for tidying up what is already there. I will also need to create the video walkthrough during this period.
+
+## 20th May 2018 - Wrap Up
+
+### What has been done
+This is a final blog post to wrap up what was done over the final few weeks. A lot of the time was taken up with the exams so I only really had a few days of proper work. I went back over the documentation and corrected any final mistakes. I have also finished the [video walkthrough](https://drive.google.com/open?id=1ucF5xRB7KGjjSrBrnHarGtpHvxxnFGDk) where I went through the idea behind the project, demonstrated its basic functionality and talked about some of its use cases. I've updated any of the readmes as necessary and now I believe the project is finished. All stories I had planned on [Trello](https://trello.com/b/Lp2PAf1i/mid-identity-engine) have been wrapped up and are ready to be reviewed.
+
+### What will be done
+I now need to prepare for the expo this Wednesday (23rd) and my demonstration this Thursday (24th) in the form of practicing my elevator pitch, creating and printing supporting documentation for both days for people to read if they wish and a small trailer to loop through the expo.
